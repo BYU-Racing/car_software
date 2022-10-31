@@ -8,11 +8,11 @@
  */
 
 //DEFINE CONSTANTS
- #define CONSTANT 3
+ #define THIS_IS_A_CONSTANT 4
 
 
 //FUNCTION PROTOTYPES
-void ExampleFunction();
+void exampleFunction(int);
 
 
 void setup() {
@@ -28,6 +28,11 @@ void loop() {
 }
 
 //DEFINE FUNCTIONS
-void ExampleFunction(){
+void exampleFunction(int x){
+  /*
+   * This function takes X in as parameters
+   * Executes Y task
+   * Return Z value
+   */
   //TODO: DEFINE THIS FUNCTION
 }
