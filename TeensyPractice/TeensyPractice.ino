@@ -7,6 +7,12 @@
  * 
  */
 
+//DEFINE CONSTANTS
+ #define CONSTANT 3
+
+
+//FUNCTION PROTOTYPES
+void ExampleFunction();
 
 
 void setup() {
@@ -15,6 +21,14 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
+  int myVariable = 1;
 
+  enum{STATE1, STATE2} currState;
+  
+}
+
+//DEFINE FUNCTIONS
+void ExampleFunction(){
+  //TODO: DEFINE THIS FUNCTION
 }
