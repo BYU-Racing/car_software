@@ -1,9 +1,26 @@
+/*
+ * Created by David Reinhardt
+ * Code to be uploaded to one of the Teensys to get them
+ * to send Signals over CANBus
+ * Goal: Send a Signal over CAN when a button is pressed
+ */
+
 #include <Arduino.h>
+#include <FlexCAN.h>
+
+#define BUTTON 2
+//TODO: DEFINE CANBUS PINS
 
 void setup() {
-  // put your setup code here, to run once:
+  //SETUP BUTTON PIN
+  pinMode(BUTTON, INPUT);
+
+  //TODO: SETUP CANBUS PINS
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  if(digitalRead(BUTTON)){
+    //TODO: SEND SIGNAL OVER CAN
+  }
 }
