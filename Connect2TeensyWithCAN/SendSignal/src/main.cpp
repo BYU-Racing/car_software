@@ -6,21 +6,28 @@
  */
 
 #include <Arduino.h>
-#include <FlexCAN.h>
+#include <FlexCAN_T4.h>
+#include <isotp.h>
 
 #define BUTTON 2
-//TODO: DEFINE CANBUS PINS
+FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> sender;
+isotp<RX_BANKS_16, 512> tp;
+
 
 void setup() {
   //SETUP BUTTON PIN
-  pinMode(BUTTON, INPUT);
+  pinMode(BUTTON, OUTPUT);
 
-  //TODO: SETUP CANBUS PINS
-
+  //SETUP CANBUS PINS
+  sender.begin();
+  sender.setClock(CLK_60MHz);
+  sender.setBaudRate(95238);
+  sender.setMaxMB(16);
 }
 
 void loop() {
   if(digitalRead(BUTTON)){
-    //TODO: SEND SIGNAL OVER CAN
+    ISOTP_data config;
+;
   }
 }
