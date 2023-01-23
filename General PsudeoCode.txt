@@ -1,0 +1,22 @@
+
+
+setup() {
+    //initialize sensors and ports
+
+    //intialize with a state off
+
+}
+
+loop() {
+    //check shutoff conditions
+        //high priority
+
+    //update driving controls
+        //go pedal, brakes, etc 
+        //medium priority
+
+    //log data
+        //low priority
+
+
+}
