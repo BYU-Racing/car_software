@@ -15,7 +15,7 @@ BYU Racing Team Repo
   Have an accelerometer</p>
 
 #### We would like our car to be able to measure:
-<br>  Wheel speed<br>
+<p>  Wheel speed<br>
   Brake pressure<br>
   damper deflection (Damper potentiometers)<br>
   steering wheel angle</p>
