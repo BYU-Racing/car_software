@@ -20,3 +20,44 @@ loop() {
 
 
 }
+
+State {
+    turnKey();
+    toggleInertiaSwitch();
+    toggleBrakes();
+    updateThrottle();
+}
+
+Idle {
+    bool keyPosition;
+    bool inertiaShutdown;
+    turnKey() {
+        if (!inertiaShutdown) {
+            //change to active
+        }
+        else keyPosition = true;
+    }
+
+    toggleInertiaSwitch(){
+        if (keyPosition) {
+            //change to active
+        }
+        else inertiaShutdown = false;
+    }
+
+    toggleBrakes() {
+        //switch to ide with brakes
+    }
+
+    updateThrottle() {
+        //do nothing
+    }
+}
+
+IdleBraking() {
+    //inherit everything from Idle
+    //light it on
+    toggleBrakes() {
+        //switch back to Idle
+    }
+}
