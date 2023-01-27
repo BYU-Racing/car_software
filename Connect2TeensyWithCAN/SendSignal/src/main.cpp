@@ -15,6 +15,9 @@ isotp<RX_BANKS_16, 512> tp;
 
 
 void setup() {
+  //Setup Serial Monitor
+  Serial.begin(115200);
+
   //SETUP BUTTON PIN
   pinMode(BUTTON, OUTPUT);
 
@@ -26,6 +29,8 @@ void setup() {
 }
 
 void loop() {
+
+  Serial.println(digitalRead(BUTTON));
 
   uint8_t msg[1];
 
