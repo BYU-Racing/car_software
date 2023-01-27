@@ -26,9 +26,14 @@ void setup() {
   receiver.setBaudRate(95238);
   receiver.setMaxMB(16);
   receiver.onReceive(canSniff);
+
+  //TODO: WRITE TO SERIAL MONITOR
+  Serial.begin(115200);
 }
 
 void loop() {
+
+  // Serial.println();
 
   if(msgArray[0]){ //TODO: MAKE THIS IF STATEMENT DEPEND ON SIGNALS COMING FROM THE CANBUS
     digitalWrite(LED, HIGH);
