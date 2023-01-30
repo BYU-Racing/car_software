@@ -15,6 +15,9 @@ isotp<RX_BANKS_16, 512> tp;
 
 
 void setup() {
+  //Setup Serial Monitor
+  Serial.begin(115200);
+
   //SETUP BUTTON PIN
   pinMode(BUTTON, OUTPUT);
 
@@ -26,8 +29,22 @@ void setup() {
 }
 
 void loop() {
+
+  Serial.println(digitalRead(BUTTON));
+
+  uint8_t msg[1];
+
   if(digitalRead(BUTTON)){
-    ISOTP_data config;
-;
+    msg[0] = 1;
+  }else{
+    msg[0] = 0;
   }
+
+  ISOTP_data config;
+  config.id = 0x666;
+  config.flags.extended = 0; /* standard frame */
+  config.separation_time = 10; /* time between back-to-back frames in millisec */
+
+  tp.write(config, msg, sizeof(msg));
+
 }

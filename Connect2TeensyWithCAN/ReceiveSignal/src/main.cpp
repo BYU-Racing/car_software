@@ -35,13 +35,19 @@ void setup() {
   pinMode(LED, OUTPUT);
 
   //TODO: SETUP CANBUS PINS
-  Serial.begin(1152000); delay(400);
   receiver.begin();
   receiver.setClock(CLK_60MHz);
+  receiver.setBaudRate(95238);
+  receiver.setMaxMB(16);
   receiver.onReceive(canSniff);
+
+  //TODO: WRITE TO SERIAL MONITOR
+  Serial.begin(115200);
 }
 
 void loop() {
+
+
 
 
 }
