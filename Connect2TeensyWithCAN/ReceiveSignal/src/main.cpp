@@ -10,8 +10,24 @@
 #define LED 2
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> receiver;
 
+// FLASHES LIGHT 3 TIMES WHEN A SIGNAL IS RECEIVED
 void canSniff(const CAN_message_t &msg) {
+  for(int i = 0; i < 3; i++){
+    digitalWrite(LED, HIGH);
+    delay(500);
+    digitalWrite(LED, LOW);
+    delay(500);
+  }
+}
 
+// IF THE FIRST BIT OF THE MESSAGE IS ZERO TURN LIGHT OFF, IF IT IS ONE TURN LIGHT ON
+void canSniff2(const CAN_message_t &msg) {
+  boolean msgVal = msg.buf[0];
+  if(msgVal) {
+      digitalWrite(LED, HIGH);
+  } else {
+      digitalWrite(LED, LOW);
+  }
 }
 
 void setup() {
@@ -26,10 +42,6 @@ void setup() {
 }
 
 void loop() {
-  if(0){ //TODO: MAKE THIS IF STATEMENT DEPEND ON SIGNALS COMING FROM THE CANBUS
-    digitalWrite(LED, HIGH);
-  }else{
-    digitalWrite(LED, LOW);
-  }
+
 
 }
