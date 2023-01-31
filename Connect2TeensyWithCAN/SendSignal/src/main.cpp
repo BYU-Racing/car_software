@@ -10,27 +10,36 @@
 #include <isotp.h>
 
 #define BUTTON 2
+#define LED 3
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> sender;
 isotp<RX_BANKS_16, 512> tp;
 
 
 void setup() {
   //Setup Serial Monitor
-  Serial.begin(115200);
+  Serial.begin(95238);
 
   //SETUP BUTTON PIN
-  pinMode(BUTTON, OUTPUT);
+  pinMode(BUTTON, INPUT);
+
+  //SETUP LED PIN
+  pinMode(LED, OUTPUT);
 
   //SETUP CANBUS PINS
   sender.begin();
   sender.setClock(CLK_60MHz);
   sender.setBaudRate(95238);
   sender.setMaxMB(16);
+
+  tp.begin();
+  tp.setWriteBus(&sender);
 }
 
 void loop() {
 
+  delay(500);
   Serial.println(digitalRead(BUTTON));
+  digitalWrite(LED, HIGH);
 
   uint8_t msg[1];
 
