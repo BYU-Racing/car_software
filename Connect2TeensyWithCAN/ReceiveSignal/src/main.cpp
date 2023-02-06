@@ -28,11 +28,14 @@ void canSniff2(const CAN_message_t &msg) {
   } else {
       digitalWrite(LED, LOW);
   }
+  char* buf = (char*) msg.buf;
+  Serial.print(buf);
 }
 
 void setup() {
   //SETUP LED PIN
   pinMode(LED, OUTPUT);
+  //digitalWrite(LED, HIGH);
 
   //TODO: SETUP CANBUS PINS
   receiver.begin();
@@ -42,11 +45,19 @@ void setup() {
   receiver.onReceive(canSniff);
 
   //TODO: WRITE TO SERIAL MONITOR
-  Serial.begin(115200);
+  Serial.begin(95238);
 }
 
-void loop() {
+int i = 0;
 
+void loop() {
+  
+  /*if(i == 0) {
+    digitalWrite(LED, HIGH);
+    Serial.print("Hello World\n");
+    Serial.flush();
+    i++;
+  }*/
 
 
 
