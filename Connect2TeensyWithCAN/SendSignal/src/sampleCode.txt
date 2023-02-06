@@ -1,0 +1,74 @@
+/* Teensy 4.0
+  CAN2 using SN65HVD230 can tranciever
+*/
+
+#include <FlexCAN_T4.h>
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_256> myCan;
+
+// CAN_message_t msg, rxmsg;
+
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_256> myCanDEBUG;
+
+void setup()
+{
+
+  Serial.begin(115200);
+
+  myCan.begin();
+  myCan.setBaudRate(500000);
+  myCan.mailboxStatus();
+
+  myCanDEBUG.begin();
+  myCanDEBUG.setBaudRate(500000);
+}
+
+
+void loop()
+{
+
+  SEND_CAN();
+
+
+  static uint32_t timeoutMBStatus = millis();
+  if ( millis() - timeoutMBStatus > 2000 )
+  {
+    myCan.mailboxStatus();
+    timeoutMBStatus = millis();
+  }
+}
+
+void SEND_CAN()
+{
+  static uint32_t timeout;
+  if (millis() - timeout > 200)
+
+  { // send random frame every 1000ms
+    CAN_message_t msg;
+    msg.id = 0x236; // address ID 566
+    msg.buf[0] = lowByte(millis());
+//    msg.buf[1] = Data[1];
+//    msg.buf[2] = Data[2];
+//    msg.buf[3] = Data[3];
+//    msg.buf[4] = Data[4];
+//    msg.buf[5] = Data[5];
+//    msg.buf[6] = Data[6];
+//    msg.buf[7] = Data[7];
+//    msg.len = 8;
+//    msg.flags.extended = 0;
+//    msg.flags.remote = 0;
+
+    myCan.write(msg);
+    timeout = millis();
+
+    Serial.print("SEND: ");
+    Serial.print(" ID: ");
+    Serial.print(msg.id);
+    Serial.print(" Buffer: ");
+    for (uint8_t i = 0; i < msg.len; i++)
+    {
+      Serial.print(msg.buf[i]);
+      Serial.print(" ");
+    }
+    Serial.println();
+  }
+}
