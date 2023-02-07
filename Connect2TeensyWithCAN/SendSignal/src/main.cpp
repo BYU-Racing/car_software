@@ -14,7 +14,7 @@
 #define LED 4
 #define ID 0x001
 
-FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> sender;
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> sender;
 // isotp<RX_BANKS_16, 512> tp;
 
 
@@ -35,13 +35,14 @@ void setup() {
   sender.begin();
   sender.setClock(CLK_60MHz);
   sender.setBaudRate(95238);
-  sender.setMaxMB(16);
+  sender.mailboxStatus();
 
   // tp.begin();
   // tp.setWriteBus(&sender);
 }
 
 void loop() {
+  delay(50);
 
   // Serial.println(digitalRead(BUTTON));
   digitalWrite(POWER, HIGH);
@@ -54,7 +55,9 @@ void loop() {
     msg.len = 1;
     msg.buf[0] = 1;
 
-    sender.write(msg);
+    // Serial.println("Sent!");
+
+    Serial.println(sender.write(msg));
 
     digitalWrite(LED, HIGH);
   }else{
