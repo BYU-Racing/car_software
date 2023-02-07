@@ -5,7 +5,6 @@
 
 class IdleState: public State {
     public:
-        IdleState() {}
         IdleState(Car newCar, int _ledPin) : State(newCar, _ledPin) {};
         void checkActive();
         void toggleBrakes();

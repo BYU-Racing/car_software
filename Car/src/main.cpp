@@ -1,7 +1,7 @@
 #ifndef MAIN_CPP
 #define MAIN_CPP
 #include <Arduino.h>
-#include "Car.h"
+#include "Car.cpp"
 
 #define KEYSWITCH 2
 #define INERTIASWITCH 3
@@ -13,7 +13,7 @@ void setup() {
   pinMode(KEYSWITCH, INPUT);
   pinMode(INERTIASWITCH, INPUT);
   pinMode(LED, OUTPUT);
-  car = Car(LED);
+  //car = Car(LED);
 }
 
 void loop() {

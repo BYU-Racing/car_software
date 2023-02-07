@@ -8,7 +8,8 @@
 #include <FlexCAN_T4.h>
 
 #define LED 2
-FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> receiver;
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> receiver;
+CAN_message_t msg;
 
 // FLASHES LIGHT 3 TIMES WHEN A SIGNAL IS RECEIVED
 void canSniff(const CAN_message_t &msg) {
@@ -35,22 +36,35 @@ void canSniff2(const CAN_message_t &msg) {
 void setup() {
   //SETUP LED PIN
   pinMode(LED, OUTPUT);
+  pinMode(23, OUTPUT);
   //digitalWrite(LED, HIGH);
 
   //TODO: SETUP CANBUS PINS
   receiver.begin();
   receiver.setClock(CLK_60MHz);
   receiver.setBaudRate(95238);
-  receiver.setMaxMB(16);
+  //receiver.setMaxMB(16);
   receiver.onReceive(canSniff);
 
   //TODO: WRITE TO SERIAL MONITOR
   Serial.begin(95238);
+  Serial.println("hello");
 }
 
 int i = 0;
 
 void loop() {
+  digitalWrite(23, HIGH);
+  digitalWrite(LED, HIGH);
+  delay(150);
+  digitalWrite(LED, LOW);
+  delay(150);
+
+  if (receiver.read(msg)) {
+      canSniff(msg);
+      delay(1000);
+      Serial.println("received!");
+  }
   
   /*if(i == 0) {
     digitalWrite(LED, HIGH);
