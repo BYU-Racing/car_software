@@ -43,7 +43,8 @@ void setup() {
   receiver.begin();
   receiver.setClock(CLK_60MHz);
   receiver.setBaudRate(95238);
-  //receiver.setMaxMB(16);
+  receiver.mailboxStatus();
+  receiver.setMaxMB(1);
   receiver.onReceive(canSniff);
 
   //TODO: WRITE TO SERIAL MONITOR
@@ -54,11 +55,6 @@ void setup() {
 int i = 0;
 
 void loop() {
-  digitalWrite(23, HIGH);
-  digitalWrite(LED, HIGH);
-  delay(150);
-  digitalWrite(LED, LOW);
-  delay(150);
 
   if (receiver.read(msg)) {
       canSniff(msg);
@@ -66,6 +62,8 @@ void loop() {
       Serial.println("received!");
   }
   
+  delay(300);
+
   /*if(i == 0) {
     digitalWrite(LED, HIGH);
     Serial.print("Hello World\n");
