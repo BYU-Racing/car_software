@@ -39,20 +39,19 @@ void setup() {
   pinMode(23, OUTPUT);
   //digitalWrite(LED, HIGH);
 
-  //TODO: SETUP CANBUS PINS
+  //SETUP CANBUS PINS
   receiver.begin();
   receiver.setClock(CLK_60MHz);
-  receiver.setBaudRate(95238);
-  receiver.mailboxStatus();
-  receiver.setMaxMB(1);
+  receiver.setBaudRate(20000);
+  receiver.setMaxMB(16);
   receiver.onReceive(canSniff);
 
-  //TODO: WRITE TO SERIAL MONITOR
-  Serial.begin(95238);
-  Serial.println("hello");
+  //WRITE TO SERIAL MONITOR
+  Serial.begin(9600);
+  while(!Serial);
+  receiver.mailboxStatus();
+  Serial.println("Hello");
 }
-
-int i = 0;
 
 void loop() {
 
@@ -61,16 +60,5 @@ void loop() {
       delay(1000);
       Serial.println("received!");
   }
-  
-  delay(300);
-
-  /*if(i == 0) {
-    digitalWrite(LED, HIGH);
-    Serial.print("Hello World\n");
-    Serial.flush();
-    i++;
-  }*/
-
-
 
 }
