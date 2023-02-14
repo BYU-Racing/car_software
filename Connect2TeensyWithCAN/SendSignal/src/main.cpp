@@ -21,6 +21,7 @@ FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> sender;
 void setup() {
   //Setup Serial Monitor
   Serial.begin(95238);
+  while(!Serial);
 
   //SETUP BUTTON PIN
   pinMode(BUTTON, INPUT);
@@ -35,6 +36,8 @@ void setup() {
   sender.begin();
   sender.setClock(CLK_60MHz);
   sender.setBaudRate(95238);
+  sender.setMaxMB(16);
+ // sender.setMB(MB0, TX, EXT);
   sender.mailboxStatus();
 
   // tp.begin();
@@ -42,7 +45,7 @@ void setup() {
 }
 
 void loop() {
-  delay(50);
+  delay(500);
 
   // Serial.println(digitalRead(BUTTON));
   digitalWrite(POWER, HIGH);
@@ -58,6 +61,7 @@ void loop() {
     // Serial.println("Sent!");
 
     Serial.println(sender.write(msg));
+    sender.mailboxStatus();
 
     digitalWrite(LED, HIGH);
   }else{
