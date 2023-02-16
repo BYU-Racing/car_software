@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from enum import Enum
 from bitstring import BitArray
+from plotly.subplots import make_subplots
 import plotly.io as pio
 import panel as pn
 
@@ -167,11 +168,28 @@ def plot(frame, index):
     time = frame["Timestamp"]
     speed = frame["Data"]
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acceleration'))
-    fig.update_layout(title=sensors[index],
-                      xaxis_title='Time (seconds)',
-                      yaxis_title="Value")
+    # fig = go.Figure()
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acc1'), row=1, col=1)
+    fig.update_yaxes(nticks=1)
+
+    # fig.update_layout(title=sensors[index],
+    #                   paper_bgcolor='rgba(60,60,60,1)',
+    #                   plot_bgcolor='rgba(40,40,40,1)',
+    #                   legend=dict(
+    #                       font=dict(
+    #                           color="white"
+    #                       )
+    #                   ),
+    #                   font_family="Courier New",
+    #                   font_color="white",
+    #                   title_font_family="Times New Roman",
+    #                   title_font_color="white",
+    #                   legend_title_font_color="white",
+    #                   )
+    for i in range(7):
+        fig.update_yaxes(title_text="Value", row=i, col=1)
+
     fig.show()
 
 
