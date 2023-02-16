@@ -149,6 +149,19 @@ def convertData(data):
         return BitArray(bin=str(data)).float
     return pd.DataFrame([BitArray(bin=str(d)).float for d in data])
 
+def crc(message, cycCheck):
+    # initialize local variables
+    n = 8
+    primes = [5, 7, 11, 13, 17, 19, 23, 29]
+    # split message into 8 bytes
+    message = [message[i:i + n] for i in range(0, len(message), n)]
+    # convert bytes to integers
+    message = [int(str(m), 2) for m in message]
+    # recompute crc using message and primes
+    check = bin(sum([m*p for m, p in zip(message, primes)]))[2:].rjust(15, "0")
+    # return comparison between computed and received crc value
+    return check == cycCheck
+
 
 def plot(frame, index):
     time = frame["Timestamp"]
@@ -167,3 +180,5 @@ if __name__ == "__main__":
     # file_name = 'synthesized_data1.csv'
     # all_sensors = readData(file_name)
     # plot(all_sensors[Sensor.BRAKE.value], Sensor.BRAKE.value)
+
+
