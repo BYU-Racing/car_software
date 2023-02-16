@@ -33,7 +33,7 @@ def dataFrame(f, interval):
 
     time_stamp, data = timeStamp(f, interval)
 
-    idBinary = getBinary(Sensor.BRAK.value, 11)
+    idBinary = getBinary(Sensor.BRAKE.value, 11)
 
     datas = [[idBinary, time_stamp[i], data[i]] for i in range(len(data))]
   

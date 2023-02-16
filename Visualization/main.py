@@ -2,13 +2,26 @@ import pandas as pd
 import plotly.graph_objects as go
 from enum import Enum
 from bitstring import BitArray
+import plotly.io as pio
+import panel as pn
+
+"""
+Assumptions:
+1. Data is sent in IEEE 64 bit floating point binary representation
+2. Time is sent as number of milliseconds since the start
+3. We have control over how we encode data and timestamps
+4. We have control over how we encode the entire signal (metadata)
+5. CSV File has one signal per line and optionally one field per column
+6. Signals follow CAN Bus Protocol Draft format
+"""
+
 
 class Sensor(Enum):
     ACC1 = 0
     ACC2 = 1
-    BRAK = 2
-    SWCH = 3
-    ANGL = 4
+    BRAKE = 2
+    SWITCH = 3
+    ANGLE = 4
     TIRE1 = 5
     TIRE2 = 6
     TIRE3 = 7
@@ -18,7 +31,7 @@ class Sensor(Enum):
     DAMP3 = 11
     DAMP4 = 12
     TEMP = 13
-    LITE = 14
+    LIGHT = 14
 
 sensors = {0: 'Accelerator 1',
            1: 'Accelerator 2',
@@ -42,7 +55,7 @@ def readData(filename):
     # returns: nothing
     """
     CAN BUS Protocol
-    1. Start of frame   (1 bit)     Always 1. Denotes the start of frame transmission
+    1. Start of frame:  (1 bit)     Always 1. Denotes the start of frame transmission
     2. ID:              (11 bits)   A (unique) identifier which also represents the message priority
     3. Stuff bit:       (1 bit)     A bit of the opposite polarity to maintain synchronisation
     4. IDE:             (1 bit)     Identifier extension bit. Must be dominant (0)
@@ -69,12 +82,45 @@ def readData(filename):
     df['ID'] = convertID(df['ID'])
     df['Timestamp'] = convertTime(df['Timestamp'])
     df['Data'] = convertData(df['Data'])
-    all_data = {}
 
+    all_data = {}
     for i in range(len(sensors)):
         all_data.update({i: df[df["ID"] == sensors[i]]})
 
-    plot(all_data[Sensor.BRAK.value], Sensor.BRAK.value)
+    return all_data
+
+
+def parseBits(signals):
+    protocol = [['Start of frame', 1],
+                ['ID', 11],
+                ['Stuff bit', 1],
+                ['IDE', 1],
+                ['Reserved bit', 1],
+                ['Message length', 4],
+                ['Timestamp', 16],
+                ['Data field', 64],
+                ['CRC', 15],
+                ['CRC delimiter', 1],
+                ['ACK slot', 1],
+                ['ACK delimiter', 1],
+                ['EOF', 1],
+                ['IFS', 3],
+                ['Total', 121],]
+
+    processed = []
+    for signal in signals:
+        if type(signal) is not str:
+            raise TypeError(f"Signal is not of type string. Instead received {type(signal)}."
+                            f"\nSignal: {signal}")
+        if len(signal) != protocol[-1][1]:
+            raise ValueError(f"Signal is not the right length. Expected {protocol[-1][1]} but received {len(signal)}."
+                             f"\nSignal: {signal}")
+        parsed = []
+        for field in protocol[:-1]:
+            parsed.append(signal[:field[1]])
+            signal = signal[field[1]:]
+        processed.append(parsed)
+    return pd.DataFrame(processed)
 
 
 def convertTime(timestamp):
@@ -86,13 +132,13 @@ def convertTime(timestamp):
     return pd.DataFrame([int(str(time), 2) / 1000. for time in timestamp])
 
 
-def convertID(id):
+def convertID(id_sensor):
     # convert binary ID into an integer, maybe use enumerators?
     # input: id (string) or (list of strings) of zeros and ones
     # returns: id (int) or (list of ints) of IDs
-    if type(id) is str:
-        return sensors[int(str(id), 2)]
-    return pd.DataFrame([sensors[int(str(i), 2)] for i in id])
+    if type(id_sensor) is str:
+        return sensors[int(str(id_sensor), 2)]
+    return pd.DataFrame([sensors[int(str(i), 2)] for i in id_sensor])
 
 
 def convertData(data):
@@ -104,33 +150,20 @@ def convertData(data):
     return pd.DataFrame([BitArray(bin=str(d)).float for d in data])
 
 
-def synthesizeData():
-    driving = pd.DataFrame()
-
-
-def updateSensorIDs():
-    pass
-
-
 def plot(frame, index):
-    # Create data
     time = frame["Timestamp"]
     speed = frame["Data"]
-    # Create figure
+
     fig = go.Figure()
-    # Add traces
     fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acceleration'))
-    # Edit the layout
     fig.update_layout(title=sensors[index],
                       xaxis_title='Time (seconds)',
                       yaxis_title="Value")
-    # Plot
     fig.show()
 
 
 if __name__ == "__main__":
-    filename = 'synthesized_data1.csv'
-    readData(filename)
-
-
-
+    pass
+    # file_name = 'synthesized_data1.csv'
+    # all_sensors = readData(file_name)
+    # plot(all_sensors[Sensor.BRAKE.value], Sensor.BRAKE.value)
