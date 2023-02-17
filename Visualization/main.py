@@ -34,6 +34,7 @@ class Sensor(Enum):
     TEMP = 13
     LIGHT = 14
 
+
 sensors = {0: 'Accelerator 1',
            1: 'Accelerator 2',
            2: 'Brake Pressure',
@@ -49,6 +50,7 @@ sensors = {0: 'Accelerator 1',
            12: 'Back Right Damper',
            13: 'Batter Temperature',
            14: 'Rain Light'}
+
 
 def readData(filename):
     # read csv into a data frame
@@ -106,7 +108,7 @@ def parseBits(signals):
                 ['ACK delimiter', 1],
                 ['EOF', 1],
                 ['IFS', 3],
-                ['Total', 121],]
+                ['Total', 121], ]
 
     processed = []
     for signal in signals:
@@ -150,6 +152,7 @@ def convertData(data):
         return BitArray(bin=str(data)).float
     return pd.DataFrame([BitArray(bin=str(d)).float for d in data])
 
+
 def crc(message, cycCheck):
     # initialize local variables
     n = 8
@@ -159,12 +162,12 @@ def crc(message, cycCheck):
     # convert bytes to integers
     message = [int(str(m), 2) for m in message]
     # recompute crc using message and primes
-    check = bin(sum([m*p for m, p in zip(message, primes)]))[2:].rjust(15, "0")
+    check = bin(sum([m * p for m, p in zip(message, primes)]))[2:].rjust(15, "0")
     # return comparison between computed and received crc value
     return check == cycCheck
 
 
-def plot(frame, index):
+def plot(frame):
     time = frame["Timestamp"]
     speed = frame["Data"]
 
@@ -193,10 +196,109 @@ def plot(frame, index):
     fig.show()
 
 
+def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_ticks=1):
+    if avail is None:
+        avail = list(range(15))
+    fig = make_subplots(rows=num_plots, cols=1)
+    row = 0
+    graph_mode = 'lines'
+
+    # Plot 1: Accelerators
+    if Sensor.ACC1.value in avail:
+        row += 1
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC1.value]["Timestamp"],
+                                 y=all_frames[Sensor.ACC1.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1)
+    if Sensor.ACC2.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC2.value]["Timestamp"],
+                                 y=all_frames[Sensor.ACC2.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.ACC2.value]), row=row, col=1)
+        fig.update_yaxes(nticks=num_ticks, title_text="Acc.", row=row, col=1)
+
+    # Plot 2: Brake Pressure
+    if Sensor.BRAKE.value in avail:
+        row += 1
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.BRAKE.value]["Timestamp"],
+                                 y=all_frames[Sensor.BRAKE.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.BRAKE.value]), row=row, col=1)
+        fig.update_yaxes(nticks=num_ticks, title_text="Brake", row=row, col=1)
+
+    # Plot 3: Tire speeds
+    if Sensor.TIRE1.value in avail:
+        row += 1
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
+                                 y=all_frames[Sensor.TIRE1.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.TIRE1.value]), row=row, col=1)
+    if Sensor.TIRE2.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE2.value]["Timestamp"],
+                                 y=all_frames[Sensor.TIRE2.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.TIRE2.value]), row=row, col=1)
+    if Sensor.TIRE3.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE3.value]["Timestamp"],
+                                 y=all_frames[Sensor.TIRE3.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.TIRE3.value]), row=row, col=1)
+    if Sensor.TIRE4.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE4.value]["Timestamp"],
+                                 y=all_frames[Sensor.TIRE4.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
+    fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
+
+    # Plot 4: Steering Wheel
+    if Sensor.ANGLE.value in avail:
+        row += 1
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.ANGLE.value]["Timestamp"],
+                                 y=all_frames[Sensor.ANGLE.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.ANGLE.value]), row=row, col=1)
+        fig.update_yaxes(nticks=num_ticks, title_text="Steering", row=row, col=1)
+
+    # Plot 5: Damper Position
+    if Sensor.DAMP1.value in avail:
+        row += 1
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
+                                 y=all_frames[Sensor.DAMP1.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.DAMP1.value]), row=row, col=1)
+    if Sensor.DAMP2.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP2.value]["Timestamp"],
+                                 y=all_frames[Sensor.DAMP2.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.DAMP2.value]), row=row, col=1)
+    if Sensor.DAMP3.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP3.value]["Timestamp"],
+                                 y=all_frames[Sensor.DAMP3.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.DAMP3.value]), row=row, col=1)
+    if Sensor.DAMP4.value in avail:
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP4.value]["Timestamp"],
+                                 y=all_frames[Sensor.DAMP4.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.DAMP4.value]), row=row, col=1)
+        fig.update_yaxes(nticks=num_ticks, title_text="Dampers", row=row, col=1)
+
+    # Plot 6: Battery Temperature
+    if Sensor.TEMP.value in avail:
+        row += 1
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.TEMP.value]["Timestamp"],
+                                 y=all_frames[Sensor.TEMP.value]["Data"],
+                                 mode=graph_mode, name=sensors[Sensor.TEMP.value]), row=row, col=1)
+        fig.update_yaxes(nticks=num_ticks, title_text="Battery", row=row, col=1)
+
+    # update display layout
+    fig.update_layout(title_font_family="Courier New",
+                      font_family="Courier New")
+    if dark_mode:
+        fig.update_layout(paper_bgcolor='rgba(60,60,60,1)',
+                          plot_bgcolor='rgba(40,40,40,1)',
+                          legend=dict(
+                              font=dict(
+                                  color="white"
+                              )
+                          ),
+                          font_color="white",
+                          title_font_color="white",
+                          legend_title_font_color="white",
+                          )
+    fig.show()
+
+
 if __name__ == "__main__":
     pass
     # file_name = 'synthesized_data1.csv'
     # all_sensors = readData(file_name)
-    # plot(all_sensors[Sensor.BRAKE.value], Sensor.BRAKE.value)
-
-
+    # plot(all_sensors[Sensor.BRAKE.value])
