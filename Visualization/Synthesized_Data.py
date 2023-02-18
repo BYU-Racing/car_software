@@ -29,11 +29,11 @@ def timeStamp(f, interval):
 
     return time_stamp, data
 
-def dataFrame(f, interval):
+def dataFrame(f, Sensor, interval):
 
     time_stamp, data = timeStamp(f, interval)
 
-    idBinary = getBinary(Sensor.BRAK.value, 11)
+    idBinary = getBinary(Sensor, 11)
 
     datas = [[idBinary, time_stamp[i], data[i]] for i in range(len(data))]
   
@@ -46,12 +46,12 @@ def dataFrame(f, interval):
 if __name__ == "__main__":
     # f = lambda x: np.sin(x/1000)
     # interval = [0, 5000]
-    # df = dataFrame(f, interval)
+    # df = dataFrame(f, Sensor.BRAK.value, interval)
     # df.to_csv('synthesized_data.csv')
 
-    # f = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
-    # interval = [0, 5000]
-    # df = dataFrame(f, interval)
-    # df.to_csv('synthesized_data1.csv')
+    f = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
+    interval = [0, 5000]
+    df = dataFrame(f, Sensor.BRAK.value, interval)
+    df.to_csv('synthesized_data1.csv')
 
     pass
