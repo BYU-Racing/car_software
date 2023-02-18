@@ -4,7 +4,7 @@ from enum import Enum
 from bitstring import BitArray
 from plotly.subplots import make_subplots
 import plotly.io as pio
-import panel as pn
+# import panel as pn
 
 """
 Assumptions:
@@ -299,6 +299,6 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
 
 if __name__ == "__main__":
     pass
-    # file_name = 'synthesized_data1.csv'
-    # all_sensors = readData(file_name)
-    # plot(all_sensors[Sensor.BRAKE.value])
+    file_name = 'Master.csv'
+    all_sensors = readData(file_name)
+    display_dashboard(all_sensors)

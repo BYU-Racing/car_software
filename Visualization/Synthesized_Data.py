@@ -78,10 +78,10 @@ if __name__ == "__main__":
     dft3.to_csv('TIRE3.csv')
     dft4.to_csv('TIRE4.csv')
 
-    d1 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
-    d2 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2.25
-    d3 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2.5
-    d4 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2.75
+    d1 = lambda x: np.cos(x/1000)
+    d2 = lambda x: np.cos(x/1000) + 0.25
+    d3 = lambda x: np.cos(x/1000) + 0.5
+    d4 = lambda x: np.cos(x/1000) + 0.75
     dfd1 = dataFrame(d1, Sensor.TIRE1.value, interval)
     dfd2 = dataFrame(d2, Sensor.TIRE2.value, interval)
     dfd3 = dataFrame(d3, Sensor.TIRE3.value, interval)
@@ -99,37 +99,9 @@ if __name__ == "__main__":
     dfl = dataFrame(l, Sensor.LIGHT.value, interval)
     dfl.to_csv('LIGHT.csv')
 
+    dfMaster = pd.concat([dfa1, dfa2, dfbr, dfang, dfsw, dft1, dft2, dft3, dft4, dfd1, dfd2, dfd3, dfd4, dfte, dfl], axis=0)
+    dfMaster = dfMaster.sort_values(by=['Timestamp', 'ID'])
+    dfMaster.to_csv('Master.csv')
 
-    for i in range(len(dfl)):
-
-        dfa1.iloc[i]
-        dfa2.iloc[i]
-
-        dfbr.iloc[i]
-
-        dfsw.iloc[i]
-
-        dfang.iloc[i]
-
-        dft1.iloc[i]
-        dft2.iloc[i]
-        dft3.iloc[i]
-        dft4.iloc[i]
-
-        dfd1.iloc[i]
-        dfd2.iloc[i]
-        dfd3.iloc[i]
-        dfd4.iloc[i]
-
-        dfte.iloc[i]
-
-        dfl.iloc[i]
-
-
-
-
-
-
-    df = df.append(df2, ignore_index = True)
 
     pass
