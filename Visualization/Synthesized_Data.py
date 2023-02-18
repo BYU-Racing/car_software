@@ -44,14 +44,92 @@ def dataFrame(f, Sensor, interval):
 
 
 if __name__ == "__main__":
-    # f = lambda x: np.sin(x/1000)
-    # interval = [0, 5000]
-    # df = dataFrame(f, Sensor.BRAK.value, interval)
-    # df.to_csv('synthesized_data.csv')
-
-    f = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
     interval = [0, 5000]
-    df = dataFrame(f, Sensor.BRAK.value, interval)
-    df.to_csv('synthesized_data1.csv')
+
+    a1 = lambda x: 1.1*x
+    a2 = lambda x: x
+    dfa1 = dataFrame(a1, Sensor.ACC1.value, interval)
+    dfa2 = dataFrame(a2, Sensor.ACC2.value, interval)
+    dfa1.to_csv('ACC1.csv')
+    dfa2.to_csv('ACC2.csv')
+
+    br = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
+    dfbr = dataFrame(br, Sensor.BRAKE.value, interval)
+    dfbr.to_csv('BRAKE.csv')
+
+    sw = lambda x: np.sin(x/1000)
+    dfsw = dataFrame(sw, Sensor.SWITCH.value, interval)
+    dfsw.to_csv('SWITCH.csv')
+
+    ang = lambda x: np.cos(x/1000)
+    dfang = dataFrame(ang, Sensor.ANGLE.value, interval)
+    dfang.to_csv('ANGLE.csv')
+
+    t1 = lambda x: np.sin(x/1000)
+    t2 = lambda x: np.sin(x/1000) + 0.25
+    t3 = lambda x: np.sin(x/1000) + 0.5
+    t4 = lambda x: np.sin(x/1000) + 0.75
+    dft1 = dataFrame(t1, Sensor.TIRE1.value, interval)
+    dft2 = dataFrame(t2, Sensor.TIRE2.value, interval)
+    dft3 = dataFrame(t3, Sensor.TIRE3.value, interval)
+    dft4 = dataFrame(t4, Sensor.TIRE4.value, interval)
+    dft1.to_csv('TIRE1.csv')
+    dft2.to_csv('TIRE2.csv')
+    dft3.to_csv('TIRE3.csv')
+    dft4.to_csv('TIRE4.csv')
+
+    d1 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
+    d2 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2.25
+    d3 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2.5
+    d4 = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2.75
+    dfd1 = dataFrame(d1, Sensor.TIRE1.value, interval)
+    dfd2 = dataFrame(d2, Sensor.TIRE2.value, interval)
+    dfd3 = dataFrame(d3, Sensor.TIRE3.value, interval)
+    dfd4 = dataFrame(d4, Sensor.TIRE4.value, interval)
+    dfd1.to_csv('DAMP1.csv')
+    dfd2.to_csv('DAMP2.csv')
+    dfd3.to_csv('DAMP3.csv')
+    dfd4.to_csv('DAMP4.csv')
+
+    te = lambda x: np.sin(x/1000)
+    dfte = dataFrame(te, Sensor.TEMP.value, interval)
+    dfte.to_csv('TEMP.csv')
+
+    l = lambda x: np.cos(x/1000) + np.cos(3*x/1000) + 2
+    dfl = dataFrame(l, Sensor.LIGHT.value, interval)
+    dfl.to_csv('LIGHT.csv')
+
+
+    for i in range(len(dfl)):
+
+        dfa1.iloc[i]
+        dfa2.iloc[i]
+
+        dfbr.iloc[i]
+
+        dfsw.iloc[i]
+
+        dfang.iloc[i]
+
+        dft1.iloc[i]
+        dft2.iloc[i]
+        dft3.iloc[i]
+        dft4.iloc[i]
+
+        dfd1.iloc[i]
+        dfd2.iloc[i]
+        dfd3.iloc[i]
+        dfd4.iloc[i]
+
+        dfte.iloc[i]
+
+        dfl.iloc[i]
+
+
+
+
+
+
+    df = df.append(df2, ignore_index = True)
 
     pass

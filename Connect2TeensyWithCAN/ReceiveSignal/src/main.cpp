@@ -21,18 +21,6 @@ void canSniff(const CAN_message_t &msg) {
   }
 }
 
-// IF THE FIRST BIT OF THE MESSAGE IS ZERO TURN LIGHT OFF, IF IT IS ONE TURN LIGHT ON
-void canSniff2(const CAN_message_t &msg) {
-  boolean msgVal = msg.buf[0];
-  if(msgVal) {
-      digitalWrite(LED, HIGH);
-  } else {
-      digitalWrite(LED, LOW);
-  }
-  char* buf = (char*) msg.buf;
-  Serial.print(buf);
-}
-
 void setup() {
   //SETUP LED PIN
   pinMode(LED, OUTPUT);
@@ -42,7 +30,7 @@ void setup() {
   //SETUP CANBUS PINS
   receiver.begin();
   receiver.setClock(CLK_60MHz);
-  receiver.setBaudRate(20000);
+  receiver.setBaudRate(9600);
   receiver.setMaxMB(16);
   receiver.onReceive(canSniff);
 
@@ -60,5 +48,8 @@ void loop() {
       delay(1000);
       Serial.println("received!");
   }
+
+  receiver.mailboxStatus();
+  delay(800);
 
 }
