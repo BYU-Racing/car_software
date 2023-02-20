@@ -3,7 +3,7 @@ import plotly.graph_objects as go
 from enum import Enum
 from bitstring import BitArray
 from plotly.subplots import make_subplots
-import plotly.io as pio
+# import plotly.io as pio
 # import panel as pn
 
 """
@@ -15,6 +15,7 @@ Assumptions:
 5. CSV File has one signal per line and optionally one field per column
 6. Signals follow CAN Bus Protocol Draft format
 """
+# TODO add comments
 
 
 class Sensor(Enum):
@@ -145,6 +146,7 @@ def convertID(id_sensor):
 
 
 def convertData(data):
+    # TODO update data conversion for 12 bit data
     # convert binary data into a float
     # input: data (string) or (list of strings) of zeros and ones
     # returns: data (int) or (list of ints) of data
@@ -168,30 +170,86 @@ def crc(message, cycCheck):
 
 
 def plot(frame):
+    # https://plotly.com/python/range-slider/
+    # https://plotly-r.com/arranging-views.html
     time = frame["Timestamp"]
     speed = frame["Data"]
 
     # fig = go.Figure()
-    fig = make_subplots(rows=1, cols=1)
+    fig = make_subplots(rows=3, cols=1,
+                        specs=[[{'type': 'xy'}], [{'type': 'xy'}], [{'type': 'indicator'}]])
     fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acc1'), row=1, col=1)
+    fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acc2'), row=2, col=1)
     fig.update_yaxes(nticks=1)
 
-    # fig.update_layout(title=sensors[index],
-    #                   paper_bgcolor='rgba(60,60,60,1)',
-    #                   plot_bgcolor='rgba(40,40,40,1)',
-    #                   legend=dict(
-    #                       font=dict(
-    #                           color="white"
-    #                       )
-    #                   ),
-    #                   font_family="Courier New",
-    #                   font_color="white",
-    #                   title_font_family="Times New Roman",
-    #                   title_font_color="white",
-    #                   legend_title_font_color="white",
-    #                   )
-    for i in range(7):
-        fig.update_yaxes(title_text="Value", row=i, col=1)
+    fig.update_layout(title=sensors[0],
+                      paper_bgcolor='rgba(60,60,60,1)',
+                      plot_bgcolor='rgba(40,40,40,1)',
+                      legend=dict(
+                          font=dict(
+                              color="white"
+                          )
+                      ),
+                      font_family="Courier New",
+                      font_color="white",
+                      title_font_family="Times New Roman",
+                      title_font_color="white",
+                      legend_title_font_color="white",
+                      )
+    fig.update_yaxes(title_text="Value", row=1, col=1)
+
+    fig.add_trace(go.Indicator(
+        mode="gauge+number",
+        value=270,
+        domain={'x': [0, 1], 'y': [0, 1]},
+        title={'text': "Speed"}),
+        row=3, col=1
+    )
+
+    if False:
+        fig.update_layout(
+            xaxis=dict(
+                autorange=True,
+                # range=["2012-10-31 18:36:37.3129", "2016-05-10 05:23:22.6871"],
+                rangeslider=dict(
+                    autorange=True,
+                    # range=["2012-10-31 18:36:37.3129", "2016-05-10 05:23:22.6871"]
+                ),
+                type="date"
+            ),
+            yaxis=dict(
+                anchor="x",
+                autorange=True,
+                # domain=[0, 0.2],
+                linecolor="#673ab7",
+                mirror=True,
+                # range=[-60.0858369099, 28.4406294707],
+                showline=True,
+                side="right",
+                tickfont={"color": "#673ab7"},
+                tickmode="auto",
+                ticks="",
+                titlefont={"color": "#673ab7"},
+                type="linear",
+                zeroline=False
+            ),
+            yaxis2=dict(
+                anchor="x",
+                autorange=True,
+                # domain=[0.2, 0.4],
+                linecolor="#E91E63",
+                mirror=True,
+                # range=[29.3787777032, 100.621222297],
+                showline=True,
+                side="right",
+                tickfont={"color": "#E91E63"},
+                tickmode="auto",
+                ticks="",
+                titlefont={"color": "#E91E63"},
+                type="linear",
+                zeroline=False
+            )
+        )
 
     fig.show()
 
@@ -224,6 +282,7 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
         fig.update_yaxes(nticks=num_ticks, title_text="Brake", row=row, col=1)
 
     # Plot 3: Tire speeds
+    # TODO Debug tire speeds
     if Sensor.TIRE1.value in avail:
         row += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
@@ -252,6 +311,7 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
         fig.update_yaxes(nticks=num_ticks, title_text="Steering", row=row, col=1)
 
     # Plot 5: Damper Position
+    # TODO Debug Damper
     if Sensor.DAMP1.value in avail:
         row += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
@@ -294,11 +354,14 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                           title_font_color="white",
                           legend_title_font_color="white",
                           )
+
     fig.show()
 
 
 if __name__ == "__main__":
     pass
+    # TODO learn how to use Dash
     file_name = 'Master.csv'
     all_sensors = readData(file_name)
-    display_dashboard(all_sensors)
+    # plot(all_sensors[0])
+    display_dashboard(all_sensors, dark_mode=False)
