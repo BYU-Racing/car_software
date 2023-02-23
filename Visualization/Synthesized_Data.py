@@ -82,10 +82,10 @@ if __name__ == "__main__":
     d2 = lambda x: np.cos(x/1000) + 0.25
     d3 = lambda x: np.cos(x/1000) + 0.5
     d4 = lambda x: np.cos(x/1000) + 0.75
-    dfd1 = dataFrame(d1, Sensor.TIRE1.value, interval)
-    dfd2 = dataFrame(d2, Sensor.TIRE2.value, interval)
-    dfd3 = dataFrame(d3, Sensor.TIRE3.value, interval)
-    dfd4 = dataFrame(d4, Sensor.TIRE4.value, interval)
+    dfd1 = dataFrame(d1, Sensor.DAMP1.value, interval)
+    dfd2 = dataFrame(d2, Sensor.DAMP2.value, interval)
+    dfd3 = dataFrame(d3, Sensor.DAMP3.value, interval)
+    dfd4 = dataFrame(d4, Sensor.DAMP4.value, interval)
     dfd1.to_csv('DAMP1.csv')
     dfd2.to_csv('DAMP2.csv')
     dfd3.to_csv('DAMP3.csv')

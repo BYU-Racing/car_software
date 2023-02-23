@@ -361,7 +361,8 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
 if __name__ == "__main__":
     pass
     # TODO learn how to use Dash
-    file_name = 'Master.csv'
+    file_name = 'Data/Master.csv'
     all_sensors = readData(file_name)
     # plot(all_sensors[0])
-    display_dashboard(all_sensors, dark_mode=False)
+    display_dashboard(all_sensors, dark_mode=True)
+    # print(all_sensors[Sensor.DAMP1.value]["Timestamp"])
