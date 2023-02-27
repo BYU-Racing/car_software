@@ -5,9 +5,10 @@
 class State{
     protected:
         int ledPin;
+        Car car;
     public:
-        //Car car = NULL;
-        //State(Car _car, int _ledPin) : car(_car), ledPin(_ledPin) {};
+        State() {};
+        State(Car _car, int _ledPin) : car(_car), ledPin(_ledPin) {};
         virtual void checkActive();
         virtual void toggleBrakes();
         virtual void updateThrottle();
@@ -15,7 +16,6 @@ class State{
 };
 
 void State::race() {
-    //Car car = Car(2);
     //do some racing things here
 }
 

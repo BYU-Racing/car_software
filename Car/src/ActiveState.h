@@ -2,7 +2,7 @@
 #define ACTIVESTATE_H
 #include "State.h"
 
-class ActiveState: public State {
+class ActiveState: private State {
     public:
         ActiveState(Car newCar, int _ledPin) : State(newCar, _ledPin) {};
         void checkActive();

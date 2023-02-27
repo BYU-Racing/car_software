@@ -1,11 +1,13 @@
 #ifndef IDLESTATE_H
 #define IDLESTATE_H
 #include <Arduino.h>
-#include "ActiveState.h"
+//#include "ActiveState.h"
+#include "State.h"
 
 class IdleState: public State {
     public:
-        IdleState(Car newCar, int _ledPin) : State(newCar, _ledPin) {};
+        IdleState() {};
+        IdleState(Car _car, int _ledPin) : State(_car, _ledPin) {};
         void checkActive();
         void toggleBrakes();
         void updateThrottle();
@@ -14,7 +16,7 @@ class IdleState: public State {
 
 void IdleState::checkActive() {
     if(!car.getInertiaShutdown() && car.getKeyPosition()) {
-        car.changeState(ActiveState(car));
+        //car.changeState(ActiveState(car));
     }
     // key is changed to on in some place
 }
