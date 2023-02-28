@@ -4,15 +4,16 @@
 
 class ActiveState: private State {
     public:
-        ActiveState(Car newCar, int _ledPin) : State(newCar, _ledPin) {};
-        void checkActive();
+        ActiveState(int _ledPin) : State(_ledPin) {};
+        int checkState(SensorData sensorData);
         void toggleBrakes();
         void updateThrottle();
         void race();
 };
-void ActiveState::checkActive() {
-    if(car.getInertiaShutdown() || car.getKeyPosition()) {
-        car.changeState(IdleState(car));
+
+int ActiveState::checkState(SensorData sensorData) {
+    if(sensorData.getInertiaShutdown() || sensorData.getKeyPosition()) {
+       return IDLE;
     }
 }
 

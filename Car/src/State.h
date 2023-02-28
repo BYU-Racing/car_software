@@ -1,22 +1,30 @@
 #ifndef STATE_H
 #define STATE_H
 #include "Car.h"
+#include "SensorData.h"
+
+#define IDLE 0
+#define ACTIVE 1
 
 class State{
     protected:
         int ledPin;
-        Car car;
     public:
         State() {};
-        State(Car _car, int _ledPin) : car(_car), ledPin(_ledPin) {};
-        virtual void checkActive();
-        virtual void toggleBrakes();
-        virtual void updateThrottle();
+        State(int _ledPin) : ledPin(_ledPin) {};
+        virtual int checkState(SensorData sensorData);
+        //virtual void toggleBrakes();
+        //virtual void updateThrottle();
         void race();
+        
 };
 
 void State::race() {
     //do some racing things here
+}
+
+int State::checkState(SensorData sensorData) {
+    return 0;
 }
 
 #endif

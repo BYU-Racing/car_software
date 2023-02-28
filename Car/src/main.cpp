@@ -2,6 +2,7 @@
 #define MAIN_CPP
 #include <Arduino.h>
 #include "Car.h"
+#include "State.h"
 
 #define KEYSWITCH 2
 #define INERTIASWITCH 3
@@ -20,7 +21,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   car.updateSensors(digitalRead(KEYSWITCH), digitalRead(INERTIASWITCH));
 
-  car.race();
+  car.run();
 }
 
 #endif
