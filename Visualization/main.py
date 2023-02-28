@@ -257,7 +257,7 @@ def plot(frame):
 def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_ticks=1):
     if avail is None:
         avail = list(range(15))
-    fig = make_subplots(rows=num_plots, cols=1)
+    fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.01)
     row = 0
     graph_mode = 'lines'
 
@@ -272,6 +272,7 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                                  y=all_frames[Sensor.ACC2.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.ACC2.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Acc.", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
 
     # Plot 2: Brake Pressure
     if Sensor.BRAKE.value in avail:
@@ -280,9 +281,9 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                                  y=all_frames[Sensor.BRAKE.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.BRAKE.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Brake", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
 
     # Plot 3: Tire speeds
-    # TODO Debug tire speeds
     if Sensor.TIRE1.value in avail:
         row += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
@@ -301,6 +302,7 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                                  y=all_frames[Sensor.TIRE4.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
     fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
+    fig.update_xaxes(visible=False, showticklabels=False)
 
     # Plot 4: Steering Wheel
     if Sensor.ANGLE.value in avail:
@@ -309,9 +311,9 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                                  y=all_frames[Sensor.ANGLE.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.ANGLE.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Steering", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
 
     # Plot 5: Damper Position
-    # TODO Debug Damper
     if Sensor.DAMP1.value in avail:
         row += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
@@ -330,6 +332,7 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                                  y=all_frames[Sensor.DAMP4.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.DAMP4.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Dampers", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
 
     # Plot 6: Battery Temperature
     if Sensor.TEMP.value in avail:
@@ -338,10 +341,13 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                                  y=all_frames[Sensor.TEMP.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TEMP.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Battery", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
 
     # update display layout
     fig.update_layout(title_font_family="Courier New",
-                      font_family="Courier New")
+                      font_family="Courier New",
+                      margin=dict(l=75, r=75, t=50, b=50)
+                      )
     if dark_mode:
         fig.update_layout(paper_bgcolor='rgba(60,60,60,1)',
                           plot_bgcolor='rgba(40,40,40,1)',
@@ -355,14 +361,14 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
                           legend_title_font_color="white",
                           )
 
-    fig.show()
+    # fig.show()
+    return fig
 
 
 if __name__ == "__main__":
     pass
-    # TODO learn how to use Dash
     file_name = 'Data/Master.csv'
     all_sensors = readData(file_name)
     # plot(all_sensors[0])
-    display_dashboard(all_sensors, dark_mode=True)
+    display_dashboard(all_sensors, dark_mode=True).show()
     # print(all_sensors[Sensor.DAMP1.value]["Timestamp"])
