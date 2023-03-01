@@ -51,6 +51,7 @@ sensors = {0: 'Accelerator 1',
            12: 'Back Right Damper',
            13: 'Batter Temperature',
            14: 'Rain Light'}
+legend = {}
 
 
 def readData(filename):
@@ -257,17 +258,22 @@ def plot(frame):
 def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_ticks=1):
     if avail is None:
         avail = list(range(15))
-    fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.01)
+    fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.02)
     row = 0
     graph_mode = 'lines'
+    index_trace = 0
 
     # Plot 1: Accelerators
     if Sensor.ACC1.value in avail:
         row += 1
+        legend.update({index_trace: sensors[Sensor.ACC1.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC1.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC1.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1)
     if Sensor.ACC2.value in avail:
+        legend.update({index_trace: sensors[Sensor.ACC2.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC2.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC2.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.ACC2.value]), row=row, col=1)
@@ -277,6 +283,8 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     # Plot 2: Brake Pressure
     if Sensor.BRAKE.value in avail:
         row += 1
+        legend.update({index_trace: sensors[Sensor.BRAKE.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.BRAKE.value]["Timestamp"],
                                  y=all_frames[Sensor.BRAKE.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.BRAKE.value]), row=row, col=1)
@@ -286,18 +294,26 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     # Plot 3: Tire speeds
     if Sensor.TIRE1.value in avail:
         row += 1
+        legend.update({index_trace: sensors[Sensor.TIRE1.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE1.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TIRE1.value]), row=row, col=1)
     if Sensor.TIRE2.value in avail:
+        legend.update({index_trace: sensors[Sensor.TIRE2.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE2.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE2.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TIRE2.value]), row=row, col=1)
     if Sensor.TIRE3.value in avail:
+        legend.update({index_trace: sensors[Sensor.TIRE3.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE3.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE3.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TIRE3.value]), row=row, col=1)
     if Sensor.TIRE4.value in avail:
+        legend.update({index_trace: sensors[Sensor.TIRE4.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE4.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE4.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
@@ -307,6 +323,8 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     # Plot 4: Steering Wheel
     if Sensor.ANGLE.value in avail:
         row += 1
+        legend.update({index_trace: sensors[Sensor.ANGLE.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ANGLE.value]["Timestamp"],
                                  y=all_frames[Sensor.ANGLE.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.ANGLE.value]), row=row, col=1)
@@ -316,18 +334,26 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     # Plot 5: Damper Position
     if Sensor.DAMP1.value in avail:
         row += 1
+        legend.update({index_trace: sensors[Sensor.DAMP1.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP1.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.DAMP1.value]), row=row, col=1)
     if Sensor.DAMP2.value in avail:
+        legend.update({index_trace: sensors[Sensor.DAMP2.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP2.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP2.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.DAMP2.value]), row=row, col=1)
     if Sensor.DAMP3.value in avail:
+        legend.update({index_trace: sensors[Sensor.DAMP3.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP3.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP3.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.DAMP3.value]), row=row, col=1)
     if Sensor.DAMP4.value in avail:
+        legend.update({index_trace: sensors[Sensor.DAMP4.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP4.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP4.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.DAMP4.value]), row=row, col=1)
@@ -337,6 +363,8 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     # Plot 6: Battery Temperature
     if Sensor.TEMP.value in avail:
         row += 1
+        legend.update({index_trace: sensors[Sensor.TEMP.value]})
+        index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TEMP.value]["Timestamp"],
                                  y=all_frames[Sensor.TEMP.value]["Data"],
                                  mode=graph_mode, name=sensors[Sensor.TEMP.value]), row=row, col=1)
@@ -346,8 +374,10 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     # update display layout
     fig.update_layout(title_font_family="Courier New",
                       font_family="Courier New",
-                      margin=dict(l=75, r=75, t=50, b=50)
+                      font=dict(size=15),
+                      margin=dict(l=75, r=75, t=10, b=20),
                       )
+
     if dark_mode:
         fig.update_layout(paper_bgcolor='rgba(60,60,60,1)',
                           plot_bgcolor='rgba(40,40,40,1)',
