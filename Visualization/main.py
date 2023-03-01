@@ -53,6 +53,10 @@ sensors = {0: 'Accelerator 1',
            14: 'Rain Light'}
 legend = {}
 
+# display configurations
+fontStyle = "Courier New"
+fontTitle = "Times New Roman"
+
 
 def readData(filename):
     # read csv into a data frame
@@ -191,9 +195,9 @@ def plot(frame):
                               color="white"
                           )
                       ),
-                      font_family="Courier New",
+                      font_family=fontStyle,
                       font_color="white",
-                      title_font_family="Times New Roman",
+                      title_font_family=fontTitle,
                       title_font_color="white",
                       legend_title_font_color="white",
                       )
@@ -372,8 +376,8 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
         fig.update_xaxes(visible=False, showticklabels=False)
 
     # update display layout
-    fig.update_layout(title_font_family="Courier New",
-                      font_family="Courier New",
+    fig.update_layout(title_font_family=fontStyle,
+                      font_family=fontStyle,
                       font=dict(size=15),
                       margin=dict(l=75, r=75, t=10, b=20),
                       )
@@ -393,6 +397,51 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
 
     # fig.show()
     return fig
+
+
+def speedometer(value, max=60, darkmode=True):
+    figSpeed = go.Figure()
+    max = int(max)
+    tick0 = 0
+    tick1 = round(max / 4, 2)
+    tick2 = round(max / 2, 2)
+    tick3 = 3 * tick1
+    tick4 = max
+
+    # Add a gauge chart
+    figSpeed.add_trace(go.Indicator(
+        mode="gauge+number",
+        value=value,
+        gauge={
+            'axis': {'range': [None, max], 'nticks': 7},
+            'bar': {'color': "green"},
+            'steps': [
+                {'range': [tick0, tick1], 'color': "lightgray"},
+                {'range': [tick1, tick2], 'color': "gray"},
+                {'range': [tick2, tick3], 'color': "lightgray"},
+                {'range': [tick3, tick4], 'color': "gray"}],
+            'threshold': {
+                'line': {'color': "red", 'width': 4},
+                'thickness': 0.75,
+                'value': 9*max//10}
+        }
+    ))
+
+    # Update the layout
+    figSpeed.update_layout(
+        title="Speedometer",
+        font=dict(
+            family="Arial, sans-serif",
+            size=18,
+            color="green"
+        ),
+        margin=dict(l=15, r=15, t=40, b=0),
+    )
+    if darkmode:
+        figSpeed.update_layout(
+            paper_bgcolor='rgba(60,60,60,1)',
+        )
+    return figSpeed
 
 
 if __name__ == "__main__":
