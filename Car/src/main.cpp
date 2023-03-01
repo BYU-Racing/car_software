@@ -1,7 +1,8 @@
 #ifndef MAIN_CPP
 #define MAIN_CPP
 #include <Arduino.h>
-#include "Car.cpp"
+#include "Car.h"
+#include "State.h"
 
 #define KEYSWITCH 2
 #define INERTIASWITCH 3
@@ -13,14 +14,14 @@ void setup() {
   pinMode(KEYSWITCH, INPUT);
   pinMode(INERTIASWITCH, INPUT);
   pinMode(LED, OUTPUT);
-  //car = Car(LED);
+  car = Car(LED);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   car.updateSensors(digitalRead(KEYSWITCH), digitalRead(INERTIASWITCH));
 
-  car.race();
+  car.run();
 }
 
 #endif
