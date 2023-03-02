@@ -4,6 +4,7 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import main
+import time
 
 app = Dash(__name__)
 
@@ -11,6 +12,8 @@ file_name = 'Data/Master.csv'
 all_sensors = main.readData(file_name)
 
 fig = main.display_dashboard(all_sensors, dark_mode=True)
+time_end = 5
+freq = 250
 spd = main.speedometer(0)
 pdl = main.pedals()
 
@@ -35,6 +38,11 @@ app.layout = html.Div([
         style={'width': '210vh', 'height': '120vh', 'margin': '0px'}
     ),
     html.Div([
+        dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
+                   marks={0: "0", time_end / 2: str(time_end / 2), time_end: str(time_end)}),
+        dcc.Interval(id='interval-component', interval=freq, n_intervals=0)
+    ], style={'marginLeft': '50px', 'width': '162vh'}),
+    html.Div([
         dcc.Graph(
             id='speedometer',
             figure=spd,
@@ -54,8 +62,15 @@ app.layout = html.Div([
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
 ],
-style={'background-color': '#3C3C3C', 'color': '#3C3C3C',
-        'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
+    style={'background-color': '#3C3C3C', 'color': '#3C3C3C',
+           'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
+
+
+# Define the callback function
+@app.callback(Output('time-slider', 'value'),
+              Input('interval-component', 'n_intervals'))
+def update_slider_graph(n):
+    return ((n*freq) % (time_end * 1000)) / 1000
 
 
 # define a callback function to update the output values based on the input time
@@ -63,8 +78,8 @@ style={'background-color': '#3C3C3C', 'color': '#3C3C3C',
     Output(component_id='output-values', component_property='children'),
     Output(component_id='speedometer', component_property='figure'),
     Output(component_id='pedals', component_property='figure'),
-    Output('steering-wheel', 'figure'),
-    Input(component_id='input-time', component_property='value')
+    Output(component_id='steering-wheel', component_property='figure'),
+    Input(component_id='time-slider', component_property='value')
 )
 def update_output_div(input_value):
     # parse the input time and convert it to an integer
@@ -96,7 +111,7 @@ def update_output_div(input_value):
         acceleration = np.mean([float(values[i].split(":")[1][1:]) for i in range(0, 2)])
 
         # display extra values
-        extra = html.P('\n'.join(values[-5:]),
+        extra = html.P("Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:]),
                        id='output-values',
                        style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
                               'color': '#FFFFFF', 'font-family': "Courier New", 'font-size': '14px',
@@ -108,9 +123,9 @@ def update_output_div(input_value):
 
         # return figures
         return extra, \
-            main.speedometer(speed, maxim=10), \
-            main.pedals(brake, acceleration, maxim=5), \
-            main.steering(angle=angle)
+               main.speedometer(speed, maxim=10), \
+               main.pedals(brake, acceleration, maxim=5), \
+               main.steering(angle=angle)
 
 
 if __name__ == '__main__':

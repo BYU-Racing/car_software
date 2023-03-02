@@ -175,91 +175,6 @@ def crc(message, cycCheck):
     return check == cycCheck
 
 
-def plot(frame):
-    # https://plotly.com/python/range-slider/
-    # https://plotly-r.com/arranging-views.html
-    time = frame["Timestamp"]
-    speed = frame["Data"]
-
-    # fig = go.Figure()
-    fig = make_subplots(rows=3, cols=1,
-                        specs=[[{'type': 'xy'}], [{'type': 'xy'}], [{'type': 'indicator'}]])
-    fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acc1'), row=1, col=1)
-    fig.add_trace(go.Scatter(x=time, y=speed, mode='lines', name='acc2'), row=2, col=1)
-    fig.update_yaxes(nticks=1)
-
-    fig.update_layout(title=sensors[0],
-                      paper_bgcolor='rgba(60,60,60,1)',
-                      plot_bgcolor='rgba(40,40,40,1)',
-                      legend=dict(
-                          font=dict(
-                              color="white"
-                          )
-                      ),
-                      font_family=fontStyle,
-                      font_color="white",
-                      title_font_family=fontTitle,
-                      title_font_color="white",
-                      legend_title_font_color="white",
-                      )
-    fig.update_yaxes(title_text="Value", row=1, col=1)
-
-    fig.add_trace(go.Indicator(
-        mode="gauge+number",
-        value=270,
-        domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': "Speed"}),
-        row=3, col=1
-    )
-
-    if False:
-        fig.update_layout(
-            xaxis=dict(
-                autorange=True,
-                # range=["2012-10-31 18:36:37.3129", "2016-05-10 05:23:22.6871"],
-                rangeslider=dict(
-                    autorange=True,
-                    # range=["2012-10-31 18:36:37.3129", "2016-05-10 05:23:22.6871"]
-                ),
-                type="date"
-            ),
-            yaxis=dict(
-                anchor="x",
-                autorange=True,
-                # domain=[0, 0.2],
-                linecolor="#673ab7",
-                mirror=True,
-                # range=[-60.0858369099, 28.4406294707],
-                showline=True,
-                side="right",
-                tickfont={"color": "#673ab7"},
-                tickmode="auto",
-                ticks="",
-                titlefont={"color": "#673ab7"},
-                type="linear",
-                zeroline=False
-            ),
-            yaxis2=dict(
-                anchor="x",
-                autorange=True,
-                # domain=[0.2, 0.4],
-                linecolor="#E91E63",
-                mirror=True,
-                # range=[29.3787777032, 100.621222297],
-                showline=True,
-                side="right",
-                tickfont={"color": "#E91E63"},
-                tickmode="auto",
-                ticks="",
-                titlefont={"color": "#E91E63"},
-                type="linear",
-                zeroline=False
-            )
-        )
-
-    fig.show()
-
-
 def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_ticks=1):
     if avail is None:
         avail = list(range(15))
@@ -478,11 +393,12 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True):
 
 def steering(angle=0, darkmode=True):
     # set handle location
-    t_right = np.linspace(-np.pi / 8, np.pi / 8, 500)
+    density = 100
+    t_right = np.linspace(-np.pi / 8, np.pi / 8, density)
     x = np.cos(t_right)
     y = np.sin(t_right)
 
-    t_left = np.linspace(np.pi - np.pi / 8, np.pi + np.pi / 8, 500)
+    t_left = np.linspace(np.pi - np.pi / 8, np.pi + np.pi / 8, density)
     x1 = np.cos(t_left)
     y1 = np.sin(t_left)
 
@@ -509,12 +425,12 @@ def steering(angle=0, darkmode=True):
     )
     right_top = go.Scatter(
         x=[x_right[-1]], y=[y_right[-1]], mode='markers',
-        marker=dict(size=24, color='white'),
+        marker=dict(size=20, color='white'),
         showlegend=False
     )
     left_top = go.Scatter(
         x=[x_left[0]], y=[y_left[0]], mode='markers',
-        marker=dict(size=24, color='white'),
+        marker=dict(size=20, color='white'),
         showlegend=False
     )
     fig = go.Figure()
