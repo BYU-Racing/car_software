@@ -49,7 +49,7 @@ sensors = {0: 'Accelerator 1',
            10: 'Front Right Damper',
            11: 'Back Left Damper',
            12: 'Back Right Damper',
-           13: 'Batter Temperature',
+           13: 'Battery Temperature',
            14: 'Rain Light'}
 legend = {}
 
@@ -399,21 +399,21 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
     return fig
 
 
-def speedometer(value, max=60, darkmode=True):
+def speedometer(value, maxim=60, darkmode=True):
     figSpeed = go.Figure()
-    max = int(max)
+    maxim = int(maxim)
     tick0 = 0
-    tick1 = round(max / 4, 2)
-    tick2 = round(max / 2, 2)
+    tick1 = round(maxim / 4, 2)
+    tick2 = round(maxim / 2, 2)
     tick3 = 3 * tick1
-    tick4 = max
+    tick4 = maxim
 
     # Add a gauge chart
     figSpeed.add_trace(go.Indicator(
         mode="gauge+number",
         value=value,
         gauge={
-            'axis': {'range': [None, max], 'nticks': 7},
+            'axis': {'range': [None, maxim], 'nticks': 7},
             'bar': {'color': "green"},
             'steps': [
                 {'range': [tick0, tick1], 'color': "lightgray"},
@@ -423,7 +423,7 @@ def speedometer(value, max=60, darkmode=True):
             'threshold': {
                 'line': {'color': "red", 'width': 4},
                 'thickness': 0.75,
-                'value': 9*max//10}
+                'value': maxim * .9}
         }
     ))
 
@@ -444,10 +444,39 @@ def speedometer(value, max=60, darkmode=True):
     return figSpeed
 
 
+def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True):
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        x=['Brake', 'Acceleration'],
+        y=[brake, accel],
+        marker=dict(color=['red', 'green']),
+        width=0.5,
+    ))
+
+    # Update the layout
+    fig.update_layout(
+        title="Pedals",
+        font=dict(
+            family="Arial, sans-serif",
+            size=18,
+            color="green"
+        ),
+        margin=dict(l=50, r=30, t=40, b=10),
+        yaxis_title="Pressure",
+        yaxis_range=[minim, maxim]
+    )
+    if darkmode:
+        fig.update_layout(
+            paper_bgcolor='rgba(60,60,60,1)',
+            plot_bgcolor='rgba(40,40,40,1)',
+        )
+
+    return fig
+
+
 if __name__ == "__main__":
     pass
     file_name = 'Data/Master.csv'
     all_sensors = readData(file_name)
-    # plot(all_sensors[0])
-    display_dashboard(all_sensors, dark_mode=True).show()
-    # print(all_sensors[Sensor.DAMP1.value]["Timestamp"])
+    display_dashboard(all_sensors).show()
