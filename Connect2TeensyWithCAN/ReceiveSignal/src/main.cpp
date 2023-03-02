@@ -34,6 +34,7 @@ void setup() {
   receiver.setMaxMB(1);
   receiver.setMB(MB0, RX,EXT);
   receiver.onReceive(MB0, canSniff);
+  receiver.enableMBInterrupts();
 
   //WRITE TO SERIAL MONITOR
   Serial.begin(9600);
