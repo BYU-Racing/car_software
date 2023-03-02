@@ -5,6 +5,7 @@ from bitstring import BitArray
 from plotly.subplots import make_subplots
 # import plotly.io as pio
 # import panel as pn
+import numpy as np
 
 """
 Assumptions:
@@ -470,6 +471,82 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True):
         fig.update_layout(
             paper_bgcolor='rgba(60,60,60,1)',
             plot_bgcolor='rgba(40,40,40,1)',
+        )
+
+    return fig
+
+
+def steering(angle=0, darkmode=True):
+    # set handle location
+    t_right = np.linspace(-np.pi / 8, np.pi / 8, 500)
+    x = np.cos(t_right)
+    y = np.sin(t_right)
+
+    t_left = np.linspace(np.pi - np.pi / 8, np.pi + np.pi / 8, 500)
+    x1 = np.cos(t_left)
+    y1 = np.sin(t_left)
+
+    # Rotate the points by the input angle
+    # theta = angle * np.pi / 180.0
+    theta = angle
+    c, s = np.cos(theta), np.sin(theta)
+
+    x_right = x * c - y * s
+    y_right = x * s + y * c
+    x_left = x1 * c - y1 * s
+    y_left = x1 * s + y1 * c
+
+    # Create a scatter plot with markers arranged in a circle
+    right_bar = go.Scatter(
+        x=x_right, y=y_right, mode='markers',
+        marker=dict(size=20, color='black'),
+        showlegend=False
+    )
+    left_bar = go.Scatter(
+        x=x_left, y=y_left, mode='markers',
+        marker=dict(size=20, color='black'),
+        showlegend=False
+    )
+    right_top = go.Scatter(
+        x=[x_right[-1]], y=[y_right[-1]], mode='markers',
+        marker=dict(size=24, color='white'),
+        showlegend=False
+    )
+    left_top = go.Scatter(
+        x=[x_left[0]], y=[y_left[0]], mode='markers',
+        marker=dict(size=24, color='white'),
+        showlegend=False
+    )
+    fig = go.Figure()
+    fig.add_trace(right_bar)
+    fig.add_trace(left_bar)
+    fig.add_trace(right_top)
+    fig.add_trace(left_top)
+    fig.update_layout(
+        xaxis=dict(
+            range=[-1.1, 1.1],
+            autorange=False,
+        ),
+        yaxis=dict(
+            range=[-1.1, 1.1],
+            autorange=False,
+        ),
+        title='Steering Wheel',
+        font=dict(
+            family="Arial, sans-serif",
+            size=18,
+            color="green"
+        ),
+        margin=dict(l=45, r=45, t=40, b=0),
+    )
+
+    fig.update_yaxes(nticks=1, visible=False, showticklabels=False)
+    fig.update_xaxes(nticks=1, visible=False, showticklabels=False)
+
+    if darkmode:
+        fig.update_layout(
+            paper_bgcolor='rgba(60,60,60,1)',
+            plot_bgcolor='rgba(50,50,50,1)',
         )
 
     return fig

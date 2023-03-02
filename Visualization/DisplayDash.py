@@ -45,14 +45,17 @@ app.layout = html.Div([
             figure=pdl,
             style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }
         ),
+        dcc.Graph(id='steering-wheel',
+                  config={'displayModeBar': False},
+                  style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
         html.P(id='output-values',
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
                       'color': '#FFFFFF', 'font-family': "Courier New", 'font-size': '14px',
-                      'vertical-align': 'top', 'white-space': 'pre-line'})
+                      'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
 ],
-    style={'background-color': '#3C3C3C', 'color': '#3C3C3C',
-           'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
+style={'background-color': '#3C3C3C', 'color': '#3C3C3C',
+        'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
 
 
 # define a callback function to update the output values based on the input time
@@ -60,6 +63,7 @@ app.layout = html.Div([
     Output(component_id='output-values', component_property='children'),
     Output(component_id='speedometer', component_property='figure'),
     Output(component_id='pedals', component_property='figure'),
+    Output('steering-wheel', 'figure'),
     Input(component_id='input-time', component_property='value')
 )
 def update_output_div(input_value):
@@ -73,7 +77,8 @@ def update_output_div(input_value):
     if time is None:
         return 'Please enter a valid decimal time greater than zero.', \
                main.speedometer(0, maxim=10), \
-               main.pedals()
+               main.pedals(), \
+               main.steering()
 
     else:
         # get the values of each subplot at the input time
@@ -98,10 +103,14 @@ def update_output_div(input_value):
                               'vertical-align': 'top', 'white-space': 'pre-line'}
                        )
 
-        # create a `Div` element to display the values and a new figure element as well
+        # get steering angle
+        angle = float(values[9].split(":")[1][1:])
+
+        # return figures
         return extra, \
             main.speedometer(speed, maxim=10), \
-            main.pedals(brake, acceleration, maxim=5)
+            main.pedals(brake, acceleration, maxim=5), \
+            main.steering(angle=angle)
 
 
 if __name__ == '__main__':
