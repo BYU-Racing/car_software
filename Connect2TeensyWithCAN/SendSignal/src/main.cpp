@@ -12,7 +12,7 @@
 #define BUTTON 2
 #define POWER 3
 #define LED 4
-#define ID 0x001
+#define ID 0x00
 
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> sender;
 // isotp<RX_BANKS_16, 512> tp;
@@ -36,8 +36,8 @@ void setup() {
   sender.begin();
   sender.setClock(CLK_60MHz);
   sender.setBaudRate(95238);
-  sender.setMaxMB(16);
- // sender.setMB(MB0, TX, EXT);
+  sender.setMaxMB(1);
+  sender.setMB(MB0, TX, EXT);
   sender.mailboxStatus();
 
   // tp.begin();
@@ -67,12 +67,5 @@ void loop() {
   }else{
     digitalWrite(LED, LOW);
   }
-
-  // ISOTP_data config;
-  // config.id = 0x666;
-  // config.flags.extended = 0; /* standard frame */
-  // config.separation_time = 10; /* time between back-to-back frames in millisec */
-
-  // tp.write(config, msg, sizeof(msg));
 
 }
