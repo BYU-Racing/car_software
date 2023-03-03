@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import scipy
 from scipy.interpolate import interp1d
-from scipy.misc import derivative
+from scipy import integrate
 
 #Accept Speed(mph), time(sec) and wheel angle(degrees) lists
 #return a list of x and y values
@@ -38,16 +38,20 @@ def dallin_position(speed, time, angle):
 
     theta = np.deg2rad(angle)
 
-    x =  speed * np.cos(theta)
-    y =  speed * np.sin(theta)
-
-
+    x = speed * np.cos(theta)
+    y = speed * np.sin(theta)
 
     return x, y
 
-if __name__ == "__main__":
 
-    time = np.linspace(0, 10, 1000)
+def derive(f, x0, h=1e-5):
+    return (f(x0 + h) - f(x0)) / h
+
+if __name__ == "__main__":
+    minim = 0
+    maxim = 10
+
+    time = np.linspace(minim, maxim, 1000)
     angle = np.sin(time)+1
     speed = np.cos(time)+1
 
@@ -58,29 +62,37 @@ if __name__ == "__main__":
     f_angle = scipy.interpolate.interp1d(time, angle, kind = 'cubic')
     yanew = f_angle(time)
 
-    # plt.subplot(121)
-    # plt.plot(time, ysnew)
+    # integrate
+    def f_distance(f, t):
+        return scipy.integrate.quad(f, 0, t)[0]
 
-    # plt.subplot(122)
-    # plt.plot(time, yanew)
-
-    speed_der = f_speed.derivative()
-
-    f_angle = [derivative(f_angle, i) for i in time]
-
-    ysder = f_speed(time)
-
-    yader = f_angle(time)
+    # Evaluate the integral of f_speed at some points
+    speed_int = np.array([f_distance(f_speed, t) for t in time])
+    angle_int = np.array([f_distance(f_angle, t) for t in time])
 
     plt.subplot(121)
-    plt.plot(time, ysder)
+    plt.plot(time, speed, label="Original Speed")
+    plt.subplot(122)
+    plt.plot(time, angle, label="Original Angle")
+
+    # get interpolating points
+    # time = time[:-1]
+    ysder = f_speed(time)
+    yader = f_angle(time)
+
+    # derive and plot
+    plt.subplot(121)
+    plt.plot(time, ysder, label="Speed Interpolation")
+    # plt.plot(time, derive(f_speed, time), label="Speed Derivative")
+    plt.plot(time, speed_int, label="Speed Integration")
+    plt.legend()
 
     plt.subplot(122)
-    plt.plot(time, yader)
+    plt.plot(time, yader, label="Angle Interpolation")
+    # plt.plot(time, derive(f_angle, time), label="Angle Derivative")
+    plt.plot(time, angle_int, label="Angle Integration")
 
-
-
-
+    plt.legend()
     plt.show()
 
     pass
