@@ -31,8 +31,10 @@ void setup() {
   receiver.begin();
   receiver.setClock(CLK_60MHz);
   receiver.setBaudRate(9600);
-  receiver.setMaxMB(16);
-  receiver.onReceive(canSniff);
+  receiver.setMaxMB(1);
+  receiver.setMB(MB0, RX,EXT);
+  receiver.onReceive(MB0, canSniff);
+  receiver.enableMBInterrupts();
 
   //WRITE TO SERIAL MONITOR
   Serial.begin(9600);
