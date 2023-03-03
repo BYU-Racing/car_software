@@ -55,42 +55,46 @@ if __name__ == "__main__":
     angle = np.sin(time)+1
     speed = np.cos(time)+1
 
-    f_speed = scipy.interpolate.interp1d(time, speed, kind = 'cubic')
+    f_x = scipy.interpolate.interp1d(time, speed*np.cos(angle), kind='cubic')
     # print(f_speed.coeffs)
-    ysnew = f_speed(time)
+    ysnew = f_x(time)
 
-    f_angle = scipy.interpolate.interp1d(time, angle, kind = 'cubic')
-    yanew = f_angle(time)
+    f_y = scipy.interpolate.interp1d(time, speed * np.sin(angle), kind='cubic')
+    yanew = f_y(time)
 
     # integrate
     def f_distance(f, t):
         return scipy.integrate.quad(f, 0, t)[0]
 
     # Evaluate the integral of f_speed at some points
-    speed_int = np.array([f_distance(f_speed, t) for t in time])
-    angle_int = np.array([f_distance(f_angle, t) for t in time])
+    x_pos = np.array([f_distance(f_x, t) for t in time])
+    y_pos = np.array([f_distance(f_y, t) for t in time])
 
-    plt.subplot(121)
+    plt.subplot(131)
     plt.plot(time, speed, label="Original Speed")
-    plt.subplot(122)
+    plt.subplot(132)
     plt.plot(time, angle, label="Original Angle")
 
     # get interpolating points
     # time = time[:-1]
-    ysder = f_speed(time)
-    yader = f_angle(time)
+    ysder = f_x(time)
+    yader = f_y(time)
 
     # derive and plot
-    plt.subplot(121)
+    plt.subplot(131)
     plt.plot(time, ysder, label="Speed Interpolation")
     # plt.plot(time, derive(f_speed, time), label="Speed Derivative")
-    plt.plot(time, speed_int, label="Speed Integration")
+    plt.plot(time, x_pos, label="X Position")
     plt.legend()
 
-    plt.subplot(122)
+    plt.subplot(132)
     plt.plot(time, yader, label="Angle Interpolation")
     # plt.plot(time, derive(f_angle, time), label="Angle Derivative")
-    plt.plot(time, angle_int, label="Angle Integration")
+    plt.plot(time, y_pos, label="Y Position")
+
+    plt.subplot(133)
+    plt.plot(x_pos, y_pos)
+    plt.title("Position")
 
     plt.legend()
     plt.show()
