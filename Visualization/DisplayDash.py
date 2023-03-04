@@ -4,68 +4,88 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import main
-import time
 
+# TODO add tabs
+# TODO play button
+# TODO select theme
+# TODO select display size
+
+# create Dash object
 app = Dash(__name__)
 
+# load data
 file_name = 'Data/Master.csv'
 all_sensors = main.readData(file_name)
 
-fig = main.display_dashboard(all_sensors, dark_mode=True)
+# initialize local starting variables
 time_end = 5
 freq = 250
-spd = main.speedometer(0)
-pdl = main.pedals()
+view = "Jarvis"
 
+# construct initial plots
+fig = main.display_dashboard(all_sensors, theme=view)
+spd = main.speedometer(0, theme=view)
+pdl = main.pedals(theme=view)
+
+# set dashboard layout
 app.layout = html.Div([
     html.Div([
-        html.H1('Car Go Fast!', style={'color': main.themes["Dark"]["color"][3][2],
+        # title
+        html.H1('Car Go Fast!', style={'color': main.themes[view]["color"][2][2],
                                        'paddingLeft': '30px', 'paddingTop': '10px',
                                        'paddingBottom': '0px', 'margin': '0px',
-                                       'display': 'inline-block', 'width': '33%'},
+                                       'display': 'inline-block', 'width': '33%',
+                                       'font-family': main.themes[view]["font"]["title"]},
                 id='dashboard-title'),
+        # input and settings
         dcc.Input(
             id='input-time',
             type='text',
             placeholder='Enter a time in seconds',
             value='',
-            style={'width': '15%', 'margin': '10px', 'font': main.themes["Dark"]["font"]["p"], }
+            style={'width': '15%', 'margin': '10px', 'font': main.themes[view]["font"]["p"], }
         )
     ]),
+    # main line charts
     dcc.Graph(
         id='car_go_fast',
         figure=fig,
         style={'width': '100%', 'height': '120vh', 'margin': '0px'}
     ),
+    # slider to select and view instantaneous values
     html.Div([
         dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
                    marks={0: "0", time_end / 2: str(time_end / 2), time_end: str(time_end)}),
         # dcc.Interval(id='interval-component', interval=freq, n_intervals=0)
-    ], style={'marginLeft': '50px', 'width': '162vh'}),
+    ], style={'marginLeft': '50px', 'width': '80%'}),
     html.Div([
+        # speedometer
         dcc.Graph(
             id='speedometer',
             figure=spd,
             style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }
         ),
+        # bar chart for brake and accelerator
         dcc.Graph(
             id='pedals',
             figure=pdl,
             style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }
         ),
+        # steering wheel
         dcc.Graph(id='steering-wheel',
                   config={'displayModeBar': False},
                   style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
+        # additional text data
         html.P(id='output-values',
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                      'color': main.themes["Dark"]["color"][3][2],
-                      'font-family': main.themes["Dark"]["font"]["p"],
-                      'font-size': main.themes["Dark"]["size"]["small"]+"px",
+                      'color': main.themes[view]["color"][2][2],
+                      'font-family': main.themes[view]["font"]["p"],
+                      'font-size': main.themes[view]["size"]["small"]+"px",
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
 ],
-    style={'background-color': main.themes["Dark"]["color"][0][2],
-           'color': main.themes["Dark"]["color"][0][2],
+    style={'background-color': main.themes[view]["color"][0][2],
+           'color': main.themes[view]["color"][0][2],
            'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
 
 
@@ -85,8 +105,14 @@ app.layout = html.Div([
     Input(component_id='time-slider', component_property='value')
 )
 def update_output_div(input_value):
+    """
+    Update each chart based on the input time from the slider object
+    Parameters:
+        :param input_value: (string) the desired time to view data at
+    Returns:
+        :return: list of updated plots
+    """
     # parse the input time and convert it to an integer
-    # time = int(input_value) if input_value.isdigit() else None
     try:
         time = float(input_value)
     except ValueError:
@@ -107,7 +133,7 @@ def update_output_div(input_value):
             values.append(f'{main.legend[i - 1]}: {value}')
 
         # compute the average speed to display
-        speed = np.mean([float(values[i].split(":")[1][1:]) for i in range(4, 8)])
+        speed = np.mean([float(values[i].split(":")[1][1:]) for i in range(3, 7)])
 
         # get brake and accelerator values
         brake = float(values[2].split(":")[1][1:])
@@ -117,9 +143,9 @@ def update_output_div(input_value):
         extra = html.P("Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:]),
                        id='output-values',
                        style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                              'color': main.themes["Dark"]["color"][3][2],
-                              'font-family': main.themes["Dark"]["font"]["p"],
-                              'font-size': main.themes["Dark"]["size"]["small"]+"px",
+                              'color': main.themes[view]["color"][2][2],
+                              'font-family': main.themes[view]["font"]["p"],
+                              'font-size': main.themes[view]["size"]["small"]+"px",
                               'vertical-align': 'top', 'white-space': 'pre-line'}
                        )
 
@@ -128,9 +154,9 @@ def update_output_div(input_value):
 
         # return figures
         return extra, \
-               main.speedometer(speed, maxim=10), \
-               main.pedals(brake, acceleration, maxim=5), \
-               main.steering(angle=angle)
+               main.speedometer(speed, maxim=2, theme=view), \
+               main.pedals(brake, acceleration, maxim=5, theme=view), \
+               main.steering(angle=angle, theme=view)
 
 
 if __name__ == '__main__':
