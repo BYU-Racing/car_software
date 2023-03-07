@@ -3,8 +3,6 @@ import plotly.graph_objects as go
 from enum import Enum
 from bitstring import BitArray
 from plotly.subplots import make_subplots
-# import plotly.io as pio
-# import panel as pn
 import numpy as np
 
 """
@@ -17,10 +15,7 @@ Assumptions:
 6. Signals follow CAN Bus Protocol Draft format
 """
 
-
-# TODO add comments
-
-
+# convert each sensor to a number
 class Sensor(Enum):
     ACC1 = 0
     ACC2 = 1
@@ -38,7 +33,7 @@ class Sensor(Enum):
     TEMP = 13
     LIGHT = 14
 
-
+# convert an index to a sensor display name
 sensors = {0: 'Accelerator 1',
            1: 'Accelerator 2',
            2: 'Brake Pressure',
@@ -54,41 +49,46 @@ sensors = {0: 'Accelerator 1',
            12: 'Back Right Damper',
            13: 'Battery Temperature',
            14: 'Rain Light'}
+
+# legend that maps display order to sensor
 legend = {}
 
-# display configurations
-themes = {"Dark": {
-    "color": {
-        0: ["gray", "rgba(60,60,60,1)", "#3C3C3C"],
-        1: ["dark-gray", "rgba(40,40,40,1)", ""],
-        2: ["green", "rgba(0,154,0,1)", "#009900"],
-        3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],
-        4: ["black", "rgba(0,0,0,1)", "#000000"],
+# theme customization
+themes = {"Dark": {                                     # theme name
+    "color": {                                          # color palette for graphs and backgrounds
+        0: ["gray", "rgba(60,60,60,1)", "#3C3C3C"],     # assigned to overall background
+        1: ["dark-gray", "rgba(40,40,40,1)", ""],       # subplot background to differentiate from background
+        2: ["green", "rgba(0,154,0,1)", "#009900"],     # Text color
+        3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],# Alternate text color, also just white
+        4: ["black", "rgba(0,0,0,1)", "#000000"],       # Steering wheel color, also just black
     },
     "trace": {
-        0: ["green", "rgba(0,154,0,1)", "#009900"],
+        0: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
         1: ["red", "rgba(154,0,0,1)", "#990000"],
     },
     "size": {
-        "large": "24",
-        "medium": "18",
-        "small": "14",
+        "large": "24",                                  # large text like graph titles
+        "medium": "18",                                 # medium text like like legends
+        "small": "14",                                  # small text like graph ticks
     },
     "font": {
-        "title": "Times New Roman",
-        "p": "Courier New",
-        "graph": "Arial, sans-serif",
+        "title": "Times New Roman",                     # dashboard title
+        "p": "Courier New",                             # most text
+        "graph": "Arial, sans-serif",                   # alt text font for some graphs
     }
 },
     "Jarvis": {
         "color": {
-            0: [],
-            1: [],
-            2: [],
+            0: ["black", "rgba(0,0,0,1)", "#000000"],  # assigned to overall background
+            1: ["dark-blue", "rgba(1, 2, 44,1)", "#01022C"],  # subplot background to differentiate from background
+            2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],  # Text color
+            3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
+            4: ["black", "rgba(0,0,0,1)", "#000000"],
         },
         "trace": {
-            0: [],
-            1: [],
+            0: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
+            1: ["neon_yellow", "rgba(248, 255, 51, 1)","#f8ff33"],
+            3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
         },
         "size": {
             "large": "24",
@@ -96,19 +96,22 @@ themes = {"Dark": {
             "small": "15",
         },
         "font": {
-            "title": "",
-            "p": "",
-            "graph": "",
+            "title": "Arial, sans-serif",
+            "p": "Arial, sans-serif",
+            "graph": "Arial, sans-serif",
         }
     }
 }
 
 
 def readData(filename):
-    # read csv into a data frame
-    # parameters: none
-    # returns: nothing
     """
+    Read data from a csv file filename into a dictionary
+    Parameters:
+        filename (string): name of the file to read
+    Returns:
+        all_data (dictionary): data from the csv stored, converted, and parsed in a dictionary
+
     CAN BUS Protocol
     1. Start of frame:  (1 bit)     Always 1. Denotes the start of frame transmission
     2. ID:              (11 bits)   A (unique) identifier which also represents the message priority
@@ -131,21 +134,33 @@ def readData(filename):
     2. Timestamp (16 bits)
     3. Data (64 bits)
     Total: 91 bits
-    :return:
     """
+
+    # read data
     df = pd.read_csv(filename, sep=',', usecols=['ID', 'Timestamp', 'Data'])
+
+    # convert from binary to decimal
     df['ID'] = convertID(df['ID'])
     df['Timestamp'] = convertTime(df['Timestamp'])
     df['Data'] = convertData(df['Data'])
 
+    # construct
     all_data = {}
     for i in range(len(sensors)):
         all_data.update({i: df[df["ID"] == sensors[i]]})
 
+    # return all the data in the csv
     return all_data
 
 
 def parseBits(signals):
+    """
+    Check a binary string to make sure it matches the CANBus format, then turn it into a dataframe
+    Parameters:
+        signals (list): list of strings of binary digits
+    Returns:
+        processed (dataframe): data parsed into rows and columns
+    """
     protocol = [['Start of frame', 1],
                 ['ID', 11],
                 ['Stuff bit', 1],
@@ -164,49 +179,86 @@ def parseBits(signals):
 
     processed = []
     for signal in signals:
+        # check data type
         if type(signal) is not str:
             raise TypeError(f"Signal is not of type string. Instead received {type(signal)}."
                             f"\nSignal: {signal}")
+        # check signal length
         if len(signal) != protocol[-1][1]:
             raise ValueError(f"Signal is not the right length. Expected {protocol[-1][1]} but received {len(signal)}."
                              f"\nSignal: {signal}")
+
+        # create a list of signals divided into fields
         parsed = []
         for field in protocol[:-1]:
             parsed.append(signal[:field[1]])
             signal = signal[field[1]:]
         processed.append(parsed)
+
+    # return the full data frame
     return pd.DataFrame(processed)
 
 
 def convertTime(timestamp):
-    # convert binary timestamp into human-readable text
-    # input: timestamp (string) or (list of strings) of zeros and ones
-    # returns: timestamp (string) or (list of strings) of times
+    """
+    Convert binary timestamp into human-readable text
+    Parameters:
+        timestamp (string or dataframe): time as a string of binary digits
+    Returns:
+        time (int or dataframe): formatted time
+    """
+    # case if parameter is a string
     if type(timestamp) is str:
         return int(str(timestamp), 2) / 1000.
+
+    # case if parameter is a dataframe
     return pd.DataFrame([int(str(time), 2) / 1000. for time in timestamp])
 
 
 def convertID(id_sensor):
-    # convert binary ID into an integer, maybe use enumerators?
-    # input: id (string) or (list of strings) of zeros and ones
-    # returns: id (int) or (list of ints) of IDs
+    """
+    Convert a binary ID into an integer
+    Parameters:
+        id_sensor (string or dataframe of strings): sensor id in binary
+    Returns:
+        id (int or dataframe of ints): sensor id in decimal
+    """
+    # case if parameter is a string
     if type(id_sensor) is str:
         return sensors[int(str(id_sensor), 2)]
+
+    # case if parameter is a dataframe
     return pd.DataFrame([sensors[int(str(i), 2)] for i in id_sensor])
 
 
 def convertData(data):
     # TODO update data conversion for 12 bit data
-    # convert binary data into a float
-    # input: data (string) or (list of strings) of zeros and ones
-    # returns: data (int) or (list of ints) of data
+    """
+    Convert binary data into a float
+    Parameters:
+        data (string or dataframe of strings): data in binary as a string
+    Returns:
+        data (int or dataframe of ints): data in decimal
+    """
+    # case if parameter is a string
     if type(id) is str:
         return BitArray(bin=str(data)).float
+
+    # case if parameter is a dataframe
     return pd.DataFrame([BitArray(bin=str(d)).float for d in data])
 
 
 def crc(message, cycCheck):
+    """
+    Perform Cyclic Redundancy Check. This is part of extended CANBus dataframes
+    the checks the data in the message by computing a polynomial based on the message
+    before and after sending the signal
+    Parameters:
+        message (string): message as a string of binary digits
+        cycCheck (string): CRC that the frame contained
+    Returns:
+        check (Boolean): true if the polynomials match, false otherwise
+    """
     # initialize local variables
     n = 8
     primes = [5, 7, 11, 13, 17, 19, 23, 29]
@@ -214,6 +266,7 @@ def crc(message, cycCheck):
     message = [message[i:i + n] for i in range(0, len(message), n)]
     # convert bytes to integers
     message = [int(str(m), 2) for m in message]
+
     # recompute crc using message and primes
     check = bin(sum([m * p for m, p in zip(message, primes)]))[2:].rjust(15, "0")
     # return comparison between computed and received crc value
@@ -221,28 +274,52 @@ def crc(message, cycCheck):
 
 
 def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_plots=6, num_ticks=1):
+    """
+    Display a Dash dashboard with racing sensor data
+    Parameters:
+        :param all_frames: (dataframe) pandas dataframe with every sensor at every time interval
+        :param dark_mode: (boolean) display dashboard in dark mode or light mode
+        :param theme: (string) select desired display theme such as 'Dark' or 'Jarvis'
+        :param avail: (list) data available or desired to display, ie select subplots
+        :param num_plots: (int) the number of subplots to display
+        :param num_ticks: (int) the number of y-axis tick marks on each subplot
+    :return:
+        fig: (plotly figure) figure to display main data
+    """
+    # set default availability
     if avail is None:
         avail = list(range(15))
+
+    # initialize figure with subplots
     fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.02)
     row = 0
     graph_mode = 'lines'
     index_trace = 0
+    dots = 0.001
 
     # Plot 1: Accelerators
     if Sensor.ACC1.value in avail:
+        # increment row index for subplots
         row += 1
+        # update legend dictionary with correct sensor for other plots
         legend.update({index_trace: sensors[Sensor.ACC1.value]})
+        # increment trace so that other plots can stay consistent with order
         index_trace += 1
+
+        # add a trace to the rowth subplot using data on the corresponding row from all_frames
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC1.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC1.value]["Data"],
-                                 mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1)
+                                 marker=dict(color=themes[theme]["trace"][0][2]),
+                                 mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1,),
+    # repeat for every other sensor
     if Sensor.ACC2.value in avail:
         legend.update({index_trace: sensors[Sensor.ACC2.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC2.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC2.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.ACC2.value]), row=row, col=1)
-        fig.update_yaxes(nticks=num_ticks, title_text="Acc.", row=row, col=1)
+        fig.update_yaxes(nticks=num_ticks, title_text="Accelerator", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
     # Plot 2: Brake Pressure
@@ -252,6 +329,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.BRAKE.value]["Timestamp"],
                                  y=all_frames[Sensor.BRAKE.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.BRAKE.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Brake", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
@@ -263,24 +341,32 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE1.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE1.value]), row=row, col=1)
     if Sensor.TIRE2.value in avail:
         legend.update({index_trace: sensors[Sensor.TIRE2.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE2.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE2.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE2.value]), row=row, col=1)
     if Sensor.TIRE3.value in avail:
         legend.update({index_trace: sensors[Sensor.TIRE3.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE3.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE3.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE3.value]), row=row, col=1)
     if Sensor.TIRE4.value in avail:
         legend.update({index_trace: sensors[Sensor.TIRE4.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE4.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE4.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
     fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
     fig.update_xaxes(visible=False, showticklabels=False)
@@ -292,6 +378,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ANGLE.value]["Timestamp"],
                                  y=all_frames[Sensor.ANGLE.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][0][2]),
                                  mode=graph_mode, name=sensors[Sensor.ANGLE.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Steering", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
@@ -303,24 +390,32 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP1.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP1.value]), row=row, col=1)
     if Sensor.DAMP2.value in avail:
         legend.update({index_trace: sensors[Sensor.DAMP2.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP2.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP2.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP2.value]), row=row, col=1)
     if Sensor.DAMP3.value in avail:
         legend.update({index_trace: sensors[Sensor.DAMP3.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP3.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP3.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP3.value]), row=row, col=1)
     if Sensor.DAMP4.value in avail:
         legend.update({index_trace: sensors[Sensor.DAMP4.value]})
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP4.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP4.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                             size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP4.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Dampers", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
@@ -332,28 +427,29 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TEMP.value]["Timestamp"],
                                  y=all_frames[Sensor.TEMP.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.TEMP.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Battery", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
-    # update display layout
+    # update display layout based on theme
     fig.update_layout(title_font_family=themes[theme]["font"]["p"],
                       font_family=themes[theme]["font"]["p"],
                       font=dict(size=int(themes[theme]["size"]["small"])),
                       margin=dict(l=75, r=75, t=10, b=20),
                       )
-
+    # update layout based on dark mode and theme
     if dark_mode:
         fig.update_layout(paper_bgcolor=themes[theme]["color"][0][1],
                           plot_bgcolor=themes[theme]["color"][1][1],
                           legend=dict(
                               font=dict(
-                                  color=themes[theme]["color"][3][0]
+                                  color=themes[theme]["color"][2][2]
                               )
                           ),
-                          font_color=themes[theme]["color"][3][0],
-                          title_font_color=themes[theme]["color"][3][0],
-                          legend_title_font_color=themes[theme]["color"][3][0],
+                          font_color=themes[theme]["color"][2][2],
+                          title_font_color=themes[theme]["color"][2][2],
+                          legend_title_font_color=themes[theme]["color"][2][2],
                           )
 
     # fig.show()
@@ -361,6 +457,17 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
 
 
 def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
+    """
+    Create a speedometer plot to show instantaneous speed
+    Parameters:
+        :param value: (int) instantenous speed
+        :param maxim: (int) maximum value on speedometer
+        :param darkmode: (boolean) change display based on darkmode
+        :param theme: (string) change display based on theme
+    Returns:
+        :return: fig: (plotly figure) customized speedometer plot
+    """
+    # initialize figure and plot parameters
     figSpeed = go.Figure()
     maxim = int(maxim)
     tick0 = 0
@@ -375,14 +482,16 @@ def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
         value=value,
         gauge={
             'axis': {'range': [None, maxim], 'nticks': 7},
-            'bar': {'color': themes[theme]["color"][2][0]},
+            'bar': {'color': themes[theme]["color"][2][2]},
+            # set steps
             'steps': [
-                {'range': [tick0, tick1], 'color': "lightgray"},
-                {'range': [tick1, tick2], 'color': "gray"},
-                {'range': [tick2, tick3], 'color': "lightgray"},
-                {'range': [tick3, tick4], 'color': "gray"}],
+                {'range': [tick0, tick1], 'color': themes[theme]["color"][1][2]},
+                {'range': [tick1, tick2], 'color': themes[theme]["color"][1][2]},
+                {'range': [tick2, tick3], 'color': themes[theme]["color"][1][2]},
+                {'range': [tick3, tick4], 'color': themes[theme]["color"][1][2]}],
+            # set threshold
             'threshold': {
-                'line': {'color': themes[theme]["trace"][1][0], 'width': 4},
+                'line': {'color': themes[theme]["trace"][1][2], 'width': 4},
                 'thickness': 0.75,
                 'value': maxim * .9}
         }
@@ -394,7 +503,7 @@ def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
         font=dict(
             family=themes[theme]["font"]["graph"],
             size=int(themes[theme]["size"]["medium"]),
-            color=themes[theme]["color"][2][0]
+            color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=15, r=15, t=40, b=0),
     )
@@ -406,22 +515,36 @@ def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
 
 
 def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True, theme="Dark"):
+    """
+    Create a bar chart to show instantaneous brake and accelerator pressure
+    Parameters:
+        :param brake: (int) instantaneous value of the break
+        :param accel: (int) instantaneous value of the accelerator
+        :param minim: (int) minimum chart value
+        :param maxim: (int) maximum chart value
+        :param darkmode: (boolean) select darkmode display
+        :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
+    Returns:
+        :return: fig: (plotly figure) customized bar chart
+    """
+    # instantiate figure object
     fig = go.Figure()
 
+    # add bars for brake and accelerator
     fig.add_trace(go.Bar(
         x=['Brake', 'Acceleration'],
         y=[brake, accel],
-        marker=dict(color=[themes[theme]["trace"][1][0], themes[theme]["trace"][0][0]]),
+        marker=dict(color=[themes[theme]["trace"][1][2], themes[theme]["trace"][0][2]]),
         width=0.5,
     ))
 
-    # Update the layout
+    # Update the layout based on the theme
     fig.update_layout(
         title="Pedals",
         font=dict(
             family=themes[theme]["font"]["graph"],
             size=int(themes[theme]["size"]["medium"]),
-            color=themes[theme]["color"][2][0]
+            color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=50, r=30, t=40, b=10),
         yaxis_title="Pressure",
@@ -437,7 +560,16 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True, theme="Dark"):
 
 
 def steering(angle=0, darkmode=True, theme="Dark"):
-    # set handle location
+    """
+    Create a scatter plot to show instantaneous steering wheel position
+    Parameters:
+        :param angle: (int) angle in radians that the steering wheel is turned
+        :param darkmode: (boolean) select darkmode display
+        :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
+    Returns:
+        :return: fig: (plotly figure) steering wheel view
+    """
+    # set handlebar location
     density = 100
     t_right = np.linspace(-np.pi / 8, np.pi / 8, density)
     x = np.cos(t_right)
@@ -452,38 +584,45 @@ def steering(angle=0, darkmode=True, theme="Dark"):
     theta = angle
     c, s = np.cos(theta), np.sin(theta)
 
+    # compute x and y positions of points that construct the steering wheel
     x_right = x * c - y * s
     y_right = x * s + y * c
     x_left = x1 * c - y1 * s
     y_left = x1 * s + y1 * c
 
-    # Create a scatter plot with markers arranged in a circle
+    # Create a scatter plot with markers arranged in a circular pattern
     right_bar = go.Scatter(
         x=x_right, y=y_right, mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][4][0]),
+        marker=dict(size=20, color=themes[theme]["color"][1][2]),
         showlegend=False
     )
     left_bar = go.Scatter(
         x=x_left, y=y_left, mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][4][0]),
+        marker=dict(size=20, color=themes[theme]["color"][1][2]),
         showlegend=False
     )
+    # place points on the top of the wheel to indicate orientation
     right_top = go.Scatter(
         x=[x_right[-1]], y=[y_right[-1]], mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][3][0]),
+        marker=dict(size=20, color=themes[theme]["color"][2][2]),
         showlegend=False
     )
     left_top = go.Scatter(
         x=[x_left[0]], y=[y_left[0]], mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][3][0]),
+        marker=dict(size=20, color=themes[theme]["color"][2][2]),
         showlegend=False
     )
+
+    # initialize display figure and plot points
     fig = go.Figure()
     fig.add_trace(right_bar)
     fig.add_trace(left_bar)
     fig.add_trace(right_top)
     fig.add_trace(left_top)
+
+    # update layout to match theme
     fig.update_layout(
+        # fix vertical and horizontal sizes
         xaxis=dict(
             range=[-1.1, 1.1],
             autorange=False,
@@ -496,18 +635,19 @@ def steering(angle=0, darkmode=True, theme="Dark"):
         font=dict(
             family=themes[theme]["font"]["graph"],
             size=int(themes[theme]["size"]["medium"]),
-            color=themes[theme]["color"][2][0]
+            color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=45, r=45, t=40, b=0),
     )
 
+    # remove everything on the graph besides the points
     fig.update_yaxes(nticks=1, visible=False, showticklabels=False)
     fig.update_xaxes(nticks=1, visible=False, showticklabels=False)
 
     if darkmode:
         fig.update_layout(
             paper_bgcolor=themes[theme]["color"][0][1],
-            plot_bgcolor=themes[theme]["color"][1][1],
+            plot_bgcolor=themes[theme]["color"][0][1],
         )
 
     return fig

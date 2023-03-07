@@ -51,9 +51,12 @@ if __name__ == "__main__":
     minim = 0
     maxim = 10
 
-    time = np.linspace(minim, maxim, 1000)
-    angle = np.sin(time)+1
-    speed = np.cos(time)+1
+    # time = np.linspace(minim, maxim, 1000)
+    # angle = np.sin(time)+1
+    # speed = np.cos(time)+1
+    time = np.linspace(minim, maxim, 360)
+    angle = np.arange(360)
+    speed = np.ones(360)
 
     f_x = scipy.interpolate.interp1d(time, speed*np.cos(angle), kind='cubic')
     # print(f_speed.coeffs)
