@@ -16,6 +16,8 @@ Assumptions:
 5. CSV File has one signal per line and optionally one field per column
 6. Signals follow CAN Bus Protocol Draft format
 """
+
+
 # TODO add comments
 
 
@@ -55,8 +57,51 @@ sensors = {0: 'Accelerator 1',
 legend = {}
 
 # display configurations
-fontStyle = "Courier New"
-fontTitle = "Times New Roman"
+themes = {"Dark": {
+    "color": {
+        0: ["gray", "rgba(60,60,60,1)", "#3C3C3C"],
+        1: ["dark-gray", "rgba(40,40,40,1)", ""],
+        2: ["green", "rgba(0,154,0,1)", "#009900"],
+        3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],
+        4: ["black", "rgba(0,0,0,1)", "#000000"],
+    },
+    "trace": {
+        0: ["green", "rgba(0,154,0,1)", "#009900"],
+        1: ["red", "rgba(154,0,0,1)", "#990000"],
+    },
+    "size": {
+        "large": "24",
+        "medium": "18",
+        "small": "14",
+    },
+    "font": {
+        "title": "Times New Roman",
+        "p": "Courier New",
+        "graph": "Arial, sans-serif",
+    }
+},
+    "Jarvis": {
+        "color": {
+            0: [],
+            1: [],
+            2: [],
+        },
+        "trace": {
+            0: [],
+            1: [],
+        },
+        "size": {
+            "large": "24",
+            "medium": "18",
+            "small": "15",
+        },
+        "font": {
+            "title": "",
+            "p": "",
+            "graph": "",
+        }
+    }
+}
 
 
 def readData(filename):
@@ -175,7 +220,7 @@ def crc(message, cycCheck):
     return check == cycCheck
 
 
-def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_ticks=1):
+def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_plots=6, num_ticks=1):
     if avail is None:
         avail = list(range(15))
     fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.02)
@@ -292,30 +337,30 @@ def display_dashboard(all_frames, dark_mode=True, avail=None, num_plots=6, num_t
         fig.update_xaxes(visible=False, showticklabels=False)
 
     # update display layout
-    fig.update_layout(title_font_family=fontStyle,
-                      font_family=fontStyle,
-                      font=dict(size=15),
+    fig.update_layout(title_font_family=themes[theme]["font"]["p"],
+                      font_family=themes[theme]["font"]["p"],
+                      font=dict(size=int(themes[theme]["size"]["small"])),
                       margin=dict(l=75, r=75, t=10, b=20),
                       )
 
     if dark_mode:
-        fig.update_layout(paper_bgcolor='rgba(60,60,60,1)',
-                          plot_bgcolor='rgba(40,40,40,1)',
+        fig.update_layout(paper_bgcolor=themes[theme]["color"][0][1],
+                          plot_bgcolor=themes[theme]["color"][1][1],
                           legend=dict(
                               font=dict(
-                                  color="white"
+                                  color=themes[theme]["color"][3][0]
                               )
                           ),
-                          font_color="white",
-                          title_font_color="white",
-                          legend_title_font_color="white",
+                          font_color=themes[theme]["color"][3][0],
+                          title_font_color=themes[theme]["color"][3][0],
+                          legend_title_font_color=themes[theme]["color"][3][0],
                           )
 
     # fig.show()
     return fig
 
 
-def speedometer(value, maxim=60, darkmode=True):
+def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
     figSpeed = go.Figure()
     maxim = int(maxim)
     tick0 = 0
@@ -330,14 +375,14 @@ def speedometer(value, maxim=60, darkmode=True):
         value=value,
         gauge={
             'axis': {'range': [None, maxim], 'nticks': 7},
-            'bar': {'color': "green"},
+            'bar': {'color': themes[theme]["color"][2][0]},
             'steps': [
                 {'range': [tick0, tick1], 'color': "lightgray"},
                 {'range': [tick1, tick2], 'color': "gray"},
                 {'range': [tick2, tick3], 'color': "lightgray"},
                 {'range': [tick3, tick4], 'color': "gray"}],
             'threshold': {
-                'line': {'color': "red", 'width': 4},
+                'line': {'color': themes[theme]["trace"][1][0], 'width': 4},
                 'thickness': 0.75,
                 'value': maxim * .9}
         }
@@ -347,26 +392,26 @@ def speedometer(value, maxim=60, darkmode=True):
     figSpeed.update_layout(
         title="Speedometer",
         font=dict(
-            family="Arial, sans-serif",
-            size=18,
-            color="green"
+            family=themes[theme]["font"]["graph"],
+            size=int(themes[theme]["size"]["medium"]),
+            color=themes[theme]["color"][2][0]
         ),
         margin=dict(l=15, r=15, t=40, b=0),
     )
     if darkmode:
         figSpeed.update_layout(
-            paper_bgcolor='rgba(60,60,60,1)',
+            paper_bgcolor=themes[theme]["color"][0][1],
         )
     return figSpeed
 
 
-def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True):
+def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True, theme="Dark"):
     fig = go.Figure()
 
     fig.add_trace(go.Bar(
         x=['Brake', 'Acceleration'],
         y=[brake, accel],
-        marker=dict(color=['red', 'green']),
+        marker=dict(color=[themes[theme]["trace"][1][0], themes[theme]["trace"][0][0]]),
         width=0.5,
     ))
 
@@ -374,9 +419,9 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True):
     fig.update_layout(
         title="Pedals",
         font=dict(
-            family="Arial, sans-serif",
-            size=18,
-            color="green"
+            family=themes[theme]["font"]["graph"],
+            size=int(themes[theme]["size"]["medium"]),
+            color=themes[theme]["color"][2][0]
         ),
         margin=dict(l=50, r=30, t=40, b=10),
         yaxis_title="Pressure",
@@ -384,14 +429,14 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True):
     )
     if darkmode:
         fig.update_layout(
-            paper_bgcolor='rgba(60,60,60,1)',
-            plot_bgcolor='rgba(40,40,40,1)',
+            paper_bgcolor=themes[theme]["color"][0][1],
+            plot_bgcolor=themes[theme]["color"][1][1],
         )
 
     return fig
 
 
-def steering(angle=0, darkmode=True):
+def steering(angle=0, darkmode=True, theme="Dark"):
     # set handle location
     density = 100
     t_right = np.linspace(-np.pi / 8, np.pi / 8, density)
@@ -415,22 +460,22 @@ def steering(angle=0, darkmode=True):
     # Create a scatter plot with markers arranged in a circle
     right_bar = go.Scatter(
         x=x_right, y=y_right, mode='markers',
-        marker=dict(size=20, color='black'),
+        marker=dict(size=20, color=themes[theme]["color"][4][0]),
         showlegend=False
     )
     left_bar = go.Scatter(
         x=x_left, y=y_left, mode='markers',
-        marker=dict(size=20, color='black'),
+        marker=dict(size=20, color=themes[theme]["color"][4][0]),
         showlegend=False
     )
     right_top = go.Scatter(
         x=[x_right[-1]], y=[y_right[-1]], mode='markers',
-        marker=dict(size=20, color='white'),
+        marker=dict(size=20, color=themes[theme]["color"][3][0]),
         showlegend=False
     )
     left_top = go.Scatter(
         x=[x_left[0]], y=[y_left[0]], mode='markers',
-        marker=dict(size=20, color='white'),
+        marker=dict(size=20, color=themes[theme]["color"][3][0]),
         showlegend=False
     )
     fig = go.Figure()
@@ -449,9 +494,9 @@ def steering(angle=0, darkmode=True):
         ),
         title='Steering Wheel',
         font=dict(
-            family="Arial, sans-serif",
-            size=18,
-            color="green"
+            family=themes[theme]["font"]["graph"],
+            size=int(themes[theme]["size"]["medium"]),
+            color=themes[theme]["color"][2][0]
         ),
         margin=dict(l=45, r=45, t=40, b=0),
     )
@@ -461,8 +506,8 @@ def steering(angle=0, darkmode=True):
 
     if darkmode:
         fig.update_layout(
-            paper_bgcolor='rgba(60,60,60,1)',
-            plot_bgcolor='rgba(50,50,50,1)',
+            paper_bgcolor=themes[theme]["color"][0][1],
+            plot_bgcolor=themes[theme]["color"][1][1],
         )
 
     return fig

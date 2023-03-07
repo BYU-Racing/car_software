@@ -35,6 +35,8 @@ void setup() {
   receiver.setMB(MB0, RX,EXT);
   receiver.onReceive(MB0, canSniff);
   receiver.enableMBInterrupts();
+  receiver.setMBFilter(REJECT_ALL);
+  receiver.setMBUserFilter(MB0, 0x00, 0xFF);
 
   //WRITE TO SERIAL MONITOR
   Serial.begin(9600);
@@ -44,14 +46,15 @@ void setup() {
 }
 
 void loop() {
-
+  receiver.events();
   if (receiver.read(msg)) {
       canSniff(msg);
       delay(1000);
       Serial.println("received!");
   }
-
+  
   receiver.mailboxStatus();
   delay(800);
+
 
 }

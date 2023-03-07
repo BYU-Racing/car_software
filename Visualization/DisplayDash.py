@@ -19,7 +19,7 @@ pdl = main.pedals()
 
 app.layout = html.Div([
     html.Div([
-        html.H1('Car Go Fast!', style={'color': '#FFFFFF',
+        html.H1('Car Go Fast!', style={'color': main.themes["Dark"]["color"][3][2],
                                        'paddingLeft': '30px', 'paddingTop': '10px',
                                        'paddingBottom': '0px', 'margin': '0px',
                                        'display': 'inline-block', 'width': '33%'},
@@ -29,18 +29,18 @@ app.layout = html.Div([
             type='text',
             placeholder='Enter a time in seconds',
             value='',
-            style={'width': '15%', 'margin': '10px', 'font': "Courier New", }
+            style={'width': '15%', 'margin': '10px', 'font': main.themes["Dark"]["font"]["p"], }
         )
     ]),
     dcc.Graph(
         id='car_go_fast',
         figure=fig,
-        style={'width': '210vh', 'height': '120vh', 'margin': '0px'}
+        style={'width': '100%', 'height': '120vh', 'margin': '0px'}
     ),
     html.Div([
         dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
                    marks={0: "0", time_end / 2: str(time_end / 2), time_end: str(time_end)}),
-        dcc.Interval(id='interval-component', interval=freq, n_intervals=0)
+        # dcc.Interval(id='interval-component', interval=freq, n_intervals=0)
     ], style={'marginLeft': '50px', 'width': '162vh'}),
     html.Div([
         dcc.Graph(
@@ -58,19 +58,22 @@ app.layout = html.Div([
                   style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
         html.P(id='output-values',
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                      'color': '#FFFFFF', 'font-family': "Courier New", 'font-size': '14px',
+                      'color': main.themes["Dark"]["color"][3][2],
+                      'font-family': main.themes["Dark"]["font"]["p"],
+                      'font-size': main.themes["Dark"]["size"]["small"]+"px",
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
 ],
-    style={'background-color': '#3C3C3C', 'color': '#3C3C3C',
+    style={'background-color': main.themes["Dark"]["color"][0][2],
+           'color': main.themes["Dark"]["color"][0][2],
            'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
 
 
-# Define the callback function
-@app.callback(Output('time-slider', 'value'),
-              Input('interval-component', 'n_intervals'))
-def update_slider_graph(n):
-    return ((n*freq) % (time_end * 1000)) / 1000
+# # Define the callback function
+# @app.callback(Output('time-slider', 'value'),
+#               Input('interval-component', 'n_intervals'))
+# def update_slider_graph(n):
+#     return ((n*freq) % (time_end * 1000)) / 1000
 
 
 # define a callback function to update the output values based on the input time
@@ -114,7 +117,9 @@ def update_output_div(input_value):
         extra = html.P("Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:]),
                        id='output-values',
                        style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                              'color': '#FFFFFF', 'font-family': "Courier New", 'font-size': '14px',
+                              'color': main.themes["Dark"]["color"][3][2],
+                              'font-family': main.themes["Dark"]["font"]["p"],
+                              'font-size': main.themes["Dark"]["size"]["small"]+"px",
                               'vertical-align': 'top', 'white-space': 'pre-line'}
                        )
 

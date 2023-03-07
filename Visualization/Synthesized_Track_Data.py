@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import scipy
 from scipy.interpolate import interp1d
-from scipy.misc import derivative
+from scipy import integrate
 
 #Accept Speed(mph), time(sec) and wheel angle(degrees) lists
 #return a list of x and y values
@@ -38,49 +38,65 @@ def dallin_position(speed, time, angle):
 
     theta = np.deg2rad(angle)
 
-    x =  speed * np.cos(theta)
-    y =  speed * np.sin(theta)
-
-
+    x = speed * np.cos(theta)
+    y = speed * np.sin(theta)
 
     return x, y
 
-if __name__ == "__main__":
 
-    time = np.linspace(0, 10, 1000)
+def derive(f, x0, h=1e-5):
+    return (f(x0 + h) - f(x0)) / h
+
+if __name__ == "__main__":
+    minim = 0
+    maxim = 10
+
+    time = np.linspace(minim, maxim, 1000)
     angle = np.sin(time)+1
     speed = np.cos(time)+1
 
-    f_speed = scipy.interpolate.interp1d(time, speed, kind = 'cubic')
+    f_x = scipy.interpolate.interp1d(time, speed*np.cos(angle), kind='cubic')
     # print(f_speed.coeffs)
-    ysnew = f_speed(time)
+    ysnew = f_x(time)
 
-    f_angle = scipy.interpolate.interp1d(time, angle, kind = 'cubic')
-    yanew = f_angle(time)
+    f_y = scipy.interpolate.interp1d(time, speed * np.sin(angle), kind='cubic')
+    yanew = f_y(time)
 
-    # plt.subplot(121)
-    # plt.plot(time, ysnew)
+    # integrate
+    def f_distance(f, t):
+        return scipy.integrate.quad(f, 0, t)[0]
 
-    # plt.subplot(122)
-    # plt.plot(time, yanew)
+    # Evaluate the integral of f_speed at some points
+    x_pos = np.array([f_distance(f_x, t) for t in time])
+    y_pos = np.array([f_distance(f_y, t) for t in time])
 
-    speed_der = f_speed.derivative()
+    plt.subplot(131)
+    plt.plot(time, speed, label="Original Speed")
+    plt.subplot(132)
+    plt.plot(time, angle, label="Original Angle")
 
-    f_angle = [derivative(f_angle, i) for i in time]
+    # get interpolating points
+    # time = time[:-1]
+    ysder = f_x(time)
+    yader = f_y(time)
 
-    ysder = f_speed(time)
+    # derive and plot
+    plt.subplot(131)
+    plt.plot(time, ysder, label="Speed Interpolation")
+    # plt.plot(time, derive(f_speed, time), label="Speed Derivative")
+    plt.plot(time, x_pos, label="X Position")
+    plt.legend()
 
-    yader = f_angle(time)
+    plt.subplot(132)
+    plt.plot(time, yader, label="Angle Interpolation")
+    # plt.plot(time, derive(f_angle, time), label="Angle Derivative")
+    plt.plot(time, y_pos, label="Y Position")
 
-    plt.subplot(121)
-    plt.plot(time, ysder)
+    plt.subplot(133)
+    plt.plot(x_pos, y_pos)
+    plt.title("Position")
 
-    plt.subplot(122)
-    plt.plot(time, yader)
-
-
-
-
+    plt.legend()
     plt.show()
 
     pass
