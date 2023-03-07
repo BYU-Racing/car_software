@@ -1,3 +1,16 @@
+#include <FlexCAN_T4.h>
+
+#define CAN_BAUDRATE 1000000
+
+CAN_message_t msg;
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  while(!Serial); // wait for Serial to open
+  Serial.println("CAN LED Receiver");
+  Can0.begin(CAN_BAUDRATE);
+}
+
 void loop() {
   if (Can0.read(msg)) {
     if (msg.id == 0x123 && msg.len == 1 && msg.buf[0] == 1) {
