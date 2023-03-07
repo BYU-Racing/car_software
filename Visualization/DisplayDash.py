@@ -5,10 +5,8 @@ import pandas as pd
 import numpy as np
 import main
 
-# TODO add tabs
 # TODO play button
 # TODO select theme
-# TODO select display size
 # TODO write README
 # TODO make loading screen
 # TODO fix steering wheel
@@ -77,13 +75,14 @@ app.layout = html.Div([
         html.Button('Battery', id='bat-button', n_clicks=0,
                     style=button_style[0]),
         dcc.RadioItems(['Expanded', 'Condensed'], 'Expanded',
+                       id='size_radio',
                        style={
-                 'font-family': main.themes[view]["font"]["title"],
-                 'color': main.themes[view]["color"][2][2],
-                 # 'background-color': main.themes[view]["color"][2][2],
-                 'font-size': main.themes[view]["size"]["small"] + "px",
-                 'display': 'inline-block', 'width': '12%', "padding": '0px',
-                 'marginLeft': '15px', 'marginTop': '20px'
+                         'font-family': main.themes[view]["font"]["title"],
+                         'color': main.themes[view]["color"][2][2],
+                         # 'background-color': main.themes[view]["color"][2][2],
+                         'font-size': main.themes[view]["size"]["small"] + "px",
+                         'display': 'inline-block', 'width': '12%', "padding": '0px',
+                         'marginLeft': '15px', 'marginTop': '20px'
                        })
     ]),
     # main line charts
@@ -137,21 +136,23 @@ app.layout = html.Div([
 
 
 @app.callback(
-    # Output(component_id='output-values', component_property='children'),
     Output(component_id='acc-button', component_property='style'),
     Output(component_id='brk-button', component_property='style'),
     Output(component_id='tir-button', component_property='style'),
     Output(component_id='str-button', component_property='style'),
     Output(component_id='dmp-button', component_property='style'),
     Output(component_id='bat-button', component_property='style'),
+    Output(component_id='car_go_fast', component_property='figure'),
+    Output(component_id='car_go_fast', component_property='style'),
     Input(component_id='acc-button', component_property='n_clicks'),
     Input(component_id='brk-button', component_property='n_clicks'),
     Input(component_id='tir-button', component_property='n_clicks'),
     Input(component_id='str-button', component_property='n_clicks'),
     Input(component_id='dmp-button', component_property='n_clicks'),
     Input(component_id='bat-button', component_property='n_clicks'),
+    Input(component_id='size_radio', component_property='value'),
 )
-def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5):
+def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, size):
     index = [n_click0, n_click1, n_click2, n_click3, n_click4, n_click5]
     on = [i % 2 for i in index]
     avail = []
@@ -176,9 +177,19 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5):
         elif i == 5 and on[i] == 0:
             avail.append(main.Sensor.TEMP.value)
 
-    # new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=sum(on))
+    buttons = [button_style[i % 2] for i in index]
 
-    return [button_style[i % 2] for i in index]
+    new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on)-sum(on))
+    buttons.append(new_plot)
+
+    if size == "Expanded":
+        tall = '120vh'
+    else:
+        tall = '60vh'
+    reformat = {'width': '100%', 'height': tall, 'margin': '0px'}
+    buttons.append(reformat)
+
+    return buttons
 
 
 
@@ -188,9 +199,13 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5):
     Output(component_id='speedometer', component_property='figure'),
     Output(component_id='pedals', component_property='figure'),
     Output(component_id='steering-wheel', component_property='figure'),
+    Output(component_id='speedometer', component_property='style'),
+    Output(component_id='pedals', component_property='style'),
+    Output(component_id='steering-wheel', component_property='style'),
     Input(component_id='time-slider', component_property='value'),
+    Input(component_id='size_radio', component_property='value'),
 )
-def update_output_div(input_value):
+def update_output_div(input_value, size):
     """
     Update each chart based on the input time from the slider object
     Parameters:
@@ -238,11 +253,21 @@ def update_output_div(input_value):
         # get steering angle
         angle = float(values[9].split(":")[1][1:])
 
+        # update sizes
+        if size == "Expanded":
+            wide = '50vh'
+            tall = '40vh'
+        else:
+            wide = '35vh'
+            tall = '28vh'
+        update = {'width': wide, 'height': tall, 'display': 'inline-block'}
+
         # return figures
         return extra, \
                main.speedometer(speed, maxim=2, theme=view), \
                main.pedals(brake, acceleration, maxim=5, theme=view), \
-               main.steering(angle=angle, theme=view)
+               main.steering(angle=angle, theme=view), \
+               update, update, update
 
 
 if __name__ == '__main__':
