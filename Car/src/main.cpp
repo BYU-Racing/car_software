@@ -4,13 +4,19 @@
 #include "Car.h"
 #include "State.h"
 
-#define KEYSWITCH 2
-#define INERTIASWITCH 3
-#define LED 4
+#define KEYSWITCH 3
+#define INERTIASWITCH 4
+#define LED 2
 
 Car car;
+SensorData sensorData;
 
 void setup() {
+
+  Serial.begin(9600);
+  while(!Serial);
+  Serial.println("Hello");
+
   pinMode(KEYSWITCH, INPUT);
   pinMode(INERTIASWITCH, INPUT);
   pinMode(LED, OUTPUT);
@@ -19,8 +25,11 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  car.updateSensors(digitalRead(KEYSWITCH), digitalRead(INERTIASWITCH));
+  sensorData.setKeyPosition(digitalRead(KEYSWITCH));
+  sensorData.setInertiaShutdown(digitalRead(INERTIASWITCH));
 
+  car.updateSensors(sensorData);
+  
   car.run();
 }
 

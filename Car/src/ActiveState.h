@@ -18,6 +18,7 @@ int ActiveState::checkState(SensorData sensorData) {
 }
 
 void ActiveState::race() {
+    Serial.println("Active");
     digitalWrite(ledPin, HIGH);
     delay(250);
     digitalWrite(ledPin, LOW);

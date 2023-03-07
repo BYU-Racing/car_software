@@ -24,6 +24,7 @@ int IdleState::checkState(SensorData sensorData) {
 }
 
 void IdleState::race() {
+    Serial.println("Idle");
     digitalWrite(ledPin, HIGH);
     delay(500);
     digitalWrite(ledPin, LOW);

@@ -8,9 +8,9 @@ class SensorData {
 
     public:
         bool getKeyPosition() {return keyPosition; }
-        bool setKeyPosition(bool val) { keyPosition = val;}
+        void setKeyPosition(bool val) { keyPosition = val;}
         bool getInertiaShutdown() { return inertiaShutdown; }
-        bool setInertiaShutdown(bool val) { inertiaShutdown = val; }
+        void setInertiaShutdown(bool val) { inertiaShutdown = val; }
 
 };
 

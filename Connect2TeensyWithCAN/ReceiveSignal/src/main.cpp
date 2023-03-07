@@ -8,53 +8,27 @@
 #include <FlexCAN_T4.h>
 
 #define LED 2
-FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> receiver;
+#define CAN_BAUDRATE 9600
+
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0;
+
 CAN_message_t msg;
 
-// FLASHES LIGHT 3 TIMES WHEN A SIGNAL IS RECEIVED
-void canSniff(const CAN_message_t &msg) {
-  for(int i = 0; i < 3; i++){
-    digitalWrite(LED, HIGH);
-    delay(500);
-    digitalWrite(LED, LOW);
-    delay(500);
-  }
-}
-
 void setup() {
-  //SETUP LED PIN
   pinMode(LED, OUTPUT);
-  pinMode(23, OUTPUT);
-  //digitalWrite(LED, HIGH);
-
-  //SETUP CANBUS PINS
-  receiver.begin();
-  receiver.setClock(CLK_60MHz);
-  receiver.setBaudRate(9600);
-  receiver.setMaxMB(1);
-  receiver.setMB(MB0, RX,EXT);
-  receiver.onReceive(MB0, canSniff);
-  receiver.enableMBInterrupts();
-  receiver.setMBFilter(REJECT_ALL);
-  receiver.setMBUserFilter(MB0, 0x00, 0xFF);
-
-  //WRITE TO SERIAL MONITOR
   Serial.begin(9600);
-  while(!Serial);
-  receiver.mailboxStatus();
-  Serial.println("Hello");
+  while(!Serial); // wait for Serial to open
+  Serial.println("CAN LED Receiver");
+  Can0.begin();
+  Can0.setBaudRate(CAN_BAUDRATE);
 }
 
 void loop() {
-  receiver.events();
-  if (receiver.read(msg)) {
-      canSniff(msg);
-      delay(1000);
-      Serial.println("received!");
+  int nRead = Can0.read(msg);
+  Serial.printf("%d\n", nRead);
+  if (nRead != 0) {
+    digitalWrite(LED, HIGH);
+    delay(1000);
+    digitalWrite(LED, LOW);
   }
-  
-  receiver.mailboxStatus();
-  delay(800);
-
-
 }

@@ -20,6 +20,7 @@ class State{
 };
 
 void State::race() {
+    Serial.println("state");
     //do some racing things here
 }
 

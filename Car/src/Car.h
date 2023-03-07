@@ -11,7 +11,7 @@ struct Car {
     public:
         Car() {};
         Car(int _ledPin) : state(IdleState(_ledPin)) {};
-        void updateSensors(bool, bool);
+        void updateSensors(SensorData _sensorData);
         void updateState(SensorData sensorData);
         void logData();
         bool getInertiaShutdown()  { return sensorData.getInertiaShutdown(); }
@@ -19,22 +19,21 @@ struct Car {
         void run();
 };
 
-void Car::updateSensors(bool _keyPosition, bool _inertiaShutdown) {
+void Car::updateSensors(SensorData _sensorData) {
     //read in sensors
-    sensorData.setKeyPosition(_keyPosition);
-    sensorData.setInertiaShutdown(_inertiaShutdown);
+    this->sensorData = sensorData;
     updateState(sensorData);
 }
 
 void Car::updateState(SensorData sensorData) {
     state.checkState(sensorData);
-
 }
 
 void Car::run() {
     //update sensors
     //check state
     //do racing
+    state.race();
 }
 
 #endif
