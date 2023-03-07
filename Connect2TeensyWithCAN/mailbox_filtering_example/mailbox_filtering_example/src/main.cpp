@@ -3,6 +3,20 @@ FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0;
 
 #define NUM_TX_MAILBOXES 2
 #define NUM_RX_MAILBOXES 6
+
+void canSniff(const CAN_message_t &msg) {
+  Serial.print("MB "); Serial.print(msg.mb);
+  Serial.print("  OVERRUN: "); Serial.print(msg.flags.overrun);
+  Serial.print("  LEN: "); Serial.print(msg.len);
+  Serial.print(" EXT: "); Serial.print(msg.flags.extended);
+  Serial.print(" TS: "); Serial.print(msg.timestamp);
+  Serial.print(" ID: "); Serial.print(msg.id, HEX);
+  Serial.print(" Buffer: ");
+  for ( uint8_t i = 0; i < msg.len; i++ ) {
+    Serial.print(msg.buf[i], HEX); Serial.print(" ");
+  } Serial.println();
+}
+
 void setup(void) {
   Serial.begin(115200); delay(400);
   Can0.begin();
@@ -23,19 +37,6 @@ void setup(void) {
   Can0.setMBUserFilter(MB1,0x03,0xFF);
   Can0.setMBUserFilter(MB2,0x0B,0xFF);
   Can0.mailboxStatus();
-}
-
-void canSniff(const CAN_message_t &msg) {
-  Serial.print("MB "); Serial.print(msg.mb);
-  Serial.print("  OVERRUN: "); Serial.print(msg.flags.overrun);
-  Serial.print("  LEN: "); Serial.print(msg.len);
-  Serial.print(" EXT: "); Serial.print(msg.flags.extended);
-  Serial.print(" TS: "); Serial.print(msg.timestamp);
-  Serial.print(" ID: "); Serial.print(msg.id, HEX);
-  Serial.print(" Buffer: ");
-  for ( uint8_t i = 0; i < msg.len; i++ ) {
-    Serial.print(msg.buf[i], HEX); Serial.print(" ");
-  } Serial.println();
 }
 
 void loop() {
