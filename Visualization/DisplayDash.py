@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html
+from dash import Dash, dcc, html, ctx
 from dash.dependencies import Input, Output
 import plotly.express as px
 import pandas as pd
@@ -9,6 +9,10 @@ import main
 # TODO play button
 # TODO select theme
 # TODO select display size
+# TODO write README
+# TODO make loading screen
+# TODO fix steering wheel
+# TODO add logo and name
 
 # create Dash object
 app = Dash(__name__)
@@ -27,24 +31,60 @@ fig = main.display_dashboard(all_sensors, theme=view)
 spd = main.speedometer(0, theme=view)
 pdl = main.pedals(theme=view)
 
+# styles
+button_style = [    # selected
+                {'font-family': main.themes[view]["font"]["title"],
+                 'color': main.themes[view]["color"][0][0],
+                 'background-color': main.themes[view]["color"][2][2],
+                 'font-size': main.themes[view]["size"]["medium"] + "px",
+                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+                 'marginBottom': '25px',
+                 'border': "1.5px solid " + main.themes[view]["color"][0][0],
+                 },
+                    # deselected
+                {'font-family': main.themes[view]["font"]["title"],
+                 'color': main.themes[view]["color"][2][2],
+                 'background-color': main.themes[view]["color"][0][0],
+                 'font-size': main.themes[view]["size"]["medium"] + "px",
+                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+                 'marginBottom': '25px',
+                 'border': "1.5px solid " + main.themes[view]["color"][2][2],
+                 },
+                ]
+
 # set dashboard layout
 app.layout = html.Div([
     html.Div([
         # title
-        html.H1('Car Go Fast!', style={'color': main.themes[view]["color"][2][2],
-                                       'paddingLeft': '30px', 'paddingTop': '10px',
-                                       'paddingBottom': '0px', 'margin': '0px',
-                                       'display': 'inline-block', 'width': '33%',
-                                       'font-family': main.themes[view]["font"]["title"]},
+        html.H1('A.V.A.', style={'color': main.themes[view]["color"][2][2],
+                                 'paddingLeft': '30px', 'paddingTop': '10px',
+                                 'paddingBottom': '0px', 'margin': '0px',
+                                 'display': 'inline-block', 'width': '16%',
+                                 'font-family': main.themes[view]["font"]["title"],
+                                 'font-style': 'italic'
+                                 },
                 id='dashboard-title'),
-        # input and settings
-        dcc.Input(
-            id='input-time',
-            type='text',
-            placeholder='Enter a time in seconds',
-            value='',
-            style={'width': '15%', 'margin': '10px', 'font': main.themes[view]["font"]["p"], }
-        )
+        html.Button('Accelerator', id='acc-button', n_clicks=0,
+                    style=button_style[0]),
+        html.Button('Brake', id='brk-button', n_clicks=0,
+                    style=button_style[0]),
+        html.Button('Tires', id='tir-button', n_clicks=0,
+                    style=button_style[0]),
+        html.Button('Steering', id='str-button', n_clicks=0,
+                    style=button_style[0]),
+        html.Button('Dampers', id='dmp-button', n_clicks=0,
+                    style=button_style[0]),
+        html.Button('Battery', id='bat-button', n_clicks=0,
+                    style=button_style[0]),
+        dcc.RadioItems(['Expanded', 'Condensed'], 'Expanded',
+                       style={
+                 'font-family': main.themes[view]["font"]["title"],
+                 'color': main.themes[view]["color"][2][2],
+                 # 'background-color': main.themes[view]["color"][2][2],
+                 'font-size': main.themes[view]["size"]["small"] + "px",
+                 'display': 'inline-block', 'width': '12%', "padding": '0px',
+                 'marginLeft': '15px', 'marginTop': '20px'
+                       })
     ]),
     # main line charts
     dcc.Graph(
@@ -80,7 +120,7 @@ app.layout = html.Div([
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
                       'color': main.themes[view]["color"][2][2],
                       'font-family': main.themes[view]["font"]["p"],
-                      'font-size': main.themes[view]["size"]["small"]+"px",
+                      'font-size': main.themes[view]["size"]["small"] + "px",
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
 ],
@@ -96,13 +136,59 @@ app.layout = html.Div([
 #     return ((n*freq) % (time_end * 1000)) / 1000
 
 
+@app.callback(
+    # Output(component_id='output-values', component_property='children'),
+    Output(component_id='acc-button', component_property='style'),
+    Output(component_id='brk-button', component_property='style'),
+    Output(component_id='tir-button', component_property='style'),
+    Output(component_id='str-button', component_property='style'),
+    Output(component_id='dmp-button', component_property='style'),
+    Output(component_id='bat-button', component_property='style'),
+    Input(component_id='acc-button', component_property='n_clicks'),
+    Input(component_id='brk-button', component_property='n_clicks'),
+    Input(component_id='tir-button', component_property='n_clicks'),
+    Input(component_id='str-button', component_property='n_clicks'),
+    Input(component_id='dmp-button', component_property='n_clicks'),
+    Input(component_id='bat-button', component_property='n_clicks'),
+)
+def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5):
+    index = [n_click0, n_click1, n_click2, n_click3, n_click4, n_click5]
+    on = [i % 2 for i in index]
+    avail = []
+    for i in range(len(on)):
+        if i == 0 and on[i] == 0:
+            avail.append(main.Sensor.ACC1.value)
+            avail.append(main.Sensor.ACC2.value)
+        elif i == 1 and on[i] == 0:
+            avail.append(main.Sensor.BRAKE.value)
+        elif i == 2 and on[i] == 0:
+            avail.append(main.Sensor.TIRE1.value)
+            avail.append(main.Sensor.TIRE2.value)
+            avail.append(main.Sensor.TIRE3.value)
+            avail.append(main.Sensor.TIRE4.value)
+        elif i == 3 and on[i] == 0:
+            avail.append(main.Sensor.ANGLE.value)
+        elif i == 4 and on[i] == 0:
+            avail.append(main.Sensor.DAMP1.value)
+            avail.append(main.Sensor.DAMP2.value)
+            avail.append(main.Sensor.DAMP3.value)
+            avail.append(main.Sensor.DAMP4.value)
+        elif i == 5 and on[i] == 0:
+            avail.append(main.Sensor.TEMP.value)
+
+    # new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=sum(on))
+
+    return [button_style[i % 2] for i in index]
+
+
+
 # define a callback function to update the output values based on the input time
 @app.callback(
     Output(component_id='output-values', component_property='children'),
     Output(component_id='speedometer', component_property='figure'),
     Output(component_id='pedals', component_property='figure'),
     Output(component_id='steering-wheel', component_property='figure'),
-    Input(component_id='time-slider', component_property='value')
+    Input(component_id='time-slider', component_property='value'),
 )
 def update_output_div(input_value):
     """
@@ -145,7 +231,7 @@ def update_output_div(input_value):
                        style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
                               'color': main.themes[view]["color"][2][2],
                               'font-family': main.themes[view]["font"]["p"],
-                              'font-size': main.themes[view]["size"]["small"]+"px",
+                              'font-size': main.themes[view]["size"]["small"] + "px",
                               'vertical-align': 'top', 'white-space': 'pre-line'}
                        )
 
