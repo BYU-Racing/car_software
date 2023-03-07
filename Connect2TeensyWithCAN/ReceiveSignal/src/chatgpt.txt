@@ -1,0 +1,10 @@
+void loop() {
+  if (Can0.read(msg)) {
+    if (msg.id == 0x123 && msg.len == 1 && msg.buf[0] == 1) {
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(1000);
+      digitalWrite(LED_BUILTIN, LOW);
+    }
+  }
+}
+This code also sets up the CAN communication using the Can0 object and initializes the LED pin as an output. In the loop, it reads any incoming CAN messages and checks if the message ID is 0x123, the message length is 1, and the data byte is 1. If all conditions are met, it turns on the LED for 1 second and then turns it off.
