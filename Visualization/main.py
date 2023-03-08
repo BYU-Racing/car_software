@@ -65,6 +65,11 @@ themes = {"Dark": {                                     # theme name
     "trace": {
         0: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
         1: ["red", "rgba(154,0,0,1)", "#990000"],
+        2: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
+        3: ["red", "rgba(154,0,0,1)", "#990000"],
+        4: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
+        5: ["red", "rgba(154,0,0,1)", "#990000"],
+        6: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
     },
     "size": {
         "large": "24",                                  # large text like graph titles
@@ -83,12 +88,16 @@ themes = {"Dark": {                                     # theme name
             1: ["dark-blue", "rgba(1, 2, 44,1)", "#01022C"],  # subplot background to differentiate from background
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],  # Text color
             3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
-            4: ["black", "rgba(0,0,0,1)", "#000000"],
+            4: ["dark-gray", "rgba(216, 216, 216,1)", "#888888"], # Steering wheel color, also just black
         },
         "trace": {
             0: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             1: ["neon_yellow", "rgba(248, 255, 51, 1)","#f8ff33"],
-            3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
+            2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
+            3: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
+            4: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
+            5: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
+            7: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
         },
         "size": {
             "large": "24",
@@ -306,7 +315,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         # increment trace so that other plots can stay consistent with order
         index_trace += 1
 
-        # add a trace to the rowth subplot using data on the corresponding row from all_frames
+        # add a trace to the growth subplot using data on the corresponding row from all_frames
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC1.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC1.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][0][2]),
@@ -341,7 +350,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE1.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                 marker=dict(color=themes[theme]["trace"][2][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE1.value]), row=row, col=1)
     if Sensor.TIRE2.value in avail:
@@ -357,7 +366,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE3.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE3.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                 marker=dict(color=themes[theme]["trace"][4][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE3.value]), row=row, col=1)
     if Sensor.TIRE4.value in avail:
@@ -365,7 +374,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE4.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE4.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                 marker=dict(color=themes[theme]["trace"][5][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
     fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
@@ -378,7 +387,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ANGLE.value]["Timestamp"],
                                  y=all_frames[Sensor.ANGLE.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][0][2]),
+                                 marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.ANGLE.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Steering", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
@@ -390,7 +399,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP1.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                 marker=dict(color=themes[theme]["trace"][2][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP1.value]), row=row, col=1)
     if Sensor.DAMP2.value in avail:
@@ -406,7 +415,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP3.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP3.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                 marker=dict(color=themes[theme]["trace"][4][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP3.value]), row=row, col=1)
     if Sensor.DAMP4.value in avail:
@@ -414,7 +423,7 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
         index_trace += 1
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP4.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP4.value]["Data"],
-                                 marker=dict(color=themes[theme]["trace"][3][2],
+                                 marker=dict(color=themes[theme]["trace"][5][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP4.value]), row=row, col=1)
         fig.update_yaxes(nticks=num_ticks, title_text="Dampers", row=row, col=1)
@@ -593,23 +602,23 @@ def steering(angle=0, darkmode=True, theme="Dark"):
     # Create a scatter plot with markers arranged in a circular pattern
     right_bar = go.Scatter(
         x=x_right, y=y_right, mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][1][2]),
+        marker=dict(size=20, color=themes[theme]["color"][4][2]),
         showlegend=False
     )
     left_bar = go.Scatter(
         x=x_left, y=y_left, mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][1][2]),
+        marker=dict(size=20, color=themes[theme]["color"][4][2]),
         showlegend=False
     )
     # place points on the top of the wheel to indicate orientation
     right_top = go.Scatter(
         x=[x_right[-1]], y=[y_right[-1]], mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][2][2]),
+        marker=dict(size=20, color=themes[theme]["color"][1][2]),
         showlegend=False
     )
     left_top = go.Scatter(
         x=[x_left[0]], y=[y_left[0]], mode='markers',
-        marker=dict(size=20, color=themes[theme]["color"][2][2]),
+        marker=dict(size=20, color=themes[theme]["color"][1][2]),
         showlegend=False
     )
 
@@ -624,11 +633,11 @@ def steering(angle=0, darkmode=True, theme="Dark"):
     fig.update_layout(
         # fix vertical and horizontal sizes
         xaxis=dict(
-            range=[-1.1, 1.1],
+            range=[-1.15, 1.15],
             autorange=False,
         ),
         yaxis=dict(
-            range=[-1.1, 1.1],
+            range=[-1.15, 1.15],
             autorange=False,
         ),
         title='Steering Wheel',

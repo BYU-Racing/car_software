@@ -9,8 +9,6 @@ import main
 # TODO select theme
 # TODO write README
 # TODO make loading screen
-# TODO fix steering wheel
-# TODO add logo and name
 
 # create Dash object
 app = Dash(__name__)
@@ -35,7 +33,7 @@ button_style = [    # selected
                  'color': main.themes[view]["color"][0][0],
                  'background-color': main.themes[view]["color"][2][2],
                  'font-size': main.themes[view]["size"]["medium"] + "px",
-                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+                 'display': 'inline-block', 'width': '9%', 'marginLeft': '8px',
                  'marginBottom': '25px',
                  'border': "1.5px solid " + main.themes[view]["color"][0][0],
                  },
@@ -44,7 +42,7 @@ button_style = [    # selected
                  'color': main.themes[view]["color"][2][2],
                  'background-color': main.themes[view]["color"][0][0],
                  'font-size': main.themes[view]["size"]["medium"] + "px",
-                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+                 'display': 'inline-block', 'width': '9%', 'marginLeft': '8px',
                  'marginBottom': '25px',
                  'border': "1.5px solid " + main.themes[view]["color"][2][2],
                  },
@@ -53,11 +51,15 @@ button_style = [    # selected
 # set dashboard layout
 app.layout = html.Div([
     html.Div([
+        # logo
+        html.Img(src=app.get_asset_url("club_logo.JPG"),
+                 style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginTop': '10px',
+                        'display': 'inline-block',}),
         # title
         html.H1('A.V.A.', style={'color': main.themes[view]["color"][2][2],
-                                 'paddingLeft': '30px', 'paddingTop': '10px',
+                                 'paddingLeft': '10px', 'paddingTop': '10px',
                                  'paddingBottom': '0px', 'margin': '0px',
-                                 'display': 'inline-block', 'width': '16%',
+                                 'display': 'inline-block', 'width': '10%',
                                  'font-family': main.themes[view]["font"]["title"],
                                  'font-style': 'italic'
                                  },
@@ -82,7 +84,7 @@ app.layout = html.Div([
                          # 'background-color': main.themes[view]["color"][2][2],
                          'font-size': main.themes[view]["size"]["small"] + "px",
                          'display': 'inline-block', 'width': '12%', "padding": '0px',
-                         'marginLeft': '15px', 'marginTop': '20px'
+                         'marginLeft': '15px', 'marginTop': '5px'
                        })
     ]),
     # main line charts

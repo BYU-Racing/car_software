@@ -25,7 +25,9 @@ You can then clone this project to your own machine from GitHub.
 Instructions for Use
 
 After downloading, run the dash app by running the DisplayDash.py file, then clicking on the
-local host link that appears
+local host link that appears.
+If you click on something and nothing happens, wait a few seconds before retrying in case AVA
+is still loading.
 
 
 Instructions for Modifications
