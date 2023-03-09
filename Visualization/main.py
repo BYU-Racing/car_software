@@ -282,12 +282,11 @@ def crc(message, cycCheck):
     return check == cycCheck
 
 
-def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_plots=6, num_ticks=1):
+def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_ticks=1):
     """
     Display a Dash dashboard with racing sensor data
     Parameters:
         :param all_frames: (dataframe) pandas dataframe with every sensor at every time interval
-        :param dark_mode: (boolean) display dashboard in dark mode or light mode
         :param theme: (string) select desired display theme such as 'Dark' or 'Jarvis'
         :param avail: (list) data available or desired to display, ie select subplots
         :param num_plots: (int) the number of subplots to display
@@ -447,31 +446,29 @@ def display_dashboard(all_frames, dark_mode=True, theme="Dark", avail=None, num_
                       font=dict(size=int(themes[theme]["size"]["small"])),
                       margin=dict(l=75, r=75, t=10, b=20),
                       )
-    # update layout based on dark mode and theme
-    if dark_mode:
-        fig.update_layout(paper_bgcolor=themes[theme]["color"][0][1],
-                          plot_bgcolor=themes[theme]["color"][1][1],
-                          legend=dict(
-                              font=dict(
-                                  color=themes[theme]["color"][2][2]
-                              )
-                          ),
-                          font_color=themes[theme]["color"][2][2],
-                          title_font_color=themes[theme]["color"][2][2],
-                          legend_title_font_color=themes[theme]["color"][2][2],
+    # update layout based on and theme
+    fig.update_layout(paper_bgcolor=themes[theme]["color"][0][1],
+                      plot_bgcolor=themes[theme]["color"][1][1],
+                      legend=dict(
+                          font=dict(
+                              color=themes[theme]["color"][2][2]
                           )
+                      ),
+                      font_color=themes[theme]["color"][2][2],
+                      title_font_color=themes[theme]["color"][2][2],
+                      legend_title_font_color=themes[theme]["color"][2][2],
+                      )
 
     # fig.show()
     return fig
 
 
-def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
+def speedometer(value, maxim=60, theme="Dark"):
     """
     Create a speedometer plot to show instantaneous speed
     Parameters:
         :param value: (int) instantenous speed
         :param maxim: (int) maximum value on speedometer
-        :param darkmode: (boolean) change display based on darkmode
         :param theme: (string) change display based on theme
     Returns:
         :return: fig: (plotly figure) customized speedometer plot
@@ -515,15 +512,12 @@ def speedometer(value, maxim=60, darkmode=True, theme="Dark"):
             color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=15, r=15, t=40, b=0),
+        paper_bgcolor=themes[theme]["color"][0][1],
     )
-    if darkmode:
-        figSpeed.update_layout(
-            paper_bgcolor=themes[theme]["color"][0][1],
-        )
     return figSpeed
 
 
-def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True, theme="Dark"):
+def pedals(brake=0, accel=0, minim=0, maxim=1, theme="Dark"):
     """
     Create a bar chart to show instantaneous brake and accelerator pressure
     Parameters:
@@ -531,7 +525,6 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True, theme="Dark"):
         :param accel: (int) instantaneous value of the accelerator
         :param minim: (int) minimum chart value
         :param maxim: (int) maximum chart value
-        :param darkmode: (boolean) select darkmode display
         :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
     Returns:
         :return: fig: (plotly figure) customized bar chart
@@ -557,23 +550,19 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, darkmode=True, theme="Dark"):
         ),
         margin=dict(l=50, r=30, t=40, b=10),
         yaxis_title="Pressure",
-        yaxis_range=[minim, maxim]
+        yaxis_range=[minim, maxim],
+        paper_bgcolor=themes[theme]["color"][0][1],
+        plot_bgcolor=themes[theme]["color"][1][1],
     )
-    if darkmode:
-        fig.update_layout(
-            paper_bgcolor=themes[theme]["color"][0][1],
-            plot_bgcolor=themes[theme]["color"][1][1],
-        )
 
     return fig
 
 
-def steering(angle=0, darkmode=True, theme="Dark"):
+def steering(angle=0, theme="Dark"):
     """
     Create a scatter plot to show instantaneous steering wheel position
     Parameters:
         :param angle: (int) angle in radians that the steering wheel is turned
-        :param darkmode: (boolean) select darkmode display
         :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
     Returns:
         :return: fig: (plotly figure) steering wheel view
@@ -647,17 +636,13 @@ def steering(angle=0, darkmode=True, theme="Dark"):
             color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=45, r=45, t=40, b=0),
+        paper_bgcolor=themes[theme]["color"][0][1],
+        plot_bgcolor=themes[theme]["color"][0][1],
     )
 
     # remove everything on the graph besides the points
     fig.update_yaxes(nticks=1, visible=False, showticklabels=False)
     fig.update_xaxes(nticks=1, visible=False, showticklabels=False)
-
-    if darkmode:
-        fig.update_layout(
-            paper_bgcolor=themes[theme]["color"][0][1],
-            plot_bgcolor=themes[theme]["color"][0][1],
-        )
 
     return fig
 

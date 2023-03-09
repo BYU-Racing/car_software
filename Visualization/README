@@ -24,13 +24,40 @@ You can then clone this project to your own machine from GitHub.
 
 Instructions for Use
 
-After downloading, run the dash app by running the DisplayDash.py file, then clicking on the
-local host link that appears.
-If you click on something and nothing happens, wait a few seconds before retrying in case AVA
-is still loading.
+Running:
+    After downloading, run the dash app by running the DisplayDash.py file, then clicking on the
+local host link that appears in the command line.
+Buttons:
+    The buttons along the top allow you to select with line graphs to display. The program defaults
+to all of the charts, and clicking on a button once will hide the corresponding chart.
+Radio Buttons:
+    The Expanded option is the default option, and displays all of the chart in full dimension.
+The Condensed option displays all of the charts small enough to fit everything on one screen
+as long as you are already in full screen on your computer.
+Charts:
+    Each chart displays the data from the sensor as described on the y-axis on the right and the
+legend on the left with respect to time on the x-axis. The tick marks, values, and lines are hidden
+to reduce clutter on the display. Hovering over the curve will display the time and value at that
+point as desired.
+Slider:
+    Allows you to select the time at which you would like to view instantaneous values.
+Speedometer:
+    Displays instantaneous speed at the selected time.
+Pedals:
+    Bar chart that displays the pressure on the brake pedal acceleration pedal at the selected time.
+Steering Wheel:
+    Animation that displays the angle of the steering wheel at the selected time.
+Additional Data:
+    Displays the instantaneous values of the rest of the sensors and the selected time at the selected
+time.
+
+FAQ:
+1. If you click on something and nothing happens, wait a few seconds before retrying in case AVA
+    is still loading.
 
 
 Instructions for Modifications
 
 Dash and plotly both have lots of great documentation. If you have questions, contact the creators
-at dallinpstewart@gmail.com or message me on LinkedIn.
+at dallinpstewart@gmail.com or message me on LinkedIn. Hopefully the docstring and comments I left
+are enough to figure out what each function does.

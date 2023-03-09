@@ -8,8 +8,6 @@ import time
 
 # TODO play button
 # TODO select theme
-# TODO write README
-# TODO make loading screen
 
 # create Dash object
 app = Dash(__name__)
@@ -52,6 +50,7 @@ button_style = [    # selected
 # set dashboard layout
 app.layout = html.Div([
     html.Div([
+        # loading animation
         dcc.Loading(
                     id="loading-1",
                     type="default",
@@ -73,6 +72,7 @@ app.layout = html.Div([
                                  'marginBottom': '5px',
                                  },
                 id='dashboard-title'),
+        # tab buttons
         html.Button('Accelerator', id='acc-button', n_clicks=0,
                     style=button_style[0]),
         html.Button('Brake', id='brk-button', n_clicks=0,
@@ -85,6 +85,7 @@ app.layout = html.Div([
                     style=button_style[0]),
         html.Button('Battery', id='bat-button', n_clicks=0,
                     style=button_style[0]),
+        # display toggle
         dcc.RadioItems(['Expanded', 'Condensed'], 'Expanded',
                        id='size_radio',
                        labelStyle={'display': 'block'},
@@ -107,9 +108,17 @@ app.layout = html.Div([
     # slider to select and view instantaneous values
     html.Div([
         dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
-                   marks={0: "0", time_end / 2: str(time_end / 2), time_end: str(time_end)}),
-        # dcc.Interval(id='interval-component', interval=freq, n_intervals=0)
-    ], style={'marginLeft': '50px', 'width': '80%'}),
+                   marks={0: {'label': "0",
+                              'style': {'color': main.themes[view]["color"][2][2]}},
+                          time_end / 2: {'label': str(time_end / 2),
+                                         'style': {'color': main.themes[view]["color"][2][2]}},
+                          time_end: {'label':str(time_end),
+                                     'style': {'color': main.themes[view]["color"][2][2]}}
+                   },
+                   updatemode='drag'),
+    ], style={'marginLeft': '50px', 'width': '80%',
+              'font-family': main.themes[view]["font"]["title"],
+              'color': main.themes[view]["color"][2][2],}),
     html.Div([
         # speedometer
         dcc.Graph(
@@ -135,17 +144,10 @@ app.layout = html.Div([
                       'font-size': main.themes[view]["size"]["small"] + "px",
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
-],
+],  # overall styling
     style={'background-color': main.themes[view]["color"][0][2],
            'color': main.themes[view]["color"][0][2],
            'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
-
-
-# # Define the callback function
-# @app.callback(Output('time-slider', 'value'),
-#               Input('interval-component', 'n_intervals'))
-# def update_slider_graph(n):
-#     return ((n*freq) % (time_end * 1000)) / 1000
 
 
 @app.callback(
@@ -167,8 +169,22 @@ app.layout = html.Div([
     Input(component_id='size_radio', component_property='value'),
 )
 def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, size):
+    """
+    Select which subplots to show and the size of the overall chart
+    :param n_click0: number of times the accelerator tab has been clicked
+    :param n_click1: number of times the brake tab has been clicked
+    :param n_click2: number of times the tires tab has been clicked
+    :param n_click3: number of times the steering wheel tab has been clicked
+    :param n_click4: number of times the damper position tab has been clicked
+    :param n_click5: number of times the battery tab has been clicked
+    :param size: selection for display size
+    :return:
+    """
+    # turn click input into a list
     index = [n_click0, n_click1, n_click2, n_click3, n_click4, n_click5]
     on = [i % 2 for i in index]
+
+    # build available list based on which subplots to display
     avail = []
     for i in range(len(on)):
         if i == 0 and on[i] == 0:
@@ -191,11 +207,14 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
         elif i == 5 and on[i] == 0:
             avail.append(main.Sensor.TEMP.value)
 
+    # built output list
     buttons = [button_style[i % 2] for i in index]
 
+    # rebuild the main plot with the new availability list
     new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on)-sum(on))
     buttons.append(new_plot)
 
+    # resize the additional charts based on size input
     if size == "Expanded":
         tall = '120vh'
     else:
@@ -204,6 +223,7 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     buttons.append(reformat)
     buttons.append(size)
 
+    # return output list
     return buttons
 
 
