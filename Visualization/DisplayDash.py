@@ -4,6 +4,7 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 import main
+import time
 
 # TODO play button
 # TODO select theme
@@ -33,8 +34,8 @@ button_style = [    # selected
                  'color': main.themes[view]["color"][0][0],
                  'background-color': main.themes[view]["color"][2][2],
                  'font-size': main.themes[view]["size"]["medium"] + "px",
-                 'display': 'inline-block', 'width': '9%', 'marginLeft': '8px',
-                 'marginBottom': '25px',
+                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+                 'marginBottom': '10px',
                  'border': "1.5px solid " + main.themes[view]["color"][0][0],
                  },
                     # deselected
@@ -42,8 +43,8 @@ button_style = [    # selected
                  'color': main.themes[view]["color"][2][2],
                  'background-color': main.themes[view]["color"][0][0],
                  'font-size': main.themes[view]["size"]["medium"] + "px",
-                 'display': 'inline-block', 'width': '9%', 'marginLeft': '8px',
-                 'marginBottom': '25px',
+                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+                 'marginBottom': '10px',
                  'border': "1.5px solid " + main.themes[view]["color"][2][2],
                  },
                 ]
@@ -51,17 +52,25 @@ button_style = [    # selected
 # set dashboard layout
 app.layout = html.Div([
     html.Div([
+        dcc.Loading(
+                    id="loading-1",
+                    type="default",
+                    children=html.Div(id="loading-output-1"),
+                    style={'width': '100px', 'display': 'inline-block', 'textAlign': 'center',},
+                    color=main.themes[view]["color"][2][2],
+                ),
         # logo
         html.Img(src=app.get_asset_url("club_logo.JPG"),
-                 style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginTop': '10px',
-                        'display': 'inline-block',}),
+                 style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginBottom': '5px',
+                        'display': 'inline-block', 'verticalAlign': 'bottom'}),
         # title
         html.H1('A.V.A.', style={'color': main.themes[view]["color"][2][2],
-                                 'paddingLeft': '10px', 'paddingTop': '10px',
+                                 'paddingLeft': '10px', 'paddingTop': '0px',
                                  'paddingBottom': '0px', 'margin': '0px',
                                  'display': 'inline-block', 'width': '10%',
                                  'font-family': main.themes[view]["font"]["title"],
-                                 'font-style': 'italic'
+                                 'font-style': 'italic', 'verticalAlign': 'bottom',
+                                 'marginBottom': '5px',
                                  },
                 id='dashboard-title'),
         html.Button('Accelerator', id='acc-button', n_clicks=0,
@@ -78,14 +87,16 @@ app.layout = html.Div([
                     style=button_style[0]),
         dcc.RadioItems(['Expanded', 'Condensed'], 'Expanded',
                        id='size_radio',
+                       labelStyle={'display': 'block'},
                        style={
                          'font-family': main.themes[view]["font"]["title"],
                          'color': main.themes[view]["color"][2][2],
                          # 'background-color': main.themes[view]["color"][2][2],
                          'font-size': main.themes[view]["size"]["small"] + "px",
                          'display': 'inline-block', 'width': '12%', "padding": '0px',
-                         'marginLeft': '15px', 'marginTop': '5px'
-                       })
+                         'marginLeft': '15px', 'marginTop': '0px', 'verticalAlign': 'bottom',
+                         'marginBottom': '5px',
+                       }),
     ]),
     # main line charts
     dcc.Graph(
@@ -146,6 +157,7 @@ app.layout = html.Div([
     Output(component_id='bat-button', component_property='style'),
     Output(component_id='car_go_fast', component_property='figure'),
     Output(component_id='car_go_fast', component_property='style'),
+    Output(component_id="loading-output-1", component_property="children"),
     Input(component_id='acc-button', component_property='n_clicks'),
     Input(component_id='brk-button', component_property='n_clicks'),
     Input(component_id='tir-button', component_property='n_clicks'),
@@ -190,9 +202,9 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
         tall = '60vh'
     reformat = {'width': '100%', 'height': tall, 'margin': '0px'}
     buttons.append(reformat)
+    buttons.append(size)
 
     return buttons
-
 
 
 # define a callback function to update the output values based on the input time
