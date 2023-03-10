@@ -7,7 +7,6 @@ import main
 import time
 
 # TODO play button
-# TODO select theme
 
 # create Dash object
 app = Dash(__name__)
@@ -19,7 +18,8 @@ all_sensors = main.readData(file_name)
 # initialize local starting variables
 time_end = 5
 freq = 250
-view = "Jarvis"
+display_themes = ["Dark", "Jarvis", "Light"]
+view = display_themes[2]
 
 # construct initial plots
 fig = main.display_dashboard(all_sensors, theme=view)
@@ -29,7 +29,7 @@ pdl = main.pedals(theme=view)
 # styles
 button_style = [    # selected
                 {'font-family': main.themes[view]["font"]["title"],
-                 'color': main.themes[view]["color"][0][0],
+                 'color': main.themes[view]["color"][1][2],
                  'background-color': main.themes[view]["color"][2][2],
                  'font-size': main.themes[view]["size"]["medium"] + "px",
                  'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',

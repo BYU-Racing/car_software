@@ -57,7 +57,7 @@ legend = {}
 themes = {"Dark": {                                     # theme name
     "color": {                                          # color palette for graphs and backgrounds
         0: ["gray", "rgba(60,60,60,1)", "#3C3C3C"],     # assigned to overall background
-        1: ["dark-gray", "rgba(40,40,40,1)", ""],       # subplot background to differentiate from background
+        1: ["dark-gray", "rgba(40,40,40,1)", "#222222"],       # subplot background to differentiate from background
         2: ["green", "rgba(0,154,0,1)", "#009900"],     # Text color
         3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],# Alternate text color, also just white
         4: ["black", "rgba(0,0,0,1)", "#000000"],       # Steering wheel color, also just black
@@ -66,20 +66,20 @@ themes = {"Dark": {                                     # theme name
         0: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
         1: ["red", "rgba(154,0,0,1)", "#990000"],
         2: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
-        3: ["red", "rgba(154,0,0,1)", "#990000"],
+        3: ["green", "rgba(0,154,0,1)", "#009900"],
         4: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
-        5: ["red", "rgba(154,0,0,1)", "#990000"],
+        5: ["green", "rgba(0,154,0,1)", "#009900"],
         6: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
     },
     "size": {
-        "large": "24",                                  # large text like graph titles
-        "medium": "18",                                 # medium text like like legends
+        "large": "22",                                  # large text like graph titles
+        "medium": "16",                                 # medium text like like legends
         "small": "14",                                  # small text like graph ticks
     },
     "font": {
-        "title": "Times New Roman",                     # dashboard title
+        "title": "Courier New",                     # dashboard title
         "p": "Courier New",                             # most text
-        "graph": "Arial, sans-serif",                   # alt text font for some graphs
+        "graph": "Courier New",                   # alt text font for some graphs
     }
 },
     "Jarvis": {
@@ -97,12 +97,40 @@ themes = {"Dark": {                                     # theme name
             3: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             4: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             5: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
-            7: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
+            6: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
         },
         "size": {
             "large": "24",
             "medium": "18",
             "small": "15",
+        },
+        "font": {
+            "title": "Arial, sans-serif",
+            "p": "Arial, sans-serif",
+            "graph": "Arial, sans-serif",
+        }
+    },
+    "Light": {
+        "color": {
+            0: ["white", "rgba(255,255,255,1)", "#FFFFFF"],  # assigned to overall background
+            1: ["light-gray", "rgba(239, 239, 239,1)", "#EEEEEE"],  # subplot background to differentiate from background
+            2: ["black", "rgba(0,0,0,1)", "#000000"],  # Text color
+            3: ["black", "rgba(0,0,0,1)", "#000000"],  # Alternate text color, also just white
+            4: ["black", "rgba(0,0,0,1)", "#000000"], # Steering wheel color, also just black
+        },
+        "trace": {
+            0: ["black", "rgba(0,0,0,1)", "#000000"],
+            1: ["black", "rgba(0,0,0,1)", "#000000"],
+            2: ["black", "rgba(0,0,0,1)", "#000000"],
+            3: ["black", "rgba(0,0,0,1)", "#000000"],
+            4: ["black", "rgba(0,0,0,1)", "#000000"],
+            5: ["black", "rgba(0,0,0,1)", "#000000"],
+            6: ["black", "rgba(0,0,0,1)", "#000000"],  # Alternate text color, also just white
+        },
+        "size": {
+            "large": "28",
+            "medium": "22",
+            "small": "18",
         },
         "font": {
             "title": "Arial, sans-serif",
