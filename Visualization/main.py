@@ -15,6 +15,7 @@ Assumptions:
 6. Signals follow CAN Bus Protocol Draft format
 """
 
+
 # convert each sensor to a number
 class Sensor(Enum):
     ACC1 = 0
@@ -32,6 +33,7 @@ class Sensor(Enum):
     DAMP4 = 12
     TEMP = 13
     LIGHT = 14
+
 
 # convert an index to a sensor display name
 sensors = {0: 'Accelerator 1',
@@ -54,32 +56,32 @@ sensors = {0: 'Accelerator 1',
 legend = {}
 
 # theme customization
-themes = {"Dark": {                                     # theme name
-    "color": {                                          # color palette for graphs and backgrounds
-        0: ["gray", "rgba(60,60,60,1)", "#3C3C3C"],     # assigned to overall background
-        1: ["dark-gray", "rgba(40,40,40,1)", "#222222"],       # subplot background to differentiate from background
-        2: ["green", "rgba(0,154,0,1)", "#009900"],     # Text color
-        3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],# Alternate text color, also just white
-        4: ["black", "rgba(0,0,0,1)", "#000000"],       # Steering wheel color, also just black
+themes = {"Arduino": {  # theme name
+    "color": {  # color palette for graphs and backgrounds
+        0: ["gray", "rgba(60,60,60,1)", "#3C3C3C"],  # assigned to overall background
+        1: ["dark-gray", "rgba(40,40,40,1)", "#222222"],  # subplot background to differentiate from background
+        2: ["green", "rgba(0,154,0,1)", "#009900"],  # Text color
+        3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
+        4: ["black", "rgba(0,0,0,1)", "#000000"],  # Steering wheel color, also just black
     },
     "trace": {
-        0: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
+        0: ["green", "rgba(0,154,0,1)", "#009900"],  # color for traces and bar charts
         1: ["red", "rgba(154,0,0,1)", "#990000"],
-        2: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
+        2: ["green", "rgba(0,154,0,1)", "#009900"],  # color for traces and bar charts
         3: ["green", "rgba(0,154,0,1)", "#009900"],
-        4: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
+        4: ["green", "rgba(0,154,0,1)", "#009900"],  # color for traces and bar charts
         5: ["green", "rgba(0,154,0,1)", "#009900"],
-        6: ["green", "rgba(0,154,0,1)", "#009900"],     # color for traces and bar charts
+        6: ["green", "rgba(0,154,0,1)", "#009900"],  # color for traces and bar charts
     },
     "size": {
-        "large": "22",                                  # large text like graph titles
-        "medium": "16",                                 # medium text like like legends
-        "small": "14",                                  # small text like graph ticks
+        "large": "22",  # large text like graph titles
+        "medium": "16",  # medium text like like legends
+        "small": "14",  # small text like graph ticks
     },
     "font": {
-        "title": "Courier New",                     # dashboard title
-        "p": "Courier New",                             # most text
-        "graph": "Courier New",                   # alt text font for some graphs
+        "title": "Courier New",  # dashboard title
+        "p": "Courier New",  # most text
+        "graph": "Courier New",  # alt text font for some graphs
     }
 },
     "Jarvis": {
@@ -88,11 +90,11 @@ themes = {"Dark": {                                     # theme name
             1: ["dark-blue", "rgba(1, 2, 44,1)", "#01022C"],  # subplot background to differentiate from background
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],  # Text color
             3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
-            4: ["dark-gray", "rgba(216, 216, 216,1)", "#888888"], # Steering wheel color, also just black
+            4: ["dark-gray", "rgba(216, 216, 216,1)", "#888888"],  # Steering wheel color, also just black
         },
         "trace": {
             0: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
-            1: ["neon_yellow", "rgba(248, 255, 51, 1)","#f8ff33"],
+            1: ["neon_yellow", "rgba(248, 255, 51, 1)", "#f8ff33"],
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             3: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             4: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
@@ -110,13 +112,14 @@ themes = {"Dark": {                                     # theme name
             "graph": "Arial, sans-serif",
         }
     },
-    "Light": {
+    "Daylight": {
         "color": {
             0: ["white", "rgba(255,255,255,1)", "#FFFFFF"],  # assigned to overall background
-            1: ["light-gray", "rgba(239, 239, 239,1)", "#EEEEEE"],  # subplot background to differentiate from background
+            1: ["light-gray", "rgba(239, 239, 239,1)", "#EEEEEE"],
+            # subplot background to differentiate from background
             2: ["black", "rgba(0,0,0,1)", "#000000"],  # Text color
             3: ["black", "rgba(0,0,0,1)", "#000000"],  # Alternate text color, also just white
-            4: ["black", "rgba(0,0,0,1)", "#000000"], # Steering wheel color, also just black
+            4: ["black", "rgba(0,0,0,1)", "#000000"],  # Steering wheel color, also just black
         },
         "trace": {
             0: ["black", "rgba(0,0,0,1)", "#000000"],
@@ -310,6 +313,43 @@ def crc(message, cycCheck):
     return check == cycCheck
 
 
+def convert_position(speed, time, angle):
+    """
+    Convert timestamped speed and steering wheel angle to current
+    track position.
+    :param speed: (list) a list of speeds in miles per hour as floats
+    :param time: (list) as list of timestamps in seconds as floats
+    :param angle: (list) a list of wheel angles in degrees as floats
+    :return: x and y positions (list, list) of floats
+    """
+    # convert MPH to MPS and make distance traveled per second
+    distance = [s * 0.000278 * t for s, t in zip(speed, time)]
+    theta = 0
+    x = 0
+    y = 0
+    x_val = [0] * len(distance)
+    y_val = [0] * len(distance)
+    angle = [np.deg2rad(a) for a in angle]
+
+    for i in range(len(distance)):
+        theta += angle[i]
+        x += distance[i] * np.cos(theta)
+        x_val[i] = x
+        y += distance[i] * np.sin(theta)
+        y_val[i] = y
+
+    return x_val, y_val
+
+
+# fake track data
+n = 433
+tim = np.ones(n)
+domain = np.linspace(0, 2 * np.pi, n)
+deg = np.round(2 * np.sin(domain), 1)
+spd = np.ones(n)
+x, y = convert_position(spd, tim, deg)
+
+
 def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_ticks=1):
     """
     Display a Dash dashboard with racing sensor data
@@ -346,7 +386,7 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC1.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC1.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][0][2]),
-                                 mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1,),
+                                 mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1, ),
     # repeat for every other sensor
     if Sensor.ACC2.value in avail:
         legend.update({index_trace: sensors[Sensor.ACC2.value]})
@@ -667,6 +707,48 @@ def steering(angle=0, theme="Dark"):
         paper_bgcolor=themes[theme]["color"][0][1],
         plot_bgcolor=themes[theme]["color"][0][1],
     )
+
+    # remove everything on the graph besides the points
+    fig.update_yaxes(nticks=1, visible=False, showticklabels=False)
+    fig.update_xaxes(nticks=1, visible=False, showticklabels=False)
+
+    return fig
+
+
+def track(time_stamp=0, theme="Dark"):
+    index = int(time_stamp * 1000) % 433
+    highlight = go.Scatter(x=x, y=y, mode='lines',
+                           line=dict(width=5, color=themes[theme]["trace"][6][2]),
+                           showlegend=False
+                           )
+    line = go.Scatter(x=x, y=y, mode='lines',
+                      line=dict(width=3, color=themes[theme]["trace"][0][2]),
+                      showlegend=False
+                      )
+    # position = go.Scatter(x=[x[index]], y=[y[index]], mode='markers',
+    position = go.Scatter(x=[x[index]], y=[y[index]], mode='markers',
+                          marker=dict(size=28, color=themes[theme]["trace"][0][2],
+                                      line=dict(width=4, color=themes[theme]["color"][0][2]),
+                                      symbol="arrow", angleref='previous', ),
+                          showlegend=False,
+                          )
+
+    fig = go.Figure()
+    fig.add_trace(highlight)
+    fig.add_trace(line)
+    fig.add_trace(position)
+
+    # Set the plot title and axis labels
+    fig.update_layout(title='Track',
+                      font=dict(
+                          family=themes[theme]["font"]["graph"],
+                          size=int(themes[theme]["size"]["medium"]),
+                          color=themes[theme]["color"][2][2]
+                      ),
+                      margin=dict(l=45, r=45, t=40, b=0),
+                      paper_bgcolor=themes[theme]["color"][0][1],
+                      plot_bgcolor=themes[theme]["color"][0][1],
+                      )
 
     # remove everything on the graph besides the points
     fig.update_yaxes(nticks=1, visible=False, showticklabels=False)

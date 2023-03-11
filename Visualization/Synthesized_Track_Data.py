@@ -1,4 +1,5 @@
 #plot race track
+import time
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -11,10 +12,8 @@ from scipy import integrate
 def benj_position(speed, time, angle):
 
     #convert MPH to MPS
-    speed = [x * 0.000278 for x in speed]
-
     #use speed and time to make distance traveled per second
-    distance = speed * time
+    distance = speed * 0.000278 * time
 
     theta = 0
     x = 0
@@ -32,9 +31,30 @@ def benj_position(speed, time, angle):
         y += dist * np.sin(theta)
         y_val.append(y)
 
+    print(x_val, y_val)
     return x_val, y_val
 
-def dallin_position(speed, time, angle):
+
+def convert_position(speed, seconds, angle):
+    # convert MPH to MPS and make distance traveled per second
+    distance = [s * 0.000278 * t for s, t in zip(speed, seconds)]
+    theta = 0
+    x = 0
+    y = 0
+    x_val = [0] * len(distance)
+    y_val = [0] * len(distance)
+    angle = [np.deg2rad(a) for a in angle]
+
+    for i in range(len(distance)):
+        theta += angle[i]
+        x += distance[i] * np.cos(theta)
+        x_val[i] = x
+        y += distance[i] * np.sin(theta)
+        y_val[i] = y
+
+    return x_val, y_val
+
+def dallin_position(speed, clock, angle):
 
     theta = np.deg2rad(angle)
 
@@ -47,7 +67,7 @@ def dallin_position(speed, time, angle):
 def derive(f, x0, h=1e-5):
     return (f(x0 + h) - f(x0)) / h
 
-if __name__ == "__main__":
+def attempt_two():
     minim = 0
     maxim = 10
 
@@ -58,7 +78,7 @@ if __name__ == "__main__":
     angle = np.arange(360)
     speed = np.ones(360)
 
-    f_x = scipy.interpolate.interp1d(time, speed*np.cos(angle), kind='cubic')
+    f_x = scipy.interpolate.interp1d(time, speed * np.cos(angle), kind='cubic')
     # print(f_speed.coeffs)
     ysnew = f_x(time)
 
@@ -102,4 +122,35 @@ if __name__ == "__main__":
     plt.legend()
     plt.show()
 
+def track(position=0, theme="Dark"):
+    fig = go.Figure(data=go.Scatter(x=x, y=y, mode='markers'))
+
+    # Set the plot title and axis labels
+    fig.update_layout(title='Scatter Plot', xaxis_title='X Axis', yaxis_title='Y Axis')
+
+
+
+if __name__ == "__main__":
     pass
+    n = 433
+    tim = np.ones(n)
+    domain = np.linspace(0, 2 * np.pi, n)
+    deg = np.round(2 * np.sin(domain), 1)
+    spd = np.ones(n)
+
+    x, y = convert_position(speed=spd, seconds=tim, angle=deg)
+    plt.plot(x, y)
+    plt.show()
+    for i in range(100):
+        n = i * 10
+        tim = np.ones(n)
+        domain = np.linspace(0, 3*np.pi, n)
+        deg = np.round(2 * np.sin(domain), 1)
+        spd = np.ones(n)
+
+        x, y = convert_position(speed=spd, seconds=tim, angle=deg)
+        plt.subplot(10, 10, i+1)
+        plt.plot(x, y)
+        plt.title(n)
+    plt.show()
+

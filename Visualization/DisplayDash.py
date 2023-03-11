@@ -7,6 +7,9 @@ import main
 import time
 
 # TODO play button
+# TODO add a settings button
+# TODO improve instructions by testing
+# TODO enable production server
 
 # create Dash object
 app = Dash(__name__)
@@ -17,9 +20,8 @@ all_sensors = main.readData(file_name)
 
 # initialize local starting variables
 time_end = 5
-freq = 250
-display_themes = ["Dark", "Jarvis", "Light"]
-view = display_themes[2]
+display_themes = ["Arduino", "Jarvis", "Daylight"]
+view = display_themes[1]
 
 # construct initial plots
 fig = main.display_dashboard(all_sensors, theme=view)
@@ -27,37 +29,37 @@ spd = main.speedometer(0, theme=view)
 pdl = main.pedals(theme=view)
 
 # styles
-button_style = [    # selected
-                {'font-family': main.themes[view]["font"]["title"],
-                 'color': main.themes[view]["color"][1][2],
-                 'background-color': main.themes[view]["color"][2][2],
-                 'font-size': main.themes[view]["size"]["medium"] + "px",
-                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
-                 'marginBottom': '10px',
-                 'border': "1.5px solid " + main.themes[view]["color"][0][0],
-                 },
-                    # deselected
-                {'font-family': main.themes[view]["font"]["title"],
-                 'color': main.themes[view]["color"][2][2],
-                 'background-color': main.themes[view]["color"][0][0],
-                 'font-size': main.themes[view]["size"]["medium"] + "px",
-                 'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
-                 'marginBottom': '10px',
-                 'border': "1.5px solid " + main.themes[view]["color"][2][2],
-                 },
-                ]
+button_style = [  # selected
+    {'font-family': main.themes[view]["font"]["title"],
+     'color': main.themes[view]["color"][1][2],
+     'background-color': main.themes[view]["color"][2][2],
+     'font-size': main.themes[view]["size"]["medium"] + "px",
+     'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+     'marginBottom': '10px',
+     'border': "1.5px solid " + main.themes[view]["color"][0][0],
+     },
+    # deselected
+    {'font-family': main.themes[view]["font"]["title"],
+     'color': main.themes[view]["color"][2][2],
+     'background-color': main.themes[view]["color"][0][0],
+     'font-size': main.themes[view]["size"]["medium"] + "px",
+     'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+     'marginBottom': '10px',
+     'border': "1.5px solid " + main.themes[view]["color"][2][2],
+     },
+]
 
 # set dashboard layout
 app.layout = html.Div([
     html.Div([
         # loading animation
         dcc.Loading(
-                    id="loading-1",
-                    type="default",
-                    children=html.Div(id="loading-output-1"),
-                    style={'width': '100px', 'display': 'inline-block', 'textAlign': 'center',},
-                    color=main.themes[view]["color"][2][2],
-                ),
+            id="loading-1",
+            type="default",
+            children=html.Div(id="loading-output-1"),
+            style={'width': '100px', 'display': 'inline-block', 'textAlign': 'center', },
+            color=main.themes[view]["color"][2][2],
+        ),
         # logo
         html.Img(src=app.get_asset_url("club_logo.JPG"),
                  style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginBottom': '5px',
@@ -90,13 +92,13 @@ app.layout = html.Div([
                        id='size_radio',
                        labelStyle={'display': 'block'},
                        style={
-                         'font-family': main.themes[view]["font"]["title"],
-                         'color': main.themes[view]["color"][2][2],
-                         # 'background-color': main.themes[view]["color"][2][2],
-                         'font-size': main.themes[view]["size"]["small"] + "px",
-                         'display': 'inline-block', 'width': '12%', "padding": '0px',
-                         'marginLeft': '15px', 'marginTop': '0px', 'verticalAlign': 'bottom',
-                         'marginBottom': '5px',
+                           'font-family': main.themes[view]["font"]["title"],
+                           'color': main.themes[view]["color"][2][2],
+                           # 'background-color': main.themes[view]["color"][2][2],
+                           'font-size': main.themes[view]["size"]["small"] + "px",
+                           'display': 'inline-block', 'width': '12%', "padding": '0px',
+                           'marginLeft': '15px', 'marginTop': '0px', 'verticalAlign': 'bottom',
+                           'marginBottom': '5px',
                        }),
     ]),
     # main line charts
@@ -112,13 +114,13 @@ app.layout = html.Div([
                               'style': {'color': main.themes[view]["color"][2][2]}},
                           time_end / 2: {'label': str(time_end / 2),
                                          'style': {'color': main.themes[view]["color"][2][2]}},
-                          time_end: {'label':str(time_end),
+                          time_end: {'label': str(time_end),
                                      'style': {'color': main.themes[view]["color"][2][2]}}
-                   },
+                          },
                    updatemode='drag'),
     ], style={'marginLeft': '50px', 'width': '80%',
               'font-family': main.themes[view]["font"]["title"],
-              'color': main.themes[view]["color"][2][2],}),
+              'color': main.themes[view]["color"][2][2], }),
     html.Div([
         # speedometer
         dcc.Graph(
@@ -134,6 +136,10 @@ app.layout = html.Div([
         ),
         # steering wheel
         dcc.Graph(id='steering-wheel',
+                  config={'displayModeBar': False},
+                  style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
+        # track position
+        dcc.Graph(id='track-position',
                   config={'displayModeBar': False},
                   style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
         # additional text data
@@ -211,7 +217,7 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     buttons = [button_style[i % 2] for i in index]
 
     # rebuild the main plot with the new availability list
-    new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on)-sum(on))
+    new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on) - sum(on))
     buttons.append(new_plot)
 
     # resize the additional charts based on size input
@@ -233,9 +239,11 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     Output(component_id='speedometer', component_property='figure'),
     Output(component_id='pedals', component_property='figure'),
     Output(component_id='steering-wheel', component_property='figure'),
+    Output(component_id='track-position', component_property='figure'),
     Output(component_id='speedometer', component_property='style'),
     Output(component_id='pedals', component_property='style'),
     Output(component_id='steering-wheel', component_property='style'),
+    Output(component_id='track-position', component_property='style'),
     Input(component_id='time-slider', component_property='value'),
     Input(component_id='size_radio', component_property='value'),
 )
@@ -255,9 +263,10 @@ def update_output_div(input_value, size):
     # if the input is not a valid integer, display an error message
     if time is None:
         return 'Please enter a valid decimal time greater than zero.', \
-               main.speedometer(0, maxim=10), \
-               main.pedals(), \
-               main.steering()
+               main.speedometer(0, maxim=10, theme=view), \
+               main.pedals(theme=view), \
+               main.steering(theme=view), \
+               main.track(theme=view)
 
     else:
         # get the values of each subplot at the input time
@@ -301,7 +310,8 @@ def update_output_div(input_value, size):
                main.speedometer(speed, maxim=2, theme=view), \
                main.pedals(brake, acceleration, maxim=5, theme=view), \
                main.steering(angle=angle, theme=view), \
-               update, update, update
+               main.track(time_stamp=input_value, theme=view), \
+               update, update, update, update
 
 
 if __name__ == '__main__':
