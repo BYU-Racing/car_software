@@ -62,40 +62,41 @@ Here's how.
 ### Instructions for Use
 
 #### Running:
-- After downloading, run the dash app by running the DisplayDash.py file, then clicking on the
+&emsp;After downloading, run the dash app by running the AVA.py file, then clicking on the
 local host link that appears in the command line.
 <br>
 #### Buttons:
-- The buttons along the top allow you to select with line graphs to display. The program defaults
+&emsp;The buttons along the top allow you to select with line graphs to display. The program defaults
 to all the charts, and clicking on a button once will hide the corresponding chart.
 <br>
 #### Radio Buttons:
-- The Expanded option is the default option, and displays all the chart in full dimension.
+&emsp;The Expanded option is the default option, and displays all the chart in full dimension.
 The Condensed option displays all the charts small enough to fit everything on one screen
 as long as you are already in full screen on your computer.
 <br>
 #### Charts:
-- Each chart displays the data from the sensor as described on the y-axis on the right and the
+&emsp;Each chart displays the data from the sensor as described on the y-axis on the right and the
 legend on the left with respect to time on the x-axis. The tick marks, values, and lines are hidden
 to reduce clutter on the display. Hovering over the curve will display the time and value at that
 point as desired.
 <br>
 #### Slider:
-- Allows you to select the time at which you would like to view instantaneous values.
+&emsp;Allows you to select the time at which you would like to view instantaneous values.
 <br>
 #### Speedometer:
-- Displays instantaneous speed at the selected time.
+&emsp;Displays instantaneous speed at the selected time.
 <br>
 #### Pedals:
-- Bar chart that displays the pressure on the brake pedal acceleration pedal at the selected time.
+&emsp;Bar chart that displays the pressure on the brake pedal acceleration pedal at the selected time.
 <br>
 #### Steering Wheel:
-- Animation that displays the angle of the steering wheel at the selected time.
+&emsp;Animation that displays the angle of the steering wheel at the selected time.
 <br>
 #### Track:
-- Chart that displays the track the racecar followed, along with its position at the selected time.
+&emsp;Chart that displays the track the racecar followed, along with its position at the selected time.
+<br>
 #### Additional Data:
-- Displays the instantaneous values of the rest of the sensors and the selected time at the selected
+&emsp;Displays the instantaneous values of the rest of the sensors and the selected time at the selected
 time.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
