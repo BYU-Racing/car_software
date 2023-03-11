@@ -3,11 +3,12 @@
 <div align="center">
     <h1 align="center">A.V.A.</h1>
     <p align="center">
-        Created by the BYU Formula E Club 2023
-        <br>
-        Contributors: Dallin Stewart and Benjamin McMullin
+        An Advanced Vehicle Analytics Application 
+        </br>Created by the BYU Formula E Club 2022-2024
     </p>
 </div>
+
+<hr>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -25,19 +26,22 @@
 ## Welcome
 
 This is A.V.A., the Advanced Vehicle Analytics application for the BYU Formula E club.
-A.V.A. is a dashboard that show vehicle and driving data collected from an array of sensors
-designed to collect everything from tire speed to steering wheel angle. In addition to
-providing advanced analytics and feedback, A.V.A. visualizing this driving information in a way
-that is easy to understand and acquire insight from.
-The name elegantly captures the contribution this dashboard provides to the engineering challenge
-of electric car racing, and is also a pop culture reference to Ava from Ex Machina.
+A.V.A. is a dashboard that displays vehicle and driving data collected from an array of sensors
+designed to collect everything from tire speed to steering wheel angle of an electric race car 
+while driving. 
+</br>
+In addition to providing advanced analytics and feedback, A.V.A. visualizes driving information 
+in a format that makes it easy to understand and gain insight from the data.
+The name is inspired by Ava, the highly capable AI machine from Ex Machina, and the acronym captures 
+the contribution this dashboard provides to the BYU Formula E club's engineering challenge of 
+electric car racing.
 
 ### <a href="https://www.linkedin.com/company/byu-racing/">BYU Formula E</a>
 
-BYU Formula E is an engineering team focused on designing, manufacturing, resting, and competing 
-of an open-wheel, electrically-powered race car. This is done under the Society of Automotive 
-Engineers (SAE), specifically in their Formula program. All of our work is aimed to fit the yearly 
-regulations of FSAE and be competitive with the end products of student engineers from around 
+BYU Formula E is an engineering team focused on designing, manufacturing, testing, and competing 
+of an open-wheel, electrically-powered race car. It operates under the Formula program of the 
+Society of Automotive Engineers (SAE). This team aims to fit all of its work to the yearly 
+regulations of FSAE, and perform competitively with the end products of student engineers from around 
 the globe.
 
 <hr>
@@ -46,69 +50,81 @@ the globe.
 ### Instructions for Download
 
 You'll need to start by downloading plotly and dash with these commands:
-<li>pip install plotly</li>
-<li>pip install dash</li>
-<br>
+- pip install plotly
+- pip install dash
+
 You can then clone this project to your own machine from GitHub.
 <br>
 Here's how.
 
+<hr>
 
 ### Instructions for Use
 
 #### Running:
-After downloading, run the dash app by running the DisplayDash.py file, then clicking on the
+- After downloading, run the dash app by running the DisplayDash.py file, then clicking on the
 local host link that appears in the command line.
 <br>
 #### Buttons:
-The buttons along the top allow you to select with line graphs to display. The program defaults
-to all of the charts, and clicking on a button once will hide the corresponding chart.
+- The buttons along the top allow you to select with line graphs to display. The program defaults
+to all the charts, and clicking on a button once will hide the corresponding chart.
 <br>
 #### Radio Buttons:
-The Expanded option is the default option, and displays all of the chart in full dimension.
-The Condensed option displays all of the charts small enough to fit everything on one screen
+- The Expanded option is the default option, and displays all the chart in full dimension.
+The Condensed option displays all the charts small enough to fit everything on one screen
 as long as you are already in full screen on your computer.
 <br>
 #### Charts:
-Each chart displays the data from the sensor as described on the y-axis on the right and the
+- Each chart displays the data from the sensor as described on the y-axis on the right and the
 legend on the left with respect to time on the x-axis. The tick marks, values, and lines are hidden
 to reduce clutter on the display. Hovering over the curve will display the time and value at that
 point as desired.
 <br>
 #### Slider:
-Allows you to select the time at which you would like to view instantaneous values.
+- Allows you to select the time at which you would like to view instantaneous values.
 <br>
 #### Speedometer:
-Displays instantaneous speed at the selected time.
+- Displays instantaneous speed at the selected time.
 <br>
 #### Pedals:
-Bar chart that displays the pressure on the brake pedal acceleration pedal at the selected time.
+- Bar chart that displays the pressure on the brake pedal acceleration pedal at the selected time.
 <br>
 #### Steering Wheel:
-Animation that displays the angle of the steering wheel at the selected time.
+- Animation that displays the angle of the steering wheel at the selected time.
+<br>
+#### Track:
+- Chart that displays the track the racecar followed, along with its position at the selected time.
 #### Additional Data:
-Displays the instantaneous values of the rest of the sensors and the selected time at the selected
+- Displays the instantaneous values of the rest of the sensors and the selected time at the selected
 time.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<hr>
 
 ### Instructions for Modifications
 
-Dash and plotly both have lots of great documentation. If you have questions, contact the creators
-at dallinpstewart@gmail.com or message me on LinkedIn. Hopefully the docstring and comments I left
+Dash and Plotly both have lots of great documentation. If you have questions, contact the creators
+at dallinpstewart@gmail.com or message me on LinkedIn. Hopefully the docstring and comments 
 are enough to figure out what each function does.
 
 ### FAQ:
-<ol>If you click on something and nothing happens, wait a few seconds before retrying in case A.V.A.
-is still loading.</ol>
+Why is nothing happening?
+- If you click on something and nothing happens, wait a few seconds before retrying in case A.V.A.
+is still loading. The interactions enabled either reformat the style of some graphs, or recreate the
+graphs entirely, so some actions take a few seconds.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <hr>
 
 ### Built With
 
-<!--[![Pandas][Pandas-icon]][Pandas-url]
+[![Plotly][Plotly-icon]][Plotly-url] &emsp; &emsp;  [![Dash][Dash-icon]][Dash-url] &emsp; &emsp;
 
-[![SQL][SQL-icon]][SQL-url] -->
+[![Numpy][Numpy-icon]][Numpy-url] &emsp; &emsp; [![Python][Python-icon]][Python-url] &emsp; &emsp; [![Pandas][Pandas-icon]][Pandas-url]    
 
-[![Python][Python-icon]][Python-url] &emsp; &emsp; [![Numpy][Numpy-icon]][Numpy-url] &emsp; &emsp; [![Pandas][Pandas-icon]][Pandas-url]    
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -139,6 +155,13 @@ Benjamin McMullin
 
 [Pandas-icon]: https://img.shields.io/badge/Pandas-120756?style=for-the-badge&logo=pandas&logoColor=white
 [Pandas-url]: https://pandas.pydata.org/
+
+[Plotly-icon]: https://img.shields.io/badge/Plotly-e5558f?style=for-the-badge&logo=plotly&logoColor=white
+[Plotly-url]: https://plotly.com/
+
+[Dash-icon]: https://img.shields.io/badge/Dash-7c74fb?style=for-the-badge&logo=dash&logoColor=white
+[Dash-url]: https://plotly.com/dash/
+
 
 [linkedIn-icon]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedIn-url]: https://www.linkedin.com/in/dallinstewart/

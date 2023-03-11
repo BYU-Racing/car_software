@@ -1,22 +1,23 @@
-from dash import Dash, dcc, html, ctx
+from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
-import pandas as pd
 import numpy as np
-import main
-import time
+
+from Plots import *
+from Static import themes, Sensor
+
 
 # TODO play button
 # TODO add a settings button
 # TODO improve instructions by testing
-# TODO enable production server
+# TODO add position on track
 
 # create Dash object
 app = Dash(__name__)
 
 # load data
 file_name = 'Data/Master.csv'
-all_sensors = main.readData(file_name)
+all_sensors = readData(file_name)
 
 # initialize local starting variables
 time_end = 5
@@ -24,28 +25,28 @@ display_themes = ["Arduino", "Jarvis", "Daylight"]
 view = display_themes[1]
 
 # construct initial plots
-fig = main.display_dashboard(all_sensors, theme=view)
-spd = main.speedometer(0, theme=view)
-pdl = main.pedals(theme=view)
+fig = display_dashboard(all_sensors, theme=view)
+spd = speedometer(0, theme=view)
+pdl = pedals(theme=view)
 
 # styles
 button_style = [  # selected
-    {'font-family': main.themes[view]["font"]["title"],
-     'color': main.themes[view]["color"][1][2],
-     'background-color': main.themes[view]["color"][2][2],
-     'font-size': main.themes[view]["size"]["medium"] + "px",
+    {'font-family': themes[view]["font"]["title"],
+     'color': themes[view]["color"][1][2],
+     'background-color': themes[view]["color"][2][2],
+     'font-size': themes[view]["size"]["medium"] + "px",
      'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
      'marginBottom': '10px',
-     'border': "1.5px solid " + main.themes[view]["color"][0][0],
+     'border': "1.5px solid " + themes[view]["color"][0][0],
      },
     # deselected
-    {'font-family': main.themes[view]["font"]["title"],
-     'color': main.themes[view]["color"][2][2],
-     'background-color': main.themes[view]["color"][0][0],
-     'font-size': main.themes[view]["size"]["medium"] + "px",
+    {'font-family': themes[view]["font"]["title"],
+     'color': themes[view]["color"][2][2],
+     'background-color': themes[view]["color"][0][0],
+     'font-size': themes[view]["size"]["medium"] + "px",
      'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
      'marginBottom': '10px',
-     'border': "1.5px solid " + main.themes[view]["color"][2][2],
+     'border': "1.5px solid " + themes[view]["color"][2][2],
      },
 ]
 
@@ -58,18 +59,18 @@ app.layout = html.Div([
             type="default",
             children=html.Div(id="loading-output-1"),
             style={'width': '100px', 'display': 'inline-block', 'textAlign': 'center', },
-            color=main.themes[view]["color"][2][2],
+            color=themes[view]["color"][2][2],
         ),
         # logo
         html.Img(src=app.get_asset_url("club_logo.JPG"),
                  style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginBottom': '5px',
                         'display': 'inline-block', 'verticalAlign': 'bottom'}),
         # title
-        html.H1('A.V.A.', style={'color': main.themes[view]["color"][2][2],
+        html.H1('A.V.A.', style={'color': themes[view]["color"][2][2],
                                  'paddingLeft': '10px', 'paddingTop': '0px',
                                  'paddingBottom': '0px', 'margin': '0px',
                                  'display': 'inline-block', 'width': '10%',
-                                 'font-family': main.themes[view]["font"]["title"],
+                                 'font-family': themes[view]["font"]["title"],
                                  'font-style': 'italic', 'verticalAlign': 'bottom',
                                  'marginBottom': '5px',
                                  },
@@ -92,10 +93,10 @@ app.layout = html.Div([
                        id='size_radio',
                        labelStyle={'display': 'block'},
                        style={
-                           'font-family': main.themes[view]["font"]["title"],
-                           'color': main.themes[view]["color"][2][2],
-                           # 'background-color': main.themes[view]["color"][2][2],
-                           'font-size': main.themes[view]["size"]["small"] + "px",
+                           'font-family': themes[view]["font"]["title"],
+                           'color': themes[view]["color"][2][2],
+                           # 'background-color': themes[view]["color"][2][2],
+                           'font-size': themes[view]["size"]["small"] + "px",
                            'display': 'inline-block', 'width': '12%', "padding": '0px',
                            'marginLeft': '15px', 'marginTop': '0px', 'verticalAlign': 'bottom',
                            'marginBottom': '5px',
@@ -111,16 +112,16 @@ app.layout = html.Div([
     html.Div([
         dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
                    marks={0: {'label': "0",
-                              'style': {'color': main.themes[view]["color"][2][2]}},
+                              'style': {'color': themes[view]["color"][2][2]}},
                           time_end / 2: {'label': str(time_end / 2),
-                                         'style': {'color': main.themes[view]["color"][2][2]}},
+                                         'style': {'color': themes[view]["color"][2][2]}},
                           time_end: {'label': str(time_end),
-                                     'style': {'color': main.themes[view]["color"][2][2]}}
+                                     'style': {'color': themes[view]["color"][2][2]}}
                           },
                    updatemode='drag'),
     ], style={'marginLeft': '50px', 'width': '80%',
-              'font-family': main.themes[view]["font"]["title"],
-              'color': main.themes[view]["color"][2][2], }),
+              'font-family': themes[view]["font"]["title"],
+              'color': themes[view]["color"][2][2], }),
     html.Div([
         # speedometer
         dcc.Graph(
@@ -145,14 +146,14 @@ app.layout = html.Div([
         # additional text data
         html.P(id='output-values',
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                      'color': main.themes[view]["color"][2][2],
-                      'font-family': main.themes[view]["font"]["p"],
-                      'font-size': main.themes[view]["size"]["small"] + "px",
+                      'color': themes[view]["color"][2][2],
+                      'font-family': themes[view]["font"]["p"],
+                      'font-size': themes[view]["size"]["small"] + "px",
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
 ],  # overall styling
-    style={'background-color': main.themes[view]["color"][0][2],
-           'color': main.themes[view]["color"][0][2],
+    style={'background-color': themes[view]["color"][0][2],
+           'color': themes[view]["color"][0][2],
            'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
 
 
@@ -194,30 +195,30 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     avail = []
     for i in range(len(on)):
         if i == 0 and on[i] == 0:
-            avail.append(main.Sensor.ACC1.value)
-            avail.append(main.Sensor.ACC2.value)
+            avail.append(Sensor.ACC1.value)
+            avail.append(Sensor.ACC2.value)
         elif i == 1 and on[i] == 0:
-            avail.append(main.Sensor.BRAKE.value)
+            avail.append(Sensor.BRAKE.value)
         elif i == 2 and on[i] == 0:
-            avail.append(main.Sensor.TIRE1.value)
-            avail.append(main.Sensor.TIRE2.value)
-            avail.append(main.Sensor.TIRE3.value)
-            avail.append(main.Sensor.TIRE4.value)
+            avail.append(Sensor.TIRE1.value)
+            avail.append(Sensor.TIRE2.value)
+            avail.append(Sensor.TIRE3.value)
+            avail.append(Sensor.TIRE4.value)
         elif i == 3 and on[i] == 0:
-            avail.append(main.Sensor.ANGLE.value)
+            avail.append(Sensor.ANGLE.value)
         elif i == 4 and on[i] == 0:
-            avail.append(main.Sensor.DAMP1.value)
-            avail.append(main.Sensor.DAMP2.value)
-            avail.append(main.Sensor.DAMP3.value)
-            avail.append(main.Sensor.DAMP4.value)
+            avail.append(Sensor.DAMP1.value)
+            avail.append(Sensor.DAMP2.value)
+            avail.append(Sensor.DAMP3.value)
+            avail.append(Sensor.DAMP4.value)
         elif i == 5 and on[i] == 0:
-            avail.append(main.Sensor.TEMP.value)
+            avail.append(Sensor.TEMP.value)
 
     # built output list
     buttons = [button_style[i % 2] for i in index]
 
     # rebuild the main plot with the new availability list
-    new_plot = main.display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on) - sum(on))
+    new_plot = display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on) - sum(on))
     buttons.append(new_plot)
 
     # resize the additional charts based on size input
@@ -263,18 +264,18 @@ def update_output_div(input_value, size):
     # if the input is not a valid integer, display an error message
     if time is None:
         return 'Please enter a valid decimal time greater than zero.', \
-               main.speedometer(0, maxim=10, theme=view), \
-               main.pedals(theme=view), \
-               main.steering(theme=view), \
-               main.track(theme=view)
+               speedometer(0, maxim=10, theme=view), \
+               pedals(theme=view), \
+               steering(theme=view), \
+               track(theme=view)
 
     else:
         # get the values of each subplot at the input time
         values = []
-        for i in range(1, len(main.legend) + 1):
+        for i in range(1, len(legend) + 1):
             trace = fig['data'][i - 1]
             value = round(trace['y'][int(time * 1000)], 4) if time * 1000 < len(trace['y']) else None
-            values.append(f'{main.legend[i - 1]}: {value}')
+            values.append(f'{legend[i - 1]}: {value}')
 
         # compute the average speed to display
         speed = np.mean([float(values[i].split(":")[1][1:]) for i in range(3, 7)])
@@ -287,9 +288,9 @@ def update_output_div(input_value, size):
         extra = html.P("Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:]),
                        id='output-values',
                        style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                              'color': main.themes[view]["color"][2][2],
-                              'font-family': main.themes[view]["font"]["p"],
-                              'font-size': main.themes[view]["size"]["small"] + "px",
+                              'color': themes[view]["color"][2][2],
+                              'font-family': themes[view]["font"]["p"],
+                              'font-size': themes[view]["size"]["small"] + "px",
                               'vertical-align': 'top', 'white-space': 'pre-line'}
                        )
 
@@ -307,10 +308,10 @@ def update_output_div(input_value, size):
 
         # return figures
         return extra, \
-               main.speedometer(speed, maxim=2, theme=view), \
-               main.pedals(brake, acceleration, maxim=5, theme=view), \
-               main.steering(angle=angle, theme=view), \
-               main.track(time_stamp=input_value, theme=view), \
+               speedometer(speed, maxim=2, theme=view), \
+               pedals(brake, acceleration, maxim=5, theme=view), \
+               steering(angle=angle, theme=view), \
+               track(time_stamp=input_value, theme=view), \
                update, update, update, update
 
 
