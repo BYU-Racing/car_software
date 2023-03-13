@@ -1,7 +1,6 @@
 #ifndef IDLESTATE_H
 #define IDLESTATE_H
 #include <Arduino.h>
-//#include "ActiveState.h"
 #include "State.h"
 #include "SensorData.h"
 
@@ -9,14 +8,12 @@ class IdleState: public State {
     public:
         IdleState() {};
         IdleState(int _ledPin) : State(_ledPin) {};
-        int checkState(SensorData);
-        //void toggleBrakes();
-        //void updateThrottle();
+        int checkState(bool inertiaShutdown, bool keyPosition, double acceleratorPedal, double brakePosition);
         void race();
 };
 
-int IdleState::checkState(SensorData sensorData) {
-    if(!sensorData.getInertiaShutdown() && sensorData.getKeyPosition()) {
+int IdleState::checkState(bool inertiaShutdown, bool keyPosition, double acceleratorPedal, double brakePosition) {
+    if(!inertiaShutdown && keyPosition) {
         return ACTIVE;
     }
     return IDLE;

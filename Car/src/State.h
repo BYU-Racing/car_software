@@ -12,9 +12,7 @@ class State{
     public:
         State() {};
         State(int _ledPin) : ledPin(_ledPin) {};
-        virtual int checkState(SensorData sensorData);
-        //virtual void toggleBrakes();
-        //virtual void updateThrottle();
+        virtual int checkState(bool inertiaShutdown, bool keyPosition, double acceleratorPedal, double brakePosition);
         void race();
         
 };
@@ -23,7 +21,7 @@ void State::race() {
     //do some racing things here
 }
 
-int State::checkState(SensorData sensorData) {
+int State::checkState(bool inertiaShutdown, bool keyPosition, double acceleratorPedal, double brakePosition) {
     return 0;
 }
 

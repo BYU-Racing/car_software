@@ -2,17 +2,16 @@
 #define ACTIVESTATE_H
 #include "State.h"
 
-class ActiveState: private State {
+class ActiveState: public State {
     public:
         ActiveState(int _ledPin) : State(_ledPin) {};
-        int checkState(SensorData sensorData);
-        void toggleBrakes();
-        void updateThrottle();
+        int checkState(bool inertiaShutdown, bool keyPosition, double acceleratorPedal, double brakePosition);
+        //void toggleBrakes();
         void race();
 };
 
-int ActiveState::checkState(SensorData sensorData) {
-    if(sensorData.getInertiaShutdown() || sensorData.getKeyPosition()) {
+int ActiveState::checkState(bool inertiaShutdown, bool keyPosition, double acceleratorPedal, double brakePosition) {
+    if(inertiaShutdown || !keyPosition) {
        return IDLE;
     }
 }

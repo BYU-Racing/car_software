@@ -1,17 +1,14 @@
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
+enum sensorIDs { INERTIA_SWITCH, KEY_SWITCH, ACCEL_PEDAL, BRAKE_PEDAL };
+
 class SensorData {
-    private:
-        bool keyPosition;
-        bool inertiaShutdown;
-
     public:
-        bool getKeyPosition() {return keyPosition; }
-        bool setKeyPosition(bool val) { keyPosition = val;}
-        bool getInertiaShutdown() { return inertiaShutdown; }
-        bool setInertiaShutdown(bool val) { inertiaShutdown = val; }
-
+        
+        enum sensorIDs sensorid;
+        double data; //not sure about this data type
+        double timestamp;
 };
 
 

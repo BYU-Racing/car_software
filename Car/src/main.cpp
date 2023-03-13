@@ -18,10 +18,19 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  car.updateSensors(digitalRead(KEYSWITCH), digitalRead(INERTIASWITCH));
 
-  car.run();
+  //read can signals
+  //canSniff();
+
+}
+
+void canSniff() {
+  SensorData sensorData;
+  //determine which sensor it came from
+    //drive sensors
+      //call updateDriveSensor
+    //data logging sensors
+      car.logData(sensorData);
 }
 
 #endif
