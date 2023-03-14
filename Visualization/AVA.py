@@ -9,8 +9,6 @@ from Static import themes, Sensor
 
 # TODO play button
 # TODO add a settings button
-# TODO improve instructions by testing
-# TODO add position on track
 
 # create Dash object
 app = Dash(__name__)

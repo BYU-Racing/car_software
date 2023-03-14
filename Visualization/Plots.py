@@ -16,6 +16,13 @@ domain = np.linspace(0, 2 * np.pi, n)
 deg = np.round(2 * np.sin(domain), 1)
 spd = np.ones(n)
 x, y = convert_position(spd, tim, deg)
+# direction = [(np.sum([deg[:i]]) - np.pi/4) * 180 / np.pi for i in range(len(deg))]
+direction = [np.mean(deg[i-5:i+5]) * 180 / np.pi - 90 for i in range(5, n - 5)]
+print("All directions")
+print(len(direction))
+print(type(direction[1]))
+print(direction[1])
+# print(direction)
 
 def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_ticks=1):
     """
@@ -393,11 +400,12 @@ def track(time_stamp=0, theme="Dark"):
                       )
     # position = go.Scatter(x=[x[index]], y=[y[index]], mode='markers',
     position = go.Scatter(x=[x[index]], y=[y[index]], mode='markers',
-                          marker=dict(size=28, color=themes[theme]["trace"][0][2],
+                          marker=dict(size=16, color=themes[theme]["trace"][0][2],
                                       line=dict(width=4, color=themes[theme]["color"][0][2]),
-                                      symbol="arrow", angleref='previous', ),
+                                      symbol="circle", angle=direction[index], ),
                           showlegend=False,
                           )
+    print("direction:", index, direction[index])
 
     fig = go.Figure()
     fig.add_trace(highlight)
