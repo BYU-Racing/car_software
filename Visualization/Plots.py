@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-from Static import themes, sensors, Sensor
+from Config import themes, sensors, Sensor
 from Converter import *
 
 
@@ -12,17 +12,13 @@ legend = {}
 # fake track data
 n = 433
 tim = np.ones(n)
+
 domain = np.linspace(0, 2 * np.pi, n)
 deg = np.round(2 * np.sin(domain), 1)
 spd = np.ones(n)
+
 x, y = convert_position(spd, tim, deg)
-# direction = [(np.sum([deg[:i]]) - np.pi/4) * 180 / np.pi for i in range(len(deg))]
-direction = [np.mean(deg[i-5:i+5]) * 180 / np.pi - 90 for i in range(5, n - 5)]
-print("All directions")
-print(len(direction))
-print(type(direction[1]))
-print(direction[1])
-# print(direction)
+
 
 def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_ticks=1):
     """
@@ -47,12 +43,14 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
     index_trace = 0
     dots = 0.001
 
-    # Plot 1: Accelerators
+    # PLOT 1: ACCELERATORS ---------------------------------------------------------------------------------------------
     if Sensor.ACC1.value in avail:
         # increment row index for subplots
         row += 1
+
         # update legend dictionary with correct sensor for other plots
         legend.update({index_trace: sensors[Sensor.ACC1.value]})
+
         # increment trace so that other plots can stay consistent with order
         index_trace += 1
 
@@ -61,124 +59,149 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
                                  y=all_frames[Sensor.ACC1.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][0][2]),
                                  mode=graph_mode, name=sensors[Sensor.ACC1.value]), row=row, col=1, ),
+
     # repeat for every other sensor
     if Sensor.ACC2.value in avail:
         legend.update({index_trace: sensors[Sensor.ACC2.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC2.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC2.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.ACC2.value]), row=row, col=1)
+
         fig.update_yaxes(nticks=num_ticks, title_text="Accelerator", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
-    # Plot 2: Brake Pressure
+    # PLOT 2: BRAKE SENSORS --------------------------------------------------------------------------------------------
     if Sensor.BRAKE.value in avail:
         row += 1
         legend.update({index_trace: sensors[Sensor.BRAKE.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.BRAKE.value]["Timestamp"],
                                  y=all_frames[Sensor.BRAKE.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.BRAKE.value]), row=row, col=1)
+
         fig.update_yaxes(nticks=num_ticks, title_text="Brake", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
-    # Plot 3: Tire speeds
+    # PLOT 3: TIRE SPEEDS ----------------------------------------------------------------------------------------------
     if Sensor.TIRE1.value in avail:
         row += 1
         legend.update({index_trace: sensors[Sensor.TIRE1.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE1.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE1.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][2][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE1.value]), row=row, col=1)
+    # TIRE 2 PLOT
     if Sensor.TIRE2.value in avail:
         legend.update({index_trace: sensors[Sensor.TIRE2.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE2.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE2.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][3][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE2.value]), row=row, col=1)
+    # TIRE 3 PLOT
     if Sensor.TIRE3.value in avail:
         legend.update({index_trace: sensors[Sensor.TIRE3.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE3.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE3.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][4][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE3.value]), row=row, col=1)
+    # TIRE 4 PLOT
     if Sensor.TIRE4.value in avail:
         legend.update({index_trace: sensors[Sensor.TIRE4.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TIRE4.value]["Timestamp"],
                                  y=all_frames[Sensor.TIRE4.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][5][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
+
     fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
     fig.update_xaxes(visible=False, showticklabels=False)
 
-    # Plot 4: Steering Wheel
+    # PLOT 4: STEERING WHEEL -------------------------------------------------------------------------------------------
     if Sensor.ANGLE.value in avail:
         row += 1
         legend.update({index_trace: sensors[Sensor.ANGLE.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ANGLE.value]["Timestamp"],
                                  y=all_frames[Sensor.ANGLE.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.ANGLE.value]), row=row, col=1)
+
         fig.update_yaxes(nticks=num_ticks, title_text="Steering", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
-    # Plot 5: Damper Position
+    # PLOT 5: DAMPER POSITIONS -----------------------------------------------------------------------------------------
     if Sensor.DAMP1.value in avail:
         row += 1
         legend.update({index_trace: sensors[Sensor.DAMP1.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP1.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP1.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][2][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP1.value]), row=row, col=1)
+    # DAMPER 2
     if Sensor.DAMP2.value in avail:
         legend.update({index_trace: sensors[Sensor.DAMP2.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP2.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP2.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][3][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP2.value]), row=row, col=1)
+    # DAMPER 3
     if Sensor.DAMP3.value in avail:
         legend.update({index_trace: sensors[Sensor.DAMP3.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP3.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP3.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][4][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP3.value]), row=row, col=1)
+    # DAMPER 4
     if Sensor.DAMP4.value in avail:
         legend.update({index_trace: sensors[Sensor.DAMP4.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.DAMP4.value]["Timestamp"],
                                  y=all_frames[Sensor.DAMP4.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][5][2],
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.DAMP4.value]), row=row, col=1)
+
         fig.update_yaxes(nticks=num_ticks, title_text="Dampers", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
-    # Plot 6: Battery Temperature
+    # PLOT 6: BATTERY TEMPERATURE --------------------------------------------------------------------------------------
     if Sensor.TEMP.value in avail:
         row += 1
         legend.update({index_trace: sensors[Sensor.TEMP.value]})
         index_trace += 1
+
         fig.add_trace(go.Scatter(x=all_frames[Sensor.TEMP.value]["Timestamp"],
                                  y=all_frames[Sensor.TEMP.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.TEMP.value]), row=row, col=1)
+
         fig.update_yaxes(nticks=num_ticks, title_text="Battery", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
 
@@ -188,6 +211,7 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
                       font=dict(size=int(themes[theme]["size"]["small"])),
                       margin=dict(l=75, r=75, t=10, b=20),
                       )
+
     # update layout based on and theme
     fig.update_layout(paper_bgcolor=themes[theme]["color"][0][1],
                       plot_bgcolor=themes[theme]["color"][1][1],
@@ -218,6 +242,7 @@ def speedometer(value, maxim=60, theme="Dark"):
     # initialize figure and plot parameters
     figSpeed = go.Figure()
     maxim = int(maxim)
+
     tick0 = 0
     tick1 = round(maxim / 4, 2)
     tick2 = round(maxim / 2, 2)
@@ -228,15 +253,18 @@ def speedometer(value, maxim=60, theme="Dark"):
     figSpeed.add_trace(go.Indicator(
         mode="gauge+number",
         value=value,
+
         gauge={
             'axis': {'range': [None, maxim], 'nticks': 7},
             'bar': {'color': themes[theme]["color"][2][2]},
+
             # set steps
             'steps': [
                 {'range': [tick0, tick1], 'color': themes[theme]["color"][1][2]},
                 {'range': [tick1, tick2], 'color': themes[theme]["color"][1][2]},
                 {'range': [tick2, tick3], 'color': themes[theme]["color"][1][2]},
                 {'range': [tick3, tick4], 'color': themes[theme]["color"][1][2]}],
+
             # set threshold
             'threshold': {
                 'line': {'color': themes[theme]["trace"][1][2], 'width': 4},
@@ -335,17 +363,20 @@ def steering(angle=0, theme="Dark"):
         marker=dict(size=20, color=themes[theme]["color"][4][2]),
         showlegend=False
     )
+
     left_bar = go.Scatter(
         x=x_left, y=y_left, mode='markers',
         marker=dict(size=20, color=themes[theme]["color"][4][2]),
         showlegend=False
     )
+
     # place points on the top of the wheel to indicate orientation
     right_top = go.Scatter(
         x=[x_right[-1]], y=[y_right[-1]], mode='markers',
         marker=dict(size=20, color=themes[theme]["color"][1][2]),
         showlegend=False
     )
+
     left_top = go.Scatter(
         x=[x_left[0]], y=[y_left[0]], mode='markers',
         marker=dict(size=20, color=themes[theme]["color"][1][2]),
@@ -390,22 +421,24 @@ def steering(angle=0, theme="Dark"):
 
 def track(time_stamp=0, theme="Dark"):
     index = int(time_stamp * 1000) % 433
+
     highlight = go.Scatter(x=x, y=y, mode='lines',
                            line=dict(width=5, color=themes[theme]["trace"][6][2]),
                            showlegend=False
                            )
+
     line = go.Scatter(x=x, y=y, mode='lines',
                       line=dict(width=3, color=themes[theme]["trace"][0][2]),
                       showlegend=False
                       )
+
     # position = go.Scatter(x=[x[index]], y=[y[index]], mode='markers',
     position = go.Scatter(x=[x[index]], y=[y[index]], mode='markers',
                           marker=dict(size=16, color=themes[theme]["trace"][0][2],
                                       line=dict(width=4, color=themes[theme]["color"][0][2]),
-                                      symbol="circle", angle=direction[index], ),
+                                      symbol="circle"),
                           showlegend=False,
                           )
-    print("direction:", index, direction[index])
 
     fig = go.Figure()
     fig.add_trace(highlight)
@@ -429,3 +462,5 @@ def track(time_stamp=0, theme="Dark"):
     fig.update_xaxes(nticks=1, visible=False, showticklabels=False)
 
     return fig
+
+

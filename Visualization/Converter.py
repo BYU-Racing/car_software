@@ -1,7 +1,7 @@
 import pandas as pd
 from bitstring import BitArray
 import numpy as np
-from Static import *
+from Config import *
 
 
 """
@@ -90,10 +90,12 @@ def parseBits(signals):
 
     processed = []
     for signal in signals:
+
         # check data type
         if type(signal) is not str:
             raise TypeError(f"Signal is not of type string. Instead received {type(signal)}."
                             f"\nSignal: {signal}")
+
         # check signal length
         if len(signal) != protocol[-1][1]:
             raise ValueError(f"Signal is not the right length. Expected {protocol[-1][1]} but received {len(signal)}."
@@ -173,13 +175,16 @@ def crc(message, cycCheck):
     # initialize local variables
     n = 8
     primes = [5, 7, 11, 13, 17, 19, 23, 29]
+
     # split message into 8 bytes
     message = [message[i:i + n] for i in range(0, len(message), n)]
+
     # convert bytes to integers
     message = [int(str(m), 2) for m in message]
 
     # recompute crc using message and primes
     check = bin(sum([m * p for m, p in zip(message, primes)]))[2:].rjust(15, "0")
+
     # return comparison between computed and received crc value
     return check == cycCheck
 
@@ -198,15 +203,20 @@ def convert_position(speed, time, angle):
     theta = 0
     x = 0
     y = 0
+
     x_val = [0] * len(distance)
     y_val = [0] * len(distance)
     angle = [np.deg2rad(a) for a in angle]
 
     for i in range(len(distance)):
         theta += angle[i]
+
         x += distance[i] * np.cos(theta)
         x_val[i] = x
+
         y += distance[i] * np.sin(theta)
         y_val[i] = y
 
     return x_val, y_val
+
+
