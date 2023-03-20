@@ -120,7 +120,7 @@ graphs entirely, so some actions take a few seconds.
 
 <hr>
 
-### Built With
+### Packages
 
 [![Plotly][Plotly-icon]][Plotly-url] &emsp; &emsp;  [![Dash][Dash-icon]][Dash-url] &emsp; &emsp;
 
