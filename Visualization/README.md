@@ -49,13 +49,14 @@ the globe.
 
 ### Instructions for Download
 
-You'll need to start by downloading plotly and dash with these commands:
-- pip install plotly
-- pip install dash
+You'll need to start by downloading a few python packages with these commands:
+- pip install <a href=https://plotly.com/python/getting-started/>plotly</a>
+- pip install <a href=https://dash.plotly.com/installation>dash</a>
+- pip install <a href=https://pandas.pydata.org/docs/getting_started/install.html>pandas</a>
+- pip install <a href=https://pypi.org/project/bitstring/>bitstring</a>
 
-You can then clone this project to your own machine from GitHub.
-<br>
-Here's how.
+You can then <a href=https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository>
+clone this project</a> to your own machine from GitHub and then run the dashboard in any Python development environment.
 
 <hr>
 

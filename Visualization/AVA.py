@@ -4,13 +4,10 @@ import plotly.express as px
 import numpy as np
 
 from Plots import *
-from Static import themes, Sensor
-
+from Config import themes, Sensor
 
 # TODO play button
 # TODO add a settings button
-# TODO improve instructions by testing
-# TODO add position on track
 
 # create Dash object
 app = Dash(__name__)
@@ -50,9 +47,12 @@ button_style = [  # selected
      },
 ]
 
-# set dashboard layout
+
+
+# DISPLAY DASHBOARD
 app.layout = html.Div([
     html.Div([
+
         # loading animation
         dcc.Loading(
             id="loading-1",
@@ -61,10 +61,12 @@ app.layout = html.Div([
             style={'width': '100px', 'display': 'inline-block', 'textAlign': 'center', },
             color=themes[view]["color"][2][2],
         ),
+
         # logo
         html.Img(src=app.get_asset_url("club_logo.JPG"),
                  style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginBottom': '5px',
                         'display': 'inline-block', 'verticalAlign': 'bottom'}),
+
         # title
         html.H1('A.V.A.', style={'color': themes[view]["color"][2][2],
                                  'paddingLeft': '10px', 'paddingTop': '0px',
@@ -75,6 +77,7 @@ app.layout = html.Div([
                                  'marginBottom': '5px',
                                  },
                 id='dashboard-title'),
+
         # tab buttons
         html.Button('Accelerator', id='acc-button', n_clicks=0,
                     style=button_style[0]),
@@ -88,6 +91,7 @@ app.layout = html.Div([
                     style=button_style[0]),
         html.Button('Battery', id='bat-button', n_clicks=0,
                     style=button_style[0]),
+
         # display toggle
         dcc.RadioItems(['Expanded', 'Condensed'], 'Expanded',
                        id='size_radio',
@@ -102,12 +106,14 @@ app.layout = html.Div([
                            'marginBottom': '5px',
                        }),
     ]),
+
     # main line charts
     dcc.Graph(
         id='car_go_fast',
         figure=fig,
         style={'width': '100%', 'height': '120vh', 'margin': '0px'}
     ),
+
     # slider to select and view instantaneous values
     html.Div([
         dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
@@ -122,27 +128,33 @@ app.layout = html.Div([
     ], style={'marginLeft': '50px', 'width': '80%',
               'font-family': themes[view]["font"]["title"],
               'color': themes[view]["color"][2][2], }),
+
     html.Div([
+
         # speedometer
         dcc.Graph(
             id='speedometer',
             figure=spd,
             style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }
         ),
+
         # bar chart for brake and accelerator
         dcc.Graph(
             id='pedals',
             figure=pdl,
             style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }
         ),
+
         # steering wheel
         dcc.Graph(id='steering-wheel',
                   config={'displayModeBar': False},
                   style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
+
         # track position
         dcc.Graph(id='track-position',
                   config={'displayModeBar': False},
                   style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
+
         # additional text data
         html.P(id='output-values',
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
@@ -151,12 +163,18 @@ app.layout = html.Div([
                       'font-size': themes[view]["size"]["small"] + "px",
                       'vertical-align': 'top', 'white-space': 'pre-line'}),
     ])
+
 ],  # overall styling
     style={'background-color': themes[view]["color"][0][2],
            'color': themes[view]["color"][0][2],
            'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
 
 
+
+
+# CALLBACK FUNCTIONS ---------------------------------------------------------------------------------------------------
+
+# SELECT SUBPLOT BUTTONS
 @app.callback(
     Output(component_id='acc-button', component_property='style'),
     Output(component_id='brk-button', component_property='style'),
@@ -167,6 +185,7 @@ app.layout = html.Div([
     Output(component_id='car_go_fast', component_property='figure'),
     Output(component_id='car_go_fast', component_property='style'),
     Output(component_id="loading-output-1", component_property="children"),
+
     Input(component_id='acc-button', component_property='n_clicks'),
     Input(component_id='brk-button', component_property='n_clicks'),
     Input(component_id='tir-button', component_property='n_clicks'),
@@ -185,7 +204,7 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     :param n_click4: number of times the damper position tab has been clicked
     :param n_click5: number of times the battery tab has been clicked
     :param size: selection for display size
-    :return:
+    :return: button style and new main line chart
     """
     # turn click input into a list
     index = [n_click0, n_click1, n_click2, n_click3, n_click4, n_click5]
@@ -226,6 +245,7 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
         tall = '120vh'
     else:
         tall = '60vh'
+
     reformat = {'width': '100%', 'height': tall, 'margin': '0px'}
     buttons.append(reformat)
     buttons.append(size)
@@ -234,7 +254,7 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     return buttons
 
 
-# define a callback function to update the output values based on the input time
+# SELECT TIME SLIDER AND DISPLAY MODE RADIO BUTTONS
 @app.callback(
     Output(component_id='output-values', component_property='children'),
     Output(component_id='speedometer', component_property='figure'),
@@ -245,6 +265,7 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     Output(component_id='pedals', component_property='style'),
     Output(component_id='steering-wheel', component_property='style'),
     Output(component_id='track-position', component_property='style'),
+
     Input(component_id='time-slider', component_property='value'),
     Input(component_id='size_radio', component_property='value'),
 )
@@ -261,6 +282,7 @@ def update_output_div(input_value, size):
         time = float(input_value)
     except ValueError:
         time = None
+
     # if the input is not a valid integer, display an error message
     if time is None:
         return 'Please enter a valid decimal time greater than zero.', \
@@ -272,6 +294,7 @@ def update_output_div(input_value, size):
     else:
         # get the values of each subplot at the input time
         values = []
+
         for i in range(1, len(legend) + 1):
             trace = fig['data'][i - 1]
             value = round(trace['y'][int(time * 1000)], 4) if time * 1000 < len(trace['y']) else None
@@ -304,6 +327,7 @@ def update_output_div(input_value, size):
         else:
             wide = '35vh'
             tall = '28vh'
+
         update = {'width': wide, 'height': tall, 'display': 'inline-block'}
 
         # return figures
