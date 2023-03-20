@@ -2,13 +2,16 @@
 #define CAR_H
 #include "State.h"
 #include <typeinfo>
+#include <SPI.h>
+#include <SD.h>
 #include "IdleState.h"
 #include "ActiveState.h"
 #include "SensorData.h"
 
 #define ID_SIZE 4
-#define DATA_SIZE 8
-#define TIMESTAMP_SIZE 8
+#define DATA_SIZE 4
+#define TIMESTAMP_SIZE 4 //32 bits or 4 bytes 
+
 
 
 struct Car {
@@ -22,10 +25,12 @@ struct Car {
         double brakePosition;
 
         int ledPin;
+
+        File dataLog;
     public:
         Car() {};
-        Car(int _ledPin) : state(IdleState(_ledPin)), ledPin(_ledPin), inertiaShutdown(true),
-                        keyPosition(false), acceleratorPedal(0), brakePosition(0) {};
+        Car(int _ledPin, File _dataLog) : state(IdleState(_ledPin)), ledPin(_ledPin), inertiaShutdown(true),
+                        keyPosition(false), acceleratorPedal(0), brakePosition(0), dataLog(_dataLog) {};
         void updateState(SensorData sensorData);
         void updateDriveSensor(SensorData sensorData);
         void logData(SensorData sensorData);
@@ -73,7 +78,13 @@ void Car::logData(SensorData sensorData) {
     memcpy(&buf[ID_SIZE], &sensorData.data, DATA_SIZE);
     memcpy(&buf[ID_SIZE + DATA_SIZE], &sensorData.timestamp, TIMESTAMP_SIZE);
 
+    Serial.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
+
     //push to sd card
+    dataLog = SD.open("data.txt", FILE_WRITE);
+
+    dataLog.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
+    dataLog.close();
 }
 
 #endif
