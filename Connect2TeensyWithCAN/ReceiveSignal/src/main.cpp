@@ -31,7 +31,7 @@ void setup() {
   receiver.begin();
   receiver.setClock(CLK_60MHz);
   receiver.setBaudRate(9600);
-  receiver.setMaxMB(1);
+  receiver.setMaxMB(2);
   receiver.setMB(MB0, RX,EXT);
   receiver.onReceive(MB0, canSniff);
   receiver.enableMBInterrupts();

@@ -16,7 +16,6 @@ struct Car {
         SensorData sensorData = SensorData();
         State state;
         //data for driving
-        //TO DO inst in constructor
         bool inertiaShutdown;
         bool keyPosition;
         double acceleratorPedal;
@@ -27,20 +26,12 @@ struct Car {
         Car() {};
         Car(int _ledPin) : state(IdleState(_ledPin)), ledPin(_ledPin), inertiaShutdown(true),
                         keyPosition(false), acceleratorPedal(0), brakePosition(0) {};
-        void updateSensors(bool, bool);
         void updateState(SensorData sensorData);
         void updateDriveSensor(SensorData sensorData);
         void logData(SensorData sensorData);
         bool getInertiaShutdown()  { return inertiaShutdown; }
         bool getKeyPosition() { return keyPosition; }
 };
-
-void Car::updateSensors(bool _keyPosition, bool _inertiaShutdown) {
-    //read in sensors
-    //sensorData.setKeyPosition(_keyPosition);
-    //sensorData.setInertiaShutdown(_inertiaShutdown);
-    //updateState(sensorData);
-}
 
 
 
