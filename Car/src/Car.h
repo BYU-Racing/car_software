@@ -8,6 +8,8 @@
 #include "ActiveState.h"
 #include "SensorData.h"
 
+
+
 #define ID_SIZE 4
 #define DATA_SIZE 4
 #define TIMESTAMP_SIZE 4 //32 bits or 4 bytes 
@@ -78,12 +80,13 @@ void Car::logData(SensorData sensorData) {
     memcpy(&buf[ID_SIZE], &sensorData.data, DATA_SIZE);
     memcpy(&buf[ID_SIZE + DATA_SIZE], &sensorData.timestamp, TIMESTAMP_SIZE);
 
-    Serial.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
+    //Serial.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
 
     //push to sd card
-    dataLog = SD.open("data.txt", FILE_WRITE);
+    dataLog = SD.open("data.csv", FILE_WRITE);
 
     dataLog.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
+    dataLog.println(""); //add a new line between data
     dataLog.close();
 }
 

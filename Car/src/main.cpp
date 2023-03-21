@@ -6,6 +6,7 @@
 #include "Car.h"
 #include "State.h"
 
+
 #define KEYSWITCH 2
 #define INERTIASWITCH 3
 #define LED 4
@@ -20,7 +21,10 @@ Car car;
 void canSniff() {
   SensorData sensorData;
   sensorData.sensorid = INERTIA_SWITCH;
-  sensorData.data = 0x123456;
+  sensorData.data = analogRead(A0);
+  Serial.print("analog 0 is: ");
+  Serial.println(sensorData.data);
+  //sensorData.data = 0x123456;
   sensorData.timestamp = millis();
   //determine which sensor it came from
     //drive sensors
@@ -33,6 +37,7 @@ void setup() {
   pinMode(KEYSWITCH, INPUT);
   pinMode(INERTIASWITCH, INPUT);
   pinMode(LED, OUTPUT);
+
   car = Car(LED, dataLog);
 
   Serial.begin(9600);
@@ -49,8 +54,12 @@ void setup() {
   }
 }
 
+
 void loop() {
 
+
+
+  delay(1000);
   //read can signals
   if (digitalRead(KEYSWITCH)) {
     Serial.println("reading");
