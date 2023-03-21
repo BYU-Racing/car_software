@@ -37,7 +37,7 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
         avail = list(range(15))
 
     # initialize figure with subplots
-    fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.02)
+    fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.02, shared_xaxes=True)
     row = 0
     graph_mode = 'lines'
     index_trace = 0
