@@ -1,6 +1,8 @@
 import pandas as pd
 from bitstring import BitArray
 import numpy as np
+
+import Config
 from Config import *
 
 
@@ -168,34 +170,6 @@ def convertData(data):
     return pd.DataFrame([BitArray(bin=str(d)).float for d in data])
 
 
-def crc(message, cycCheck):
-    """
-    Perform Cyclic Redundancy Check. This is part of extended CANBus dataframes
-    the checks the data in the message by computing a polynomial based on the message
-    before and after sending the signal
-    Parameters:
-        message (string): message as a string of binary digits
-        cycCheck (string): CRC that the frame contained
-    Returns:
-        check (Boolean): true if the polynomials match, false otherwise
-    """
-    # initialize local variables
-    n = 8
-    primes = [5, 7, 11, 13, 17, 19, 23, 29]
-
-    # split message into 8 bytes
-    message = [message[i:i + n] for i in range(0, len(message), n)]
-
-    # convert bytes to integers
-    message = [int(str(m), 2) for m in message]
-
-    # recompute crc using message and primes
-    check = bin(sum([m * p for m, p in zip(message, primes)]))[2:].rjust(15, "0")
-
-    # return comparison between computed and received crc value
-    return check == cycCheck
-
-
 def convert_position(speed, time, angle):
     """
     Convert timestamped speed and steering wheel angle to current
@@ -227,3 +201,13 @@ def convert_position(speed, time, angle):
     return x_val, y_val
 
 
+def convert_sensor_data(sensor, data):
+    """
+    Convert raw sensor data to a float accounting for weights and biases
+    :param sensor: (string) the name of the sensor
+    :param data: (int) the raw data from the sensor
+    :return: (float) the converted data
+    """
+    weight = "W_" + sensor
+    bias = "B_" + sensor
+    return (data - Config.biases[bias]) * Config.weights[weight]

@@ -18,7 +18,67 @@ class Sensor(Enum):
     DAMP4 = 12
     TEMP = 13
     LIGHT = 14
+    GFORCE = 15
 
+
+# sensor weights and biases
+weights = {
+    "W_ACC1": 0.0,
+    "W_ACC2": 0.0,
+    "W_BRAKE": 0.0,
+    "W_SWITCH": 0.0,
+    "W_ANGLE": 0.0,
+    "W_TIRE1": 0.0,
+    "W_TIRE2": 0.0,
+    "W_TIRE3": 0.0,
+    "W_TIRE4": 0.0,
+    "W_DAMP1": 0.0,
+    "W_DAMP2": 0.0,
+    "W_DAMP3": 0.0,
+    "W_DAMP4": 0.0,
+    "W_TEMP": 0.0,
+    "W_LIGHT": 0.0,
+    "W_GFORCE": 0.0,
+}
+
+biases = {
+    "B_ACC1": 0.0,
+    "B_ACC2": 0.0,
+    "B_BRAKE": 0.0,
+    "B_SWITCH": 0.0,
+    "B_ANGLE": 0.0,
+    "B_TIRE1": 0.0,
+    "B_TIRE2": 0.0,
+    "B_TIRE3": 0.0,
+    "B_TIRE4": 0.0,
+    "B_DAMP1": 0.0,
+    "B_DAMP2": 0.0,
+    "B_DAMP3": 0.0,
+    "B_DAMP4": 0.0,
+    "B_TEMP": 0.0,
+    "B_LIGHT": 0.0,
+    "B_GFORCE": 0.0,
+}
+
+# convert each sensor index to its abbreviated name
+sensor_names = {
+    0: "ACC1",
+    1: "ACC2",
+    2: "BRAKE",
+    3: "SWITCH",
+    4: "ANGLE",
+    5: "TIRE1",
+    6: "TIRE2",
+    7: "TIRE3",
+    8: "TIRE4",
+    9: "DAMP1",
+    10: "DAMP2",
+    11: "DAMP3",
+    12: "DAMP4",
+    13: "TEMP",
+    14: "LIGHT",
+    15: "GFORCE",
+}
 
 # convert an index to a sensor display name
 sensors = {0: 'Accelerator 1',
@@ -69,7 +129,7 @@ themes = {"Arduino": {  # theme name
     "Jarvis": {
         "color": {
             0: ["black", "rgba(0,0,0,1)", "#000000"],  # assigned to overall background
-            1: ["dark-blue", "rgba(1, 2, 44,1)", "#01022C"],  # subplot background to differentiate from background
+            1: ["dark-gray", "rgba(16, 16, 16,1)", "#111111"],  # subplot background to differentiate from background
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],  # Text color
             3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
             4: ["dark-gray", "rgba(216, 216, 216,1)", "#888888"],  # Steering wheel color, also just black
@@ -78,9 +138,9 @@ themes = {"Arduino": {  # theme name
             0: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             1: ["neon_yellow", "rgba(248, 255, 51, 1)", "#f8ff33"],
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
-            3: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
-            4: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
-            5: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
+            3: ["red", "rgba(255, 0, 0, 1)", "#ff0000"],
+            4: ["green", "rgba(0, 255, 0, 1)", "#00ff00"],
+            5: ["white", "rgba(255, 255, 252, 1)", "#ffffff"],
             6: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
         },
         "size": {
