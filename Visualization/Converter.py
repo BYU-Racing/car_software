@@ -12,6 +12,13 @@ Assumptions:
 4. We have control over how we encode the entire signal (metadata)
 5. CSV File has one signal per line and optionally one field per column
 6. Signals follow CAN Bus Protocol Draft format
+
+Corrections #TODO
+1. Time is an unsigned long in milliseconds from power on
+2. Data is a 2 byte ADC range from zero to max, unique for each sensor. Only the first 10 bits are meaningful
+3. ID is an int from 0 to (total number of sensors)
+4. Each run starts with a delimiter
+5. Input file is a CSV
 """
 
 
