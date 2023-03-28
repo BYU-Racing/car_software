@@ -64,7 +64,6 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
     if Sensor.ACC2.value in avail:
         legend.update({index_trace: sensors[Sensor.ACC2.value]})
         index_trace += 1
-
         fig.add_trace(go.Scatter(x=all_frames[Sensor.ACC2.value]["Timestamp"],
                                  y=all_frames[Sensor.ACC2.value]["Data"],
                                  marker=dict(color=themes[theme]["trace"][1][2]),
@@ -129,8 +128,9 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
                                              size=dots),
                                  mode=graph_mode, name=sensors[Sensor.TIRE4.value]), row=row, col=1)
 
-    fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
-    fig.update_xaxes(visible=False, showticklabels=False)
+    if Sensor.TIRE1.value in avail:
+        fig.update_yaxes(nticks=num_ticks, title_text="Tires", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
 
     # PLOT 4: STEERING WHEEL -------------------------------------------------------------------------------------------
     if Sensor.ANGLE.value in avail:
@@ -194,6 +194,7 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
     # PLOT 6: BATTERY TEMPERATURE --------------------------------------------------------------------------------------
     if Sensor.TEMP.value in avail:
         row += 1
+
         legend.update({index_trace: sensors[Sensor.TEMP.value]})
         index_trace += 1
 
@@ -204,6 +205,21 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
 
         fig.update_yaxes(nticks=num_ticks, title_text="Battery", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
+
+    # PLOT 7: ACCELEROMETER SENSORS ------------------------------------------------------------------------------------
+    if Sensor.GFORCE.value in avail:
+        row += 1
+        legend.update({index_trace: sensors[Sensor.GFORCE.value]})
+        index_trace += 1
+
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.GFORCE.value]["Timestamp"],
+                                 y=all_frames[Sensor.GFORCE.value]["Data"],
+                                 marker=dict(color=themes[theme]["trace"][1][2]),
+                                 mode=graph_mode, name=sensors[Sensor.GFORCE.value]), row=row, col=1)
+
+        fig.update_yaxes(nticks=num_ticks, title_text="G-Force", row=row, col=1)
+        fig.update_xaxes(visible=False, showticklabels=False)
+
 
     # update display layout based on theme
     fig.update_layout(title_font_family=themes[theme]["font"]["p"],
@@ -423,12 +439,12 @@ def track(time_stamp=0, theme="Dark"):
     index = int(time_stamp * 1000) % 433
 
     highlight = go.Scatter(x=x, y=y, mode='lines',
-                           line=dict(width=5, color=themes[theme]["trace"][6][2]),
+                           line=dict(width=4, color=themes[theme]["trace"][6][2]),
                            showlegend=False
                            )
 
     line = go.Scatter(x=x, y=y, mode='lines',
-                      line=dict(width=3, color=themes[theme]["trace"][0][2]),
+                      line=dict(width=2, color=themes[theme]["trace"][0][2]),
                       showlegend=False
                       )
 

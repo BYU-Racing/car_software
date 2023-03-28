@@ -138,10 +138,10 @@ themes = {"Arduino": {  # theme name
             0: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
             1: ["neon_yellow", "rgba(248, 255, 51, 1)", "#f8ff33"],
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],
-            3: ["red", "rgba(255, 0, 0, 1)", "#ff0000"],
-            4: ["green", "rgba(0, 255, 0, 1)", "#00ff00"],
-            5: ["white", "rgba(255, 255, 252, 1)", "#ffffff"],
-            6: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
+            3: ["olive", "rgba(2, 207, 252, 1)", "#02cffc"],
+            4: ["pond", "rgba(2, 255, 220, 1)", "#02ffcc"],
+            5: ["forest_idk_main", "rgba(2, 169, 252, 1)", "#029ffc"],
+            6: ["white", "rgba(255,255,255,1)", "#FFFFFF"],  # Alternate text color, also just white
         },
         "size": {
             "large": "24",

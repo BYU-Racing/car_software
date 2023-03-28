@@ -32,7 +32,7 @@ button_style = [  # selected
      'color': themes[view]["color"][1][2],
      'background-color': themes[view]["color"][2][2],
      'font-size': themes[view]["size"]["medium"] + "px",
-     'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+     'display': 'inline-block', 'width': '9%', 'marginLeft': '6px',
      'marginBottom': '10px',
      'border': "1.5px solid " + themes[view]["color"][0][0],
      },
@@ -90,6 +90,8 @@ app.layout = html.Div([
         html.Button('Dampers', id='dmp-button', n_clicks=0,
                     style=button_style[0]),
         html.Button('Battery', id='bat-button', n_clicks=0,
+                    style=button_style[0]),
+        html.Button('G-Force', id='g-button', n_clicks=0,
                     style=button_style[0]),
 
         # display toggle
