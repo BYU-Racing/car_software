@@ -63,9 +63,9 @@ app.layout = html.Div([
         ),
 
         # logo
-        html.Img(src=app.get_asset_url("club_logo.JPG"),
-                 style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginBottom': '5px',
-                        'display': 'inline-block', 'verticalAlign': 'bottom'}),
+        # html.Img(src=app.get_asset_url("club_logo.JPG"),
+        #          style={'width': '8%', 'height': 'auto', 'marginLeft': '10px', 'marginBottom': '5px',
+        #                 'display': 'inline-block', 'verticalAlign': 'bottom'}),
 
         # title
         html.H1('A.V.A.', style={'color': themes[view]["color"][2][2],
@@ -147,6 +147,11 @@ app.layout = html.Div([
             style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }
         ),
 
+        # accelerometer g force
+        dcc.Graph(id='g-force',
+                  config={'displayModeBar': False},
+                  style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
+
         # steering wheel
         dcc.Graph(id='steering-wheel',
                   config={'displayModeBar': False},
@@ -184,6 +189,7 @@ app.layout = html.Div([
     Output(component_id='str-button', component_property='style'),
     Output(component_id='dmp-button', component_property='style'),
     Output(component_id='bat-button', component_property='style'),
+    Output(component_id='g-button', component_property='style'),
     Output(component_id='car_go_fast', component_property='figure'),
     Output(component_id='car_go_fast', component_property='style'),
     Output(component_id="loading-output-1", component_property="children"),
@@ -194,9 +200,10 @@ app.layout = html.Div([
     Input(component_id='str-button', component_property='n_clicks'),
     Input(component_id='dmp-button', component_property='n_clicks'),
     Input(component_id='bat-button', component_property='n_clicks'),
+    Input(component_id='g-button', component_property='n_clicks'),
     Input(component_id='size_radio', component_property='value'),
 )
-def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, size):
+def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, n_click6, size):
     """
     Select which subplots to show and the size of the overall chart
     :param n_click0: number of times the accelerator tab has been clicked
@@ -205,11 +212,12 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     :param n_click3: number of times the steering wheel tab has been clicked
     :param n_click4: number of times the damper position tab has been clicked
     :param n_click5: number of times the battery tab has been clicked
+    :param n_click6: number of times the g-force tab has been clicked
     :param size: selection for display size
     :return: button style and new main line chart
     """
     # turn click input into a list
-    index = [n_click0, n_click1, n_click2, n_click3, n_click4, n_click5]
+    index = [n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, n_click6]
     on = [i % 2 for i in index]
 
     # build available list based on which subplots to display
@@ -234,6 +242,8 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
             avail.append(Sensor.DAMP4.value)
         elif i == 5 and on[i] == 0:
             avail.append(Sensor.TEMP.value)
+        elif i == 6 and on[i] == 0:
+            avail.append(Sensor.GFORCE.value)
 
     # built output list
     buttons = [button_style[i % 2] for i in index]
@@ -263,10 +273,12 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, siz
     Output(component_id='pedals', component_property='figure'),
     Output(component_id='steering-wheel', component_property='figure'),
     Output(component_id='track-position', component_property='figure'),
+    Output(component_id='g-force', component_property='figure'),
     Output(component_id='speedometer', component_property='style'),
     Output(component_id='pedals', component_property='style'),
     Output(component_id='steering-wheel', component_property='style'),
     Output(component_id='track-position', component_property='style'),
+    Output(component_id='g-force', component_property='style'),
 
     Input(component_id='time-slider', component_property='value'),
     Input(component_id='size_radio', component_property='value'),
@@ -291,13 +303,15 @@ def update_output_div(input_value, size):
                speedometer(0, maxim=10, theme=view), \
                pedals(theme=view), \
                steering(theme=view), \
-               track(theme=view)
+               track(theme=view), \
+               g_force(0,0,theme=view)
 
     else:
         # get the values of each subplot at the input time
         values = []
 
         for i in range(1, len(legend) + 1):
+            # TODO fix index out of bounds error
             trace = fig['data'][i - 1]
             value = round(trace['y'][int(time * 1000)], 4) if time * 1000 < len(trace['y']) else None
             values.append(f'{legend[i - 1]}: {value}')
@@ -308,6 +322,10 @@ def update_output_div(input_value, size):
         # get brake and accelerator values
         brake = float(values[2].split(":")[1][1:])
         acceleration = np.mean([float(values[i].split(":")[1][1:]) for i in range(0, 2)])
+
+        # compute the instantaneous g-force to display
+        lat_g = brake
+        lon_g = speed
 
         # display extra values
         extra = html.P("Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:]),
@@ -338,7 +356,8 @@ def update_output_div(input_value, size):
                pedals(brake, acceleration, maxim=5, theme=view), \
                steering(angle=angle, theme=view), \
                track(time_stamp=input_value, theme=view), \
-               update, update, update, update
+               g_force(lat_g, lon_g, theme=view), \
+               update, update, update, update, update
 
 
 if __name__ == '__main__':

@@ -81,21 +81,24 @@ sensor_names = {
 }
 
 # convert an index to a sensor display name
-sensors = {0: 'Accelerator 1',
-           1: 'Accelerator 2',
-           2: 'Brake Pressure',
-           3: 'Power Switch',
-           4: 'Steering Wheel Angle',
-           5: 'Front Left Tire',
-           6: 'Front Right Tire',
-           7: 'Back Left Tire',
-           8: 'Back Right Tire',
-           9: 'Front Left Damper',
-           10: 'Front Right Damper',
-           11: 'Back Left Damper',
-           12: 'Back Right Damper',
-           13: 'Battery Temperature',
-           14: 'Rain Light'}
+sensors = {
+    0: 'Accelerator 1',
+    1: 'Accelerator 2',
+    2: 'Brake Pressure',
+    3: 'Power Switch',
+    4: 'Steering Wheel Angle',
+    5: 'Front Left Tire',
+    6: 'Front Right Tire',
+    7: 'Back Left Tire',
+    8: 'Back Right Tire',
+    9: 'Front Left Damper',
+    10: 'Front Right Damper',
+    11: 'Back Left Damper',
+    12: 'Back Right Damper',
+    13: 'Battery Temperature',
+    14: 'Rain Light',
+    15: 'G-Force',
+}
 
 # theme customization
 themes = {"Arduino": {  # theme name
@@ -129,7 +132,7 @@ themes = {"Arduino": {  # theme name
     "Jarvis": {
         "color": {
             0: ["black", "rgba(0,0,0,1)", "#000000"],  # assigned to overall background
-            1: ["dark-gray", "rgba(16, 16, 16,1)", "#111111"],  # subplot background to differentiate from background
+            1: ["dark-gray", "rgba(12, 12, 16,1)", "#111111"],  # subplot background to differentiate from background
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],  # Text color
             3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
             4: ["dark-gray", "rgba(216, 216, 216,1)", "#888888"],  # Steering wheel color, also just black
@@ -184,5 +187,3 @@ themes = {"Arduino": {  # theme name
         }
     }
 }
-
-

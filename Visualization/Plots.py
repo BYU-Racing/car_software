@@ -20,7 +20,7 @@ spd = np.ones(n)
 x, y = convert_position(spd, tim, deg)
 
 
-def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_ticks=1):
+def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=7, num_ticks=1):
     """
     Display a Dash dashboard with racing sensor data
     Parameters:
@@ -212,13 +212,16 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=6, num_tic
         legend.update({index_trace: sensors[Sensor.GFORCE.value]})
         index_trace += 1
 
-        fig.add_trace(go.Scatter(x=all_frames[Sensor.GFORCE.value]["Timestamp"],
-                                 y=all_frames[Sensor.GFORCE.value]["Data"],
+        # TODO get fake g force data and remove the -2
+        fig.add_trace(go.Scatter(x=all_frames[Sensor.GFORCE.value-2]["Timestamp"],
+                                 y=all_frames[Sensor.GFORCE.value-2]["Data"],
                                  marker=dict(color=themes[theme]["trace"][1][2]),
                                  mode=graph_mode, name=sensors[Sensor.GFORCE.value]), row=row, col=1)
 
         fig.update_yaxes(nticks=num_ticks, title_text="G-Force", row=row, col=1)
         fig.update_xaxes(visible=False, showticklabels=False)
+
+    # END SUBPLOTS -----------------------------------------------------------------------------------------------------
 
 
     # update display layout based on theme
@@ -249,7 +252,7 @@ def speedometer(value, maxim=60, theme="Dark"):
     """
     Create a speedometer plot to show instantaneous speed
     Parameters:
-        :param value: (int) instantenous speed
+        :param value: (int) instantaneous speed
         :param maxim: (int) maximum value on speedometer
         :param theme: (string) change display based on theme
     Returns:
@@ -480,3 +483,48 @@ def track(time_stamp=0, theme="Dark"):
     return fig
 
 
+def g_force(lat, lon, max=10, theme="Dark"):
+    """
+    Create a scatter plot with a single point to show instantaneous g-force
+    :param timestamp: (float) time in seconds
+    :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
+    :return: (figure) g-force plot
+    """
+
+    net = go.Scatter(
+        x=[lat], y=[lon], mode='markers',
+        marker=dict(size=30, color=themes[theme]["trace"][0][2]),
+        showlegend=False
+    )
+
+    # initialize display figure and plot point
+    fig = go.Figure()
+    fig.add_trace(net)
+
+    # update layout to match theme
+    fig.update_layout(
+        # fix vertical and horizontal sizes
+        xaxis=dict(
+            range=[-max, max],
+            autorange=False,
+        ),
+        yaxis=dict(
+            range=[-max, max],
+            autorange=False,
+        ),
+        title='G Force',
+        font=dict(
+            family=themes[theme]["font"]["graph"],
+            size=int(themes[theme]["size"]["medium"]),
+            color=themes[theme]["color"][2][2]
+        ),
+        margin=dict(l=45, r=45, t=40, b=0),
+        paper_bgcolor=themes[theme]["color"][0][1],
+        plot_bgcolor=themes[theme]["color"][1][1],
+    )
+
+    # remove everything on the graph besides the points
+    fig.update_yaxes(nticks=1, visible=True, showticklabels=False)
+    fig.update_xaxes(nticks=1, visible=True, showticklabels=False)
+
+    return fig
