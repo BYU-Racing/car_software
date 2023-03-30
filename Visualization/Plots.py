@@ -20,10 +20,11 @@ spd = np.ones(n)
 x, y = convert_position(spd, tim, deg)
 
 
-def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=7, num_ticks=1):
+def display_dashboard(all_frames, theme="Dark", size="medium", avail=None, num_plots=7, num_ticks=1):
     """
     Display a Dash dashboard with racing sensor data
     Parameters:
+        :param size: (string) select desired title font size such as 'small', 'medium', or 'large'
         :param all_frames: (dataframe) pandas dataframe with every sensor at every time interval
         :param theme: (string) select desired display theme such as 'Dark' or 'Jarvis'
         :param avail: (list) data available or desired to display, ie select subplots
@@ -34,14 +35,14 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=7, num_tic
     """
     # set default availability
     if avail is None:
-        avail = list(range(15))
+        avail = list(range(len(Config.sensor_names)))
 
     # initialize figure with subplots
     fig = make_subplots(rows=num_plots, cols=1, vertical_spacing=0.02, shared_xaxes=True)
     row = 0
     graph_mode = 'lines'
     index_trace = 0
-    dots = 0.001
+    dots = 1 / PARTITION
 
     # PLOT 1: ACCELERATORS ---------------------------------------------------------------------------------------------
     if Sensor.ACC1.value in avail:
@@ -227,7 +228,7 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=7, num_tic
     # update display layout based on theme
     fig.update_layout(title_font_family=themes[theme]["font"]["p"],
                       font_family=themes[theme]["font"]["p"],
-                      font=dict(size=int(themes[theme]["size"]["small"])),
+                      font=dict(size=int(themes[theme]["size"][size])),
                       margin=dict(l=75, r=75, t=10, b=20),
                       )
 
@@ -248,10 +249,11 @@ def display_dashboard(all_frames, theme="Dark", avail=None, num_plots=7, num_tic
     return fig
 
 
-def speedometer(value, maxim=60, theme="Dark"):
+def speedometer(value, maxim=60, theme="Dark", size="medium"):
     """
     Create a speedometer plot to show instantaneous speed
     Parameters:
+        :param size: (string) select the size of the title
         :param value: (int) instantaneous speed
         :param maxim: (int) maximum value on speedometer
         :param theme: (string) change display based on theme
@@ -297,7 +299,7 @@ def speedometer(value, maxim=60, theme="Dark"):
         title="Speedometer",
         font=dict(
             family=themes[theme]["font"]["graph"],
-            size=int(themes[theme]["size"]["medium"]),
+            size=int(themes[theme]["size"][size]),
             color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=15, r=15, t=40, b=0),
@@ -306,10 +308,11 @@ def speedometer(value, maxim=60, theme="Dark"):
     return figSpeed
 
 
-def pedals(brake=0, accel=0, minim=0, maxim=1, theme="Dark"):
+def pedals(brake=0, accel=0, minim=0, maxim=1, theme="Dark", size="medium"):
     """
     Create a bar chart to show instantaneous brake and accelerator pressure
     Parameters:
+        :param size: (string) select size of the title and axis labels
         :param brake: (int) instantaneous value of the break
         :param accel: (int) instantaneous value of the accelerator
         :param minim: (int) minimum chart value
@@ -328,13 +331,15 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, theme="Dark"):
         marker=dict(color=[themes[theme]["trace"][1][2], themes[theme]["trace"][0][2]]),
         width=0.5,
     ))
+    if size == "small":
+        fig.update_xaxes(showticklabels=False)
 
     # Update the layout based on the theme
     fig.update_layout(
         title="Pedals",
         font=dict(
             family=themes[theme]["font"]["graph"],
-            size=int(themes[theme]["size"]["medium"]),
+            size=int(themes[theme]["size"][size]),
             color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=50, r=30, t=40, b=10),
@@ -346,10 +351,11 @@ def pedals(brake=0, accel=0, minim=0, maxim=1, theme="Dark"):
     return fig
 
 
-def steering(angle=0, theme="Dark"):
+def steering(angle=0, theme="Dark", size="medium"):
     """
     Create a scatter plot to show instantaneous steering wheel position
     Parameters:
+        :param size: (string) select display size such as 'small', 'medium', or 'large'
         :param angle: (int) angle in radians that the steering wheel is turned
         :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
     Returns:
@@ -423,7 +429,7 @@ def steering(angle=0, theme="Dark"):
         title='Steering Wheel',
         font=dict(
             family=themes[theme]["font"]["graph"],
-            size=int(themes[theme]["size"]["medium"]),
+            size=int(themes[theme]["size"][size]),
             color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=45, r=45, t=40, b=0),
@@ -438,8 +444,8 @@ def steering(angle=0, theme="Dark"):
     return fig
 
 
-def track(time_stamp=0, theme="Dark"):
-    index = int(time_stamp * 1000) % 433
+def track(time_stamp=0, theme="Dark", size="medium"):
+    index = int(time_stamp * PARTITION) % n
 
     highlight = go.Scatter(x=x, y=y, mode='lines',
                            line=dict(width=4, color=themes[theme]["trace"][6][2]),
@@ -468,7 +474,7 @@ def track(time_stamp=0, theme="Dark"):
     fig.update_layout(title='Track',
                       font=dict(
                           family=themes[theme]["font"]["graph"],
-                          size=int(themes[theme]["size"]["medium"]),
+                          size=int(themes[theme]["size"][size]),
                           color=themes[theme]["color"][2][2]
                       ),
                       margin=dict(l=45, r=45, t=40, b=0),
@@ -483,10 +489,13 @@ def track(time_stamp=0, theme="Dark"):
     return fig
 
 
-def g_force(lat, lon, max=10, theme="Dark"):
+def g_force(lat, lon, max=10, theme="Dark", size="medium"):
     """
     Create a scatter plot with a single point to show instantaneous g-force
-    :param timestamp: (float) time in seconds
+    :param max: (int) maximum value of the graph
+    :param lon: (float) longitudinal g force
+    :param lat: (float) latitudinal g force
+    :param size: (string) select size of graph such as 'small', 'medium', or 'large'
     :param theme: (string) select display theme such as 'Dark' or 'Jarvis'
     :return: (figure) g-force plot
     """
@@ -515,7 +524,7 @@ def g_force(lat, lon, max=10, theme="Dark"):
         title='G Force',
         font=dict(
             family=themes[theme]["font"]["graph"],
-            size=int(themes[theme]["size"]["medium"]),
+            size=int(themes[theme]["size"][size]),
             color=themes[theme]["color"][2][2]
         ),
         margin=dict(l=45, r=45, t=40, b=0),

@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+MPS = 0.000278
+PARTITION = 1000.
+THEME = ["Arduino", "Jarvis", "Daylight"]
+
 # convert each sensor to a number
 class Sensor(Enum):
     ACC1 = 0
@@ -122,6 +126,7 @@ themes = {"Arduino": {  # theme name
         "large": "22",  # large text like graph titles
         "medium": "16",  # medium text like like legends
         "small": "14",  # small text like graph ticks
+        "mini": "10",  # mini text like graph ticks
     },
     "font": {
         "title": "Courier New",  # dashboard title
@@ -150,6 +155,7 @@ themes = {"Arduino": {  # theme name
             "large": "24",
             "medium": "18",
             "small": "15",
+            "mini": "10",
         },
         "font": {
             "title": "Arial, sans-serif",
@@ -167,18 +173,19 @@ themes = {"Arduino": {  # theme name
             4: ["black", "rgba(0,0,0,1)", "#000000"],  # Steering wheel color, also just black
         },
         "trace": {
-            0: ["black", "rgba(0,0,0,1)", "#000000"],
-            1: ["black", "rgba(0,0,0,1)", "#000000"],
-            2: ["black", "rgba(0,0,0,1)", "#000000"],
-            3: ["black", "rgba(0,0,0,1)", "#000000"],
-            4: ["black", "rgba(0,0,0,1)", "#000000"],
-            5: ["black", "rgba(0,0,0,1)", "#000000"],
-            6: ["black", "rgba(0,0,0,1)", "#000000"],  # Alternate text color, also just white
+            0: ["red", "rgba(255,0,0,1)", "#ff0000"],
+            1: ["red", "rgba(255,0,0,1)", "#ff0000"],
+            2: ["red", "rgba(255,0,0,1)", "#ff0000"],
+            3: ["red", "rgba(255,0,0,1)", "#ff0000"],
+            4: ["red", "rgba(255,0,0,1)", "#ff0000"],
+            5: ["red", "rgba(255,0,0,1)", "#ff0000"],
+            6: ["red", "rgba(255,0,0,1)", "#ff0000"],
         },
         "size": {
             "large": "28",
             "medium": "22",
             "small": "18",
+            "mini": "12",
         },
         "font": {
             "title": "Arial, sans-serif",

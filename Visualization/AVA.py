@@ -1,13 +1,11 @@
 from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
-import numpy as np
 
 from Plots import *
 from Config import themes, Sensor
 
 # TODO play button
-# TODO add a settings button
 
 # create Dash object
 app = Dash(__name__)
@@ -18,8 +16,7 @@ all_sensors = readData(file_name)
 
 # initialize local starting variables
 time_end = 5
-display_themes = ["Arduino", "Jarvis", "Daylight"]
-view = display_themes[1]
+view = THEME[1]
 
 # construct initial plots
 fig = display_dashboard(all_sensors, theme=view)
@@ -41,7 +38,7 @@ button_style = [  # selected
      'color': themes[view]["color"][2][2],
      'background-color': themes[view]["color"][0][0],
      'font-size': themes[view]["size"]["medium"] + "px",
-     'display': 'inline-block', 'width': '10%', 'marginLeft': '8px',
+     'display': 'inline-block', 'width': '9%', 'marginLeft': '6px',
      'marginBottom': '10px',
      'border': "1.5px solid " + themes[view]["color"][2][2],
      },
@@ -101,7 +98,6 @@ app.layout = html.Div([
                        style={
                            'font-family': themes[view]["font"]["title"],
                            'color': themes[view]["color"][2][2],
-                           # 'background-color': themes[view]["color"][2][2],
                            'font-size': themes[view]["size"]["small"] + "px",
                            'display': 'inline-block', 'width': '12%', "padding": '0px',
                            'marginLeft': '15px', 'marginTop': '0px', 'verticalAlign': 'bottom',
@@ -118,7 +114,7 @@ app.layout = html.Div([
 
     # slider to select and view instantaneous values
     html.Div([
-        dcc.Slider(id='time-slider', min=0, max=time_end, step=0.001, value=0,
+        dcc.Slider(id='time-slider', min=0, max=time_end, step=1/PARTITION, value=0,
                    marks={0: {'label': "0",
                               'style': {'color': themes[view]["color"][2][2]}},
                           time_end / 2: {'label': str(time_end / 2),
@@ -248,15 +244,17 @@ def select_plots(n_click0, n_click1, n_click2, n_click3, n_click4, n_click5, n_c
     # built output list
     buttons = [button_style[i % 2] for i in index]
 
-    # rebuild the main plot with the new availability list
-    new_plot = display_dashboard(all_sensors, theme=view, avail=avail, num_plots=len(on) - sum(on))
-    buttons.append(new_plot)
-
     # resize the additional charts based on size input
     if size == "Expanded":
         tall = '120vh'
+        resize = "small"
     else:
         tall = '60vh'
+        resize = "mini"
+
+    # rebuild the main plot with the new availability list
+    new_plot = display_dashboard(all_sensors, theme=view, size=resize, avail=avail, num_plots=len(on) - sum(on))
+    buttons.append(new_plot)
 
     reformat = {'width': '100%', 'height': tall, 'margin': '0px'}
     buttons.append(reformat)
@@ -287,6 +285,7 @@ def update_output_div(input_value, size):
     """
     Update each chart based on the input time from the slider object
     Parameters:
+        :param size: (string) the size of the display
         :param input_value: (string) the desired time to view data at
     Returns:
         :return: list of updated plots
@@ -309,12 +308,10 @@ def update_output_div(input_value, size):
     else:
         # get the values of each subplot at the input time
         values = []
-
-        for i in range(1, len(legend) + 1):
-            # TODO fix index out of bounds error
-            trace = fig['data'][i - 1]
-            value = round(trace['y'][int(time * 1000)], 4) if time * 1000 < len(trace['y']) else None
-            values.append(f'{legend[i - 1]}: {value}')
+        for i in range(len(legend)):
+            trace = fig['data'][i]
+            value = round(trace['y'][int(time * PARTITION)], 4) if time * PARTITION < len(trace['y']) else None
+            values.append(f'{legend[i]}: {value}')
 
         # compute the average speed to display
         speed = np.mean([float(values[i].split(":")[1][1:]) for i in range(3, 7)])
@@ -344,19 +341,22 @@ def update_output_div(input_value, size):
         if size == "Expanded":
             wide = '50vh'
             tall = '40vh'
+            resize = "medium"
         else:
             wide = '35vh'
             tall = '28vh'
+            resize = "small"
 
         update = {'width': wide, 'height': tall, 'display': 'inline-block'}
 
         # return figures
+        print("AVA is ready")
         return extra, \
-               speedometer(speed, maxim=2, theme=view), \
-               pedals(brake, acceleration, maxim=5, theme=view), \
-               steering(angle=angle, theme=view), \
-               track(time_stamp=input_value, theme=view), \
-               g_force(lat_g, lon_g, theme=view), \
+               speedometer(speed, maxim=2, theme=view, size=resize), \
+               pedals(brake, acceleration, maxim=5, theme=view, size=resize), \
+               steering(angle=angle, theme=view, size=resize), \
+               track(time_stamp=input_value, theme=view, size=resize), \
+               g_force(lat_g, lon_g, theme=view, size=resize), \
                update, update, update, update, update
 
 

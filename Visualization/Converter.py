@@ -131,10 +131,10 @@ def convertTime(timestamp):
     """
     # case if parameter is a string
     if type(timestamp) is str:
-        return int(str(timestamp), 2) / 1000.
+        return int(str(timestamp), 2) / PARTITION
 
     # case if parameter is a dataframe
-    return pd.DataFrame([int(str(time), 2) / 1000. for time in timestamp])
+    return pd.DataFrame([int(str(time), 2) / PARTITION for time in timestamp])
 
 
 def convertID(id_sensor):
@@ -180,7 +180,7 @@ def convert_position(speed, time, angle):
     :return: x and y positions (list, list) of floats
     """
     # convert MPH to MPS and make distance traveled per second
-    distance = [s * 0.000278 * t for s, t in zip(speed, time)]
+    distance = [s * MPS * t for s, t in zip(speed, time)]
     theta = 0
     x = 0
     y = 0
