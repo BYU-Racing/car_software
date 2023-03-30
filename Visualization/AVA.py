@@ -16,6 +16,7 @@ all_sensors = readData(file_name)
 
 # initialize local starting variables
 time_end = 5
+ready = False
 view = THEME[1]
 
 # construct initial plots
@@ -346,7 +347,10 @@ def update_output_div(input_value, size):
         update = {'width': wide, 'height': tall, 'display': 'inline-block'}
 
         # return figures
-        print("AVA is ready")
+        global ready
+        if not ready:
+            print("AVA is ready")
+            ready = True
         return extra, \
                speedometer(speed, maxim=2, theme=view, size=resize), \
                pedals(brake, acceleration, maxim=5, theme=view, size=resize), \
