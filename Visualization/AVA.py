@@ -25,26 +25,24 @@ pdl = pedals(theme=view)
 
 # styles
 button_style = [  # selected
-    {'font-family': themes[view]["font"]["title"],
+    {'fontFamily': themes[view]["font"]["title"],
      'color': themes[view]["color"][1][2],
-     'background-color': themes[view]["color"][2][2],
-     'font-size': themes[view]["size"]["medium"] + "px",
+     'backgroundColor': themes[view]["color"][2][2],
+     'fontSize': themes[view]["size"]["medium"] + "px",
      'display': 'inline-block', 'width': '9%', 'marginLeft': '6px',
      'marginBottom': '10px',
      'border': "1.5px solid " + themes[view]["color"][0][0],
      },
     # deselected
-    {'font-family': themes[view]["font"]["title"],
+    {'fontFamily': themes[view]["font"]["title"],
      'color': themes[view]["color"][2][2],
-     'background-color': themes[view]["color"][0][0],
-     'font-size': themes[view]["size"]["medium"] + "px",
+     'backgroundColor': themes[view]["color"][0][0],
+     'fontSize': themes[view]["size"]["medium"] + "px",
      'display': 'inline-block', 'width': '9%', 'marginLeft': '6px',
      'marginBottom': '10px',
      'border': "1.5px solid " + themes[view]["color"][2][2],
      },
 ]
-
-
 
 # DISPLAY DASHBOARD
 app.layout = html.Div([
@@ -69,8 +67,8 @@ app.layout = html.Div([
                                  'paddingLeft': '10px', 'paddingTop': '0px',
                                  'paddingBottom': '0px', 'margin': '0px',
                                  'display': 'inline-block', 'width': '10%',
-                                 'font-family': themes[view]["font"]["title"],
-                                 'font-style': 'italic', 'verticalAlign': 'bottom',
+                                 'fontFamily': themes[view]["font"]["title"],
+                                 'fontStyle': 'italic', 'verticalAlign': 'bottom',
                                  'marginBottom': '5px',
                                  },
                 id='dashboard-title'),
@@ -96,9 +94,9 @@ app.layout = html.Div([
                        id='size_radio',
                        labelStyle={'display': 'block'},
                        style={
-                           'font-family': themes[view]["font"]["title"],
+                           'fontFamily': themes[view]["font"]["title"],
                            'color': themes[view]["color"][2][2],
-                           'font-size': themes[view]["size"]["small"] + "px",
+                           'fontSize': themes[view]["size"]["small"] + "px",
                            'display': 'inline-block', 'width': '12%', "padding": '0px',
                            'marginLeft': '15px', 'marginTop': '0px', 'verticalAlign': 'bottom',
                            'marginBottom': '5px',
@@ -114,7 +112,7 @@ app.layout = html.Div([
 
     # slider to select and view instantaneous values
     html.Div([
-        dcc.Slider(id='time-slider', min=0, max=time_end, step=1/PARTITION, value=0,
+        dcc.Slider(id='time-slider', min=0, max=time_end, step=1 / PARTITION, value=0,
                    marks={0: {'label': "0",
                               'style': {'color': themes[view]["color"][2][2]}},
                           time_end / 2: {'label': str(time_end / 2),
@@ -124,7 +122,7 @@ app.layout = html.Div([
                           },
                    updatemode='drag'),
     ], style={'marginLeft': '50px', 'width': '80%',
-              'font-family': themes[view]["font"]["title"],
+              'fontFamily': themes[view]["font"]["title"],
               'color': themes[view]["color"][2][2], }),
 
     html.Div([
@@ -159,20 +157,18 @@ app.layout = html.Div([
                   style={'width': '50vh', 'height': '40vh', 'display': 'inline-block', }),
 
         # additional text data
-        html.P(id='output-values',
+        html.P(id='output-values', children="",
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
                       'color': themes[view]["color"][2][2],
-                      'font-family': themes[view]["font"]["p"],
-                      'font-size': themes[view]["size"]["small"] + "px",
-                      'vertical-align': 'top', 'white-space': 'pre-line'}),
+                      'fontFamily': themes[view]["font"]["p"],
+                      'fontSize': themes[view]["size"]["small"] + "px",
+                      'verticalAlign': 'top', 'whiteSpace': 'pre-line'})
     ])
 
 ],  # overall styling
-    style={'background-color': themes[view]["color"][0][2],
+    style={'backgroundColor': themes[view]["color"][0][2],
            'color': themes[view]["color"][0][2],
            'margin': '0px', 'padding': '0px', 'border': '0px', 'outline': '0px'})
-
-
 
 
 # CALLBACK FUNCTIONS ---------------------------------------------------------------------------------------------------
@@ -303,7 +299,7 @@ def update_output_div(input_value, size):
                pedals(theme=view), \
                steering(theme=view), \
                track(theme=view), \
-               g_force(0,0,theme=view)
+               g_force(0, 0, theme=view)
 
     else:
         # get the values of each subplot at the input time
@@ -325,14 +321,14 @@ def update_output_div(input_value, size):
         lon_g = speed
 
         # display extra values
-        extra = html.P("Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:]),
-                       id='output-values',
-                       style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
-                              'color': themes[view]["color"][2][2],
-                              'font-family': themes[view]["font"]["p"],
-                              'font-size': themes[view]["size"]["small"] + "px",
-                              'vertical-align': 'top', 'white-space': 'pre-line'}
-                       )
+        extra = "Time: " + str(input_value) + "\n\n" + '\n'.join(values[-5:])
+        """id='output-values',
+        style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
+          'color': themes[view]["color"][2][2],
+          'fontFamily': themes[view]["font"]["p"],
+          'fontSize': themes[view]["size"]["small"] + "px",
+          'verticalAlign': 'top', 'whiteSpace': 'pre-line'}
+        )"""
 
         # get steering angle
         angle = float(values[9].split(":")[1][1:])
