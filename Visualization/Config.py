@@ -4,6 +4,8 @@ from enum import Enum
 MPS = 0.000278
 PARTITION = 1000.
 THEME = ["Arduino", "Jarvis", "Daylight"]
+LOCAL_HOST = "http://127.0.0.1:8050/"
+CHROME = "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s"
 
 # convert each sensor to a number
 class Sensor(Enum):

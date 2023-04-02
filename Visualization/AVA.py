@@ -2,6 +2,8 @@ from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
 
+import webbrowser
+
 from Plots import *
 from Config import themes, Sensor
 
@@ -361,4 +363,5 @@ def update_output_div(input_value, size):
 
 
 if __name__ == '__main__':
+    webbrowser.get(CHROME).open(LOCAL_HOST)
     app.run_server(debug=True)
