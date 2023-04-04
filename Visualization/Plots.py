@@ -246,13 +246,7 @@ def display_dashboard(all_frames, theme="Dark", size="medium", avail=None, num_p
                       legend_title_font_color=themes[theme]["color"][2][2],
                       )
 
-    # # create button to animate all subplots
-    # play_button = dict(label='Play',
-    #                    method='animate',
-    #                    args=[None, dict(frame=dict(duration=50, redraw=True), fromcurrent=True)])
-    #
-    # # add button to layout
-    # fig.update_layout(updatemenus=[dict(type='buttons', showactive=False, buttons=[play_button], x=0.05, y=0.05)])
+
 
     # fig.show()
     return fig

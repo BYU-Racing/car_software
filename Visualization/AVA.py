@@ -3,6 +3,7 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 
 import webbrowser
+import cProfile
 
 from Plots import *
 from Config import themes, Sensor
@@ -362,6 +363,10 @@ def update_output_div(input_value, size):
                update, update, update, update, update
 
 
+def do_the_thing():
+    app.run_server(debug=False)
+
 if __name__ == '__main__':
-    webbrowser.get(CHROME).open(LOCAL_HOST)
-    app.run_server(debug=True)
+    # webbrowser.get(CHROME).open(LOCAL_HOST)
+    # app.run_server(debug=False)
+    cProfile.run('do+the_thing()', filename='my_profiling_results')

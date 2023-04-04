@@ -27,7 +27,7 @@ class Sensor(Enum):
     GFORCE = 15
 
 
-# sensor weights and biases
+# sensor constants
 weights = {
     "W_ACC1": 0.0,
     "W_ACC2": 0.0,
@@ -64,6 +64,44 @@ biases = {
     "B_TEMP": 0.0,
     "B_LIGHT": 0.0,
     "B_GFORCE": 0.0,
+}
+
+minimums = {
+    "N_ACC1": 0.0,
+    "N_ACC2": 0.0,
+    "N_BRAKE": 0.0,
+    "N_SWITCH": 0.0,
+    "N_ANGLE": 0.0,
+    "N_TIRE1": 0.0,
+    "N_TIRE2": 0.0,
+    "N_TIRE3": 0.0,
+    "N_TIRE4": 0.0,
+    "N_DAMP1": 0.0,
+    "N_DAMP2": 0.0,
+    "N_DAMP3": 0.0,
+    "N_DAMP4": 0.0,
+    "N_TEMP": 0.0,
+    "N_LIGHT": 0.0,
+    "N_GFORCE": 0.0,
+}
+
+maximums = {
+    "X_ACC1": 0.0,
+    "X_ACC2": 0.0,
+    "X_BRAKE": 0.0,
+    "X_SWITCH": 0.0,
+    "X_ANGLE": 0.0,
+    "X_TIRE1": 0.0,
+    "X_TIRE2": 0.0,
+    "X_TIRE3": 0.0,
+    "X_TIRE4": 0.0,
+    "X_DAMP1": 0.0,
+    "X_DAMP2": 0.0,
+    "X_DAMP3": 0.0,
+    "X_DAMP4": 0.0,
+    "X_TEMP": 0.0,
+    "X_LIGHT": 0.0,
+    "X_GFORCE": 0.0,
 }
 
 # convert each sensor index to its abbreviated name
@@ -139,7 +177,7 @@ themes = {"Arduino": {  # theme name
     "Jarvis": {
         "color": {
             0: ["black", "rgba(0,0,0,1)", "#000000"],  # assigned to overall background
-            1: ["dark-gray", "rgba(12, 12, 16,1)", "#111111"],  # subplot background to differentiate from background
+            1: ["dark-gray", "rgba(16, 16, 20,1)", "#111111"],  # subplot background to differentiate from background
             2: ["neon_blue", "rgba(2, 255, 252, 1)", "#02fffc"],  # Text color
             3: ["white", "rgba(255,2555,255,1)", "#FFFFFF"],  # Alternate text color, also just white
             4: ["dark-gray", "rgba(216, 216, 216,1)", "#888888"],  # Steering wheel color, also just black
