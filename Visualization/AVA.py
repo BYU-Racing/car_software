@@ -14,11 +14,11 @@ from Config import themes, Sensor
 app = Dash(__name__)
 
 # load data
-file_name = 'Data/Master.csv'
-all_sensors = readData(file_name)
+# all_sensors, duration = readData(SOURCE)
+all_sensors = readData(SOURCE)
 
 # initialize local starting variables
-time_end = 5
+duration = 5
 ready = False
 view = THEME[1]
 
@@ -116,18 +116,21 @@ app.layout = html.Div([
 
     # slider to select and view instantaneous values
     html.Div([
-        dcc.Slider(id='time-slider', min=0, max=time_end, step=1 / PARTITION, value=0,
+        dcc.Slider(id='time-slider', min=0, max=duration, step=1 / PARTITION, value=0,
                    marks={0: {'label': "0",
                               'style': {'color': themes[view]["color"][2][2]}},
-                          time_end / 2: {'label': str(time_end / 2),
+                          duration / 2: {'label': str(duration / 2),
                                          'style': {'color': themes[view]["color"][2][2]}},
-                          time_end: {'label': str(time_end),
+                          duration: {'label': str(duration),
                                      'style': {'color': themes[view]["color"][2][2]}}
                           },
-                   updatemode='drag'),
-    ], style={'marginLeft': '50px', 'width': '80%',
-              'fontFamily': themes[view]["font"]["title"],
-              'color': themes[view]["color"][2][2], }),
+                   updatemode='drag',
+                   ),
+        ], style={'marginLeft': '50px', 'width': '80%',
+                  'fontFamily': themes[view]["font"]["title"],
+                  'color': themes[view]["color"][2][2],
+                  'fontSize': themes[view]["size"]["small"] + "px",},
+    ),
 
     html.Div([
 
@@ -163,6 +166,7 @@ app.layout = html.Div([
         # additional text data
         html.P(id='output-values', children="",
                style={'width': '50vh', 'height': '40vh', 'display': 'inline-block',
+                      'margin': '10px',
                       'color': themes[view]["color"][2][2],
                       'fontFamily': themes[view]["font"]["p"],
                       'fontSize': themes[view]["size"]["small"] + "px",
@@ -364,9 +368,9 @@ def update_output_div(input_value, size):
 
 
 def do_the_thing():
-    app.run_server(debug=False)
+    app.run_server(debug=True)
 
 if __name__ == '__main__':
     # webbrowser.get(CHROME).open(LOCAL_HOST)
     # app.run_server(debug=False)
-    cProfile.run('do+the_thing()', filename='my_profiling_results')
+    cProfile.run('do_the_thing()', filename='my_profiling_results')

@@ -4,6 +4,9 @@ from enum import Enum
 MPS = 0.000278
 PARTITION = 1000.
 THEME = ["Arduino", "Jarvis", "Daylight"]
+SHOW_INSTANTS = False
+
+SOURCE = 'Data/Master.csv'
 LOCAL_HOST = "http://127.0.0.1:8050/"
 CHROME = "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s"
 
@@ -86,22 +89,22 @@ minimums = {
 }
 
 maximums = {
-    "X_ACC1": 0.0,
-    "X_ACC2": 0.0,
-    "X_BRAKE": 0.0,
-    "X_SWITCH": 0.0,
-    "X_ANGLE": 0.0,
-    "X_TIRE1": 0.0,
-    "X_TIRE2": 0.0,
-    "X_TIRE3": 0.0,
-    "X_TIRE4": 0.0,
-    "X_DAMP1": 0.0,
-    "X_DAMP2": 0.0,
-    "X_DAMP3": 0.0,
-    "X_DAMP4": 0.0,
-    "X_TEMP": 0.0,
-    "X_LIGHT": 0.0,
-    "X_GFORCE": 0.0,
+    "X_ACC1": 1.0,
+    "X_ACC2": 1.0,
+    "X_BRAKE": 1.0,
+    "X_SWITCH": 1.0,
+    "X_ANGLE": 1.0,
+    "X_TIRE1": 1.0,
+    "X_TIRE2": 1.0,
+    "X_TIRE3": 1.0,
+    "X_TIRE4": 1.0,
+    "X_DAMP1": 1.0,
+    "X_DAMP2": 1.0,
+    "X_DAMP3": 1.0,
+    "X_DAMP4": 1.0,
+    "X_TEMP": 1.0,
+    "X_LIGHT": 1.0,
+    "X_GFORCE": 1.0,
 }
 
 # convert each sensor index to its abbreviated name

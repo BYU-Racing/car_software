@@ -60,17 +60,57 @@ def readData(filename):
     df = pd.read_csv(filename, sep=',', usecols=['ID', 'Timestamp', 'Data'])
 
     # convert from binary to decimal
-    df['ID'] = convertID(df['ID'])
-    df['Timestamp'] = convertTime(df['Timestamp'])
-    df['Data'] = convertData(df['Data'])
+    df['ID'] = convertOldID(df['ID'])
+    df['Timestamp'] = convertOldTime(df['Timestamp'])
+    df['Data'] = convertOldData(df['Data'])
 
-    # construct
+    # split data into separate sensors
     all_data = {}
     for i in range(len(sensors)):
         all_data.update({i: df[df["ID"] == sensors[i]]})
 
     # return all the data in the csv
     return all_data
+
+
+def readRealData(filename):
+    """
+    Read data from a csv file 'filename' into a dictionary
+    Parameters:
+        filename (string): name of the file to read
+    Returns:
+        all_data (dictionary): data from the csv stored, converted, and parsed in a dictionary
+    """
+    # read data
+    df = pd.read_csv(filename, sep=',', usecols=['ID', 'Timestamp', 'Data'])
+
+    # convert from binary to decimal
+    df['ID'] = convertOldID(df['ID'])
+    df['Timestamp'] = convertOldTime(df['Timestamp'])
+    df['Data'] = convertOldData(df['Data'])
+
+    # fill in missing data
+    df = df.fillna(method='ffill')
+    df = prepend_zeros(df)
+
+    # split data into separate sensors
+    all_data = {}
+    for i in range(len(sensors)):
+        all_data.update({i: df[df["ID"] == sensors[i]]})
+
+    # get the last timestamp
+    duration = 0
+    for id in df['ID'].unique():
+        # Get the subset of the input dataframe for this ID
+        id_df = df[df['ID'] == id]
+
+        # Find the last timestamp for this ID
+        last_timestamp = id_df['Timestamp'].max()
+        if duration < last_timestamp:
+            duration = last_timestamp
+
+    # return all the data in the csv
+    return all_data, duration / PARTITION
 
 
 def parseBits(signals):
@@ -121,7 +161,7 @@ def parseBits(signals):
     return pd.DataFrame(processed)
 
 
-def convertTime(timestamp):
+def convertOldTime(timestamp):
     """
     Convert binary timestamp into human-readable text
     Parameters:
@@ -136,8 +176,23 @@ def convertTime(timestamp):
     # case if parameter is a dataframe
     return pd.DataFrame([int(str(time), 2) / PARTITION for time in timestamp])
 
+def convertTime(timestamp):
+    """
+    Read in timestamp in milliseconds and convert to seconds
+    Parameters:
+        timestamp (string or dataframe): time as a string decimal digits
+    Returns:
+        time (int or dataframe): formatted time
+    """
+    # case if parameter is a string
+    if type(timestamp) is str:
+        return float(timestamp) / PARTITION
 
-def convertID(id_sensor):
+    # case if parameter is a dataframe
+    return pd.DataFrame([float(time) / PARTITION for time in timestamp])
+
+
+def convertOldID(id_sensor):
     """
     Convert a binary ID into an integer
     Parameters:
@@ -152,9 +207,23 @@ def convertID(id_sensor):
     # case if parameter is a dataframe
     return pd.DataFrame([sensors[int(str(i), 2)] for i in id_sensor])
 
+def convertID(id_sensor):
+    """
+    Read in sensor ID and convert to a string name
+    Parameters:
+        id_sensor (string or dataframe of strings): sensor id as an integer
+    Returns:
+        id (string or dataframe of strings): sensor name
+    """
+    # case if parameter is a string
+    if type(id_sensor) is str:
+        return sensors[int(id_sensor)]
 
-def convertData(data):
-    # TODO update data conversion for 12 bit data
+    # case if parameter is a dataframe
+    return pd.DataFrame([sensors[int(i)] for i in id_sensor])
+
+
+def convertOldData(data):
     """
     Convert binary data into a float
     Parameters:
@@ -163,11 +232,34 @@ def convertData(data):
         data (int or dataframe of ints): data in decimal
     """
     # case if parameter is a string
-    if type(id) is str:
+    if type(data) is str:
         return BitArray(bin=str(data)).float
 
     # case if parameter is a dataframe
     return pd.DataFrame([BitArray(bin=str(d)).float for d in data])
+
+def convertData(data, sensor_id):
+    """
+    Read in sensor data and convert to a float
+    Parameters:
+        data (string or dataframe of strings): data in decimal as a string
+        sensor_id (int): the id of the sensor
+    Returns:
+        data (float or dataframe of floats): data in decimal
+    """
+    # get the data modifiers for the sensor
+    weight = weights["W_" + sensor_names[sensor_id]]
+    bias = biases["B_" + sensor_names[sensor_id]]
+    maxi = maximums["X_" + sensor_names[sensor_id]]
+    mini = minimums["N_" + sensor_names[sensor_id]]
+    slope = weight / (maxi - mini)
+
+    # case if parameter is a string
+    if type(data) is str:
+        return (float(data) - mini) * slope + bias
+
+    # case if parameter is a dataframe
+    return pd.DataFrame((np.array([float(d) for d in data]) - mini) * slope + bias)
 
 
 def convert_position(speed, time, angle):
@@ -211,3 +303,35 @@ def convert_sensor_data(sensor, data):
     weight = "W_" + sensor
     bias = "B_" + sensor
     return (data - Config.biases[bias]) * Config.weights[weight]
+
+
+def prepend_zeros(df):
+    # Create a new empty dataframe to hold the output
+    output_df = pd.DataFrame()
+
+    # Loop over each unique ID in the input dataframe
+    for id in df['ID'].unique():
+        # Get the subset of the input dataframe for this ID
+        id_df = df[df['ID'] == id]
+
+        # Find the first timestamp for this ID
+        first_timestamp = id_df['Timestamp'].min()
+
+        # Create a new dataframe with rows for every millisecond between
+        # zero and the first timestamp for this ID
+        new_rows = []
+        for timestamp in range(0, first_timestamp + 1):
+            new_rows.append({'ID': id, 'Timestamp': timestamp, 'Data': 0})
+        new_df = pd.DataFrame(new_rows)
+
+        # Append the original dataframe to the new dataframe and fill any
+        # missing values with zeros
+        merged_df = pd.merge(new_df, id_df, on=['ID', 'Timestamp'], how='outer').fillna(0)
+
+        # Add the merged dataframe to the output dataframe
+        output_df = output_df.append(merged_df)
+
+    # Sort the output dataframe by ID and timestamp
+    output_df = output_df.sort_values(['Timestamp', 'ID'])
+
+    return output_df

@@ -1,6 +1,7 @@
 from Plots import *
 from Converter import *
 
+# if this is your first time using this program, main has been deprecated. Please use AVA.py
 
 if __name__ == "__main__":
     pass
