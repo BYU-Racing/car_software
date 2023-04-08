@@ -1,0 +1,4 @@
+plotly
+dash
+pandas
+bitstring
