@@ -1,15 +1,8 @@
-/*
- * Created by David Reinhardt
- * Code to be uploaded to one of the Teensys to get them
- * to send Signals over CANBus
- * Goal: Send a Signal over CAN when a button is pressed
- */
-
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 
 
-const int ledPin = 3;
+const int ledPin = 13;
 
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> myCan1;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan2;
@@ -23,9 +16,9 @@ void setup() {
 myCan1.begin();
 myCan2.begin();
 myCan3.begin();
-myCan1.setBaudRate(9600);
-myCan2.setBaudRate(9600);
-myCan3.setBaudRate(9600);
+myCan1.setBaudRate(250*1000);
+myCan2.setBaudRate(250*1000);
+myCan3.setBaudRate(250*1000);
 
 }
 
