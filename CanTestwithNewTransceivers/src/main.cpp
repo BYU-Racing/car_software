@@ -4,6 +4,15 @@
 
 const int ledPin = 13;
 
+// DEFINE GLOBAL CONSTANTS
+#define DC1 6
+#define DC2 5
+#define DCPWM 7
+
+// FUNCTION PROTOTYPES
+void spinMotor(int);
+void stop();
+
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> myCan1;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan2;
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> myCan3;
@@ -13,53 +22,36 @@ void setup() {
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
   
-myCan1.begin();
-myCan2.begin();
-myCan3.begin();
-myCan1.setBaudRate(250*1000);
-myCan2.setBaudRate(250*1000);
-myCan3.setBaudRate(250*1000);
+  myCan1.begin();
+  myCan2.begin();
+  myCan3.begin();
+  myCan1.setBaudRate(250*1000);
+  myCan2.setBaudRate(250*1000);
+  myCan3.setBaudRate(250*1000);
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-CAN_message_t msg, rmsg;
-msg.len=8;
-msg.id=1;
-msg.buf[0]=1;
-msg.buf[1]=2;
-msg.buf[2]=3;
-msg.buf[3]=4;
-msg.buf[4]=5;
-msg.buf[5]=6;
-msg.buf[6]=7;
-msg.buf[7]=8;
+  CAN_message_t rmsg;
 
-myCan1.write(msg);
-msg.id=2;
-myCan2.write(msg);
-msg.id=3;
-myCan3.write(msg);
+  if ( myCan1.read(rmsg) ) 
+  {
+    spinMotor(rmsg.buf[0]);
+  }
+  Serial.println ("Hi!");
 
- if ( myCan1.read(rmsg) ) 
- {
-  Serial.print("CAN1 "); 
-  Serial.print("  ID: 0x"); Serial.print(rmsg.id, HEX );
-  Serial.println(rmsg.buf[0]);
-  Serial.println(rmsg.buf[1]);
-  Serial.println(rmsg.buf[2]);
- }
- if ( myCan2.read(rmsg) ) 
- {
- Serial.print("CAN2 "); 
- Serial.print("  ID: 0x"); Serial.print(rmsg.id, HEX );
- Serial.println(rmsg.buf[0]);
-  Serial.println(rmsg.buf[1]);
-  Serial.println(rmsg.buf[2]);
- }
- Serial.println ("Hi!");
+  digitalWrite(ledPin, !digitalRead(ledPin));
 
-digitalWrite(ledPin, !digitalRead(ledPin));
-delay (500);
+}
+
+
+void spinMotor(int speed){
+  digitalWrite(DC1, HIGH);
+  digitalWrite(DC2, LOW);
+  analogWrite(DCPWM, speed);
+}
+
+void stop(){
+  digitalWrite(DC1, LOW);
 }

@@ -37,34 +37,30 @@ void setup() {
 
     // SET UP SERIAL MONITOR
     Serial.begin(9600);
+    Serial.print("Start!");
   
 }
 
 void loop() {
     CAN_message_t msg, rmsg;
-    msg.len=8;
+    msg.len=3;
     msg.id=1;
     msg.buf[0]=2;
     msg.buf[1]=5;
     msg.buf[2]=4;
-    msg.buf[3]=4;
-    msg.buf[4]=5;
-    msg.buf[5]=6;
-    msg.buf[6]=7;
-    msg.buf[7]=8;
 
     msg.id=2;
     can2.write(msg);
     Serial.println("Sent");
 
-    if(can1.read(rmsg)){
-        Serial.println("Yes");
-        int speed = 0;
-        speed += rmsg.buf[0] * 100;
-        speed += rmsg.buf[1] * 10;
-        speed += rmsg.buf[2];
-        spinMotor(speed);
-    }
+    // if(can1.read(rmsg)){
+    //     Serial.println("Yes");
+    //     int speed = 0;
+    //     speed += rmsg.buf[0] * 100;
+    //     speed += rmsg.buf[1] * 10;
+    //     speed += rmsg.buf[2];
+    //     spinMotor(speed);
+    // }
 }
 
 void spinMotor(int speed){
