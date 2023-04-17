@@ -44,13 +44,19 @@ myCan3.write(msg);
 
  if ( myCan1.read(rmsg) ) 
  {
- Serial.print("CAN1 "); 
- Serial.print("  ID: 0x"); Serial.print(rmsg.id, HEX );
+  Serial.print("CAN1 "); 
+  Serial.print("  ID: 0x"); Serial.print(rmsg.id, HEX );
+  Serial.println(rmsg.buf[0]);
+  Serial.println(rmsg.buf[1]);
+  Serial.println(rmsg.buf[2]);
  }
  if ( myCan2.read(rmsg) ) 
  {
  Serial.print("CAN2 "); 
  Serial.print("  ID: 0x"); Serial.print(rmsg.id, HEX );
+ Serial.println(rmsg.buf[0]);
+  Serial.println(rmsg.buf[1]);
+  Serial.println(rmsg.buf[2]);
  }
  Serial.println ("Hi!");
 
