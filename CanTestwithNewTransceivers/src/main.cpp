@@ -9,6 +9,8 @@ const int ledPin = 13;
 #define DC2 5
 #define DCPWM 7
 
+CAN_message_t rmsg;
+
 // FUNCTION PROTOTYPES
 void spinMotor(int);
 void stop();
@@ -22,36 +24,41 @@ void setup() {
   Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
   
-  myCan1.begin();
-  myCan2.begin();
-  myCan3.begin();
-  myCan1.setBaudRate(250*1000);
-  myCan2.setBaudRate(250*1000);
-  myCan3.setBaudRate(250*1000);
+myCan1.begin();
+myCan2.begin();
+myCan3.begin();
+myCan1.setBaudRate(250*1000);
+myCan2.setBaudRate(250*1000);
+myCan3.setBaudRate(250*1000);
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  CAN_message_t rmsg;
+CAN_message_t msg;
+msg.len=1;
+msg.buf[0]=254;
 
-  if ( myCan1.read(rmsg) ) 
-  {
-    spinMotor(rmsg.buf[0]);
-  }
-  Serial.println ("Hi!");
+msg.id=2;
+myCan2.write(msg);
 
-  digitalWrite(ledPin, !digitalRead(ledPin));
+ if ( myCan2.read(rmsg) ) 
+ {
+  Serial.println(rmsg.buf[0]);
+  spinMotor(rmsg.buf[0]);
+ }
 
+//digitalWrite(ledPin, !digitalRead(ledPin));
+//delay (500);
 }
 
 
 void spinMotor(int speed){
-  digitalWrite(DC1, HIGH);
-  digitalWrite(DC2, LOW);
-  analogWrite(DCPWM, speed);
+    digitalWrite(DC1, HIGH);
+    digitalWrite(DC2, LOW);
+    analogWrite(DCPWM, speed);
 }
 
 void stop(){
-  digitalWrite(DC1, LOW);
+    digitalWrite(DC1, LOW);
 }

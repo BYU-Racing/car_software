@@ -5,7 +5,7 @@
 const float BIAS = 200;
 const float RANGE = 800 - BIAS;
 
-FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
 int speedCalc(int);
 
