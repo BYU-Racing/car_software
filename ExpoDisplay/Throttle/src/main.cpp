@@ -1,6 +1,7 @@
 /*
  * BYU RACING
  * Created By David Reinhardt
+ * Authors    Tyson Danby
  * Goal: Send signals containing throttle position 
  *       over the CANBus
  */
