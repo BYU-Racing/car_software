@@ -7,7 +7,7 @@ by David Reinhardt and Dallin Stewart
 | Revision |    Revised By     |    Checked By        |     Date     |
 |    1.0   |  David Reinhardt  |           -          | 19 SEPT 2023 |
 
-:::mermaid
+'''mermaid
 classDiagram
 
     class Sensor
@@ -82,4 +82,4 @@ classDiagram
 
     Sensor *-- DataCollector : Has
     Actuator *-- Dashboard : Has
-:::
+'''
