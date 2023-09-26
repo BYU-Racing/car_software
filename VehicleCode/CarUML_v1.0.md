@@ -6,7 +6,7 @@ by David Reinhardt and Dallin Stewart
 |   :---   |       :---        |         :---         |     :---     |
 | Revision |    Revised By     |    Checked By        |     Date     |
 |    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
-|    1.1   |  Dallin Stewart   |   TBD                | 25 SEPT 2023 |
+|    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
 
 ```mermaid
 classDiagram
