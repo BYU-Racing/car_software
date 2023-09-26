@@ -58,7 +58,7 @@ classDiagram
     DataCollector : -Sensor[] sensors
     DataCollector : -int timeZero
     DataCollector : +void checkSensors()
-    DataCollector : -void sendSignals
+    DataCollector : -void sendSignals()
     DataCollector : -SensorData createSensorData()
 
     class Car
