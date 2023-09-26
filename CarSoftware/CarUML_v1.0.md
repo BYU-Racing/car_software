@@ -6,6 +6,7 @@ by David Reinhardt and Dallin Stewart
 |   :---   |       :---        |         :---         |     :---     |
 | Revision |    Revised By     |    Checked By        |     Date     |
 |    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
+|    1.1   |  Dallin Stewart   |   TBD                | 25 SEPT 2023 |
 
 ```mermaid
 classDiagram
@@ -18,11 +19,11 @@ classDiagram
     Sensor : -int priority
     Sensor : int readInputs()
     Sensor : bool readyToCheck()
-    UARTSensor --|> Sensor 
+    UARTSensor --|> Sensor : Is
     note for UARTSensor "GPS\nAccelerometer"
-    AnalogSensor --|> Sensor
+    AnalogSensor --|> Sensor : Is
     note for AnalogSensor "Damper Pots\nThrottle Position\nWheel Speed\nWheatstone Bridges\nBrake Pressure\nCoolant Temp"
-    DigitalSensor --|> Sensor
+    DigitalSensor --|> Sensor : Is
     note for DigitalSensor "Buttons\nSwitches\nKey"
 
     class Actuator
@@ -30,12 +31,14 @@ classDiagram
     Actuator : -int value
     Actuator : -void writeToDisplay()
     Actuator : +void updateValue(SensorData)
-    Screen --|> Actuator
+    Screen --|> Actuator : Is
     note for Screen "Time\nLap number"
-    LEDArray --|> Actuator
+    LEDArray --|> Actuator : Is
     note for LEDArray "Battery Temperature\mBattery Draw\nBattery Life"
-    Servo --|> Actuator
+    Servo --|> Actuator : Is
     note for Servo "Speed"
+    Horn --|> Actuator : Is
+    note for Horn "Horn"
 
     class SensorData
     SensorData : -int id
@@ -74,7 +77,7 @@ classDiagram
     Car : +void readSensors()
 
     DataCollector --> Car : CAN
-    Dashboard --> DataCollector : CAN
+    DataCollector --> Dashboard : CAN
 
     Car ..> SensorData : Uses
     DataCollector ..> SensorData : Uses
