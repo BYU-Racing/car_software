@@ -1,22 +1,22 @@
 #ifndef LEDARRAY_H
 #define LEDARRAY_H
 
-#include "Actuator.h"  // Include the header for the Actuator class
+#include "Actuator.h"
 
 class LEDArray : public Actuator {
 private:
-    // Additional attributes specific to LEDArray, if any
+    // Additional attributes specific to LEDArray
 
 public:
     // Constructor
     LEDArray(int* pins, int numPins);
 
-    // Destructor (if needed)
+    // Destructor
 
     // Override the writeToDisplay method
     void writeToDisplay() override;
 
-    // Additional methods for LEDArray, if any
+    // Additional methods for LEDArray
 };
 
 #endif // LEDARRAY_H

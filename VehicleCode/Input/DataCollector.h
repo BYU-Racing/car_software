@@ -6,9 +6,10 @@
 
 class DataCollector {
 private:
-    Sensor* sensors;   // Array of Sensor objects
-    int timeZero;      // Starting time
-    int numSensors;   // Number of sensors
+    // sensor objects, starting time, and number of sensors
+    Sensor* sensors;
+    int timeZero;
+    int numSensors;
 
 public:
     // Constructor

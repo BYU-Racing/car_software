@@ -10,11 +10,12 @@ enum SensorID {
 
 class Sensor {
 protected:
-    int* inputPins;           // Array of input pins
-    int readFrequency;        // Read frequency in milliseconds
-    int previousUpdateTime;   // Previous update time in milliseconds
-    enum SensorID sensorID;   // Sensor ID
-    int priority;             // Priority level
+    // Instantiate attributes
+    int* inputPins;
+    int readFrequency;
+    int previousUpdateTime;
+    enum SensorID sensorID;
+    int priority;
 
 public:
     // Constructor

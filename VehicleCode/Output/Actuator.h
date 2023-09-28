@@ -1,19 +1,20 @@
 #ifndef ACTUATOR_H
 #define ACTUATOR_H
 
-#include "../Input/SensorData.h"  // Include the header for the SensorData class
+#include "../Input/SensorData.h"
 
 class Actuator {
 private:
-    int* outputPins;   // Array of output pins
-    int value;         // Current value
+    // Instantiate attributes
+    int* outputPins;
+    int value;
 
 public:
     // Constructor
     Actuator(int* pins, int numPins);
 
     // Destructor
-    virtual ~Actuator();  // Make the destructor virtual
+    virtual ~Actuator();
 
     // Declare a pure virtual function
     virtual void writeToDisplay() = 0;

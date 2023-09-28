@@ -5,6 +5,7 @@
 
 class SensorData {
 private:
+    // Instantiate attributes
     int id;
     int priority;
     double data;
