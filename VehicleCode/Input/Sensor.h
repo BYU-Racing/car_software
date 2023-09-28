@@ -1,6 +1,5 @@
-/*
- * TODO: Add doc string
- */
+// TODO: Add doc string
+
 
 #ifndef SENSOR_H
 #define SENSOR_H
