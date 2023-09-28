@@ -14,7 +14,7 @@ public:
     // Destructor
 
     // Override the writeToDisplay method
-    void writeToDisplay() override;
+    void updateValue(const SensorData& data);
 
     // Additional methods for Screen
 };

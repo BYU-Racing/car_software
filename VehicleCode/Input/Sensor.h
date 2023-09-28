@@ -1,25 +1,24 @@
+/*
+ * TODO: Add doc string
+ */
+
 #ifndef SENSOR_H
 #define SENSOR_H
 
-enum SensorID {
-    SENSOR_ID_1,
-    SENSOR_ID_2,
-    SENSOR_ID_3,
-    // Add more sensor IDs as needed
-};
+#include "../SensorID.h"
 
 class Sensor {
-protected:
+private:
     // Instantiate attributes
     int* inputPins;
     int readFrequency;
-    int previousUpdateTime;
-    enum SensorID sensorID;
+    int previousUpdateTime = 0;
+    int sensorID;
     int priority;
 
 public:
     // Constructor
-    Sensor(enum SensorID id, int freq, int prio);
+    Sensor(int id, int freq, int prio, int* inputPins);
 
     // Destructor
     virtual ~Sensor();  // Make the destructor virtual
