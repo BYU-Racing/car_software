@@ -10,7 +10,7 @@ class Sensor {
 private:
     // Instantiate attributes
     int* inputPins;
-    int readFrequency;
+    int waitTime;
     int previousUpdateTime = 0;
     int sensorID;
     int priority;
