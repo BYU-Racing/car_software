@@ -13,6 +13,8 @@ AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins):Sensor(id, f
 int* AnalogSensor::readInputs() {
 
     //Update previous update time
+    
+    //Pull the data from the pin and return the pointer to it
 
     
 };
@@ -20,7 +22,8 @@ int* AnalogSensor::readInputs() {
 
 //readyToCheck
 bool AnalogSensor::readyToCheck() {
-    //return (waitTime <= currentTime - previousUpdateTime);
+    //return (waitTime <= millis() - previousUpdateTime);
+    // millis() grabs time from boot from Arduino
     return false;
     
 };
