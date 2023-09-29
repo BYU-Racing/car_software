@@ -7,7 +7,7 @@
 #include "../SensorID.h"
 
 class Sensor {
-private:
+protected:
     // Instantiate attributes
     int* inputPins;
     int waitTime;

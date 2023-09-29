@@ -8,7 +8,7 @@
 class AnalogSensor : public Sensor {
 private:
     // Additional attributes specific to AnalogSensor
-    //Any benefit to storing the last value of the Sensor?
+    int sensorValue;
 public:
     // Constructor
     AnalogSensor(int id, int freq, int prio, int* inPins); // Id, Frequency, Priority
