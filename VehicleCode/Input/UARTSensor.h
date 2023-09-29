@@ -3,6 +3,19 @@
 
 #include "Sensor.h"
 
+/*  UART INFO FOR TEENSY AND UART SENSORS
+
+    PINS
+    RX1     ->  0
+    TX1     ->  1
+    RX2     ->  7
+    TX2     ->  8
+
+    IMPORTANT DATA
+    BAUD    ->  9600 (default)
+    
+*/
+
 class UARTSensor : public Sensor {
 private:
     // Additional attributes specific to UARTSensor
