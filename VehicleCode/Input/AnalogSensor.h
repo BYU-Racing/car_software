@@ -1,3 +1,5 @@
+// TODO: add doc string
+
 #ifndef ANALOGSENSOR_H
 #define ANALOGSENSOR_H
 

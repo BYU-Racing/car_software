@@ -1,3 +1,4 @@
+// TODO: all
 #include "AnalogSensor.h"
 
 //Constructor (Broken)
