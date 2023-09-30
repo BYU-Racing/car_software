@@ -1,8 +1,7 @@
 // TODO: all
-// TODO: Check millis return type
 #include "AnalogSensor.h"
 
-//Constructor (Broken)
+//Constructor
 AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins):Sensor(id, freq, prio, inPins) {
     int sensorID = id;
     int waitTime = freq;
@@ -15,7 +14,7 @@ AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins):Sensor(id, f
 int* AnalogSensor::readInputs() {
 
     //Update previous update time
-    previousUpdateTime = millis();
+    previousUpdateTime = int(millis());
 
     //Grab Sensor Value
     sensorValue = analogRead(*inputPins);
@@ -29,5 +28,5 @@ int* AnalogSensor::readInputs() {
 //readyToCheck
 bool AnalogSensor::readyToCheck() {
     //millis gets arduino time
-    return (waitTime <= millis() - previousUpdateTime);
+    return (waitTime <= int(millis()) - previousUpdateTime);
 };
