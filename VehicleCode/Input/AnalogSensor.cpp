@@ -14,10 +14,10 @@ AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins):Sensor(id, f
 int* AnalogSensor::readInputs() {
 
     //Update previous update time
-    previousUpdateTime = int(millis());
+    previousUpdateTime = millis();
 
     //Grab Sensor Value
-    sensorValue = analogRead(*inputPins);
+    sensorValue = analogRead(inputPins[0]);
 
     //Return a pointer to the private value
     return &sensorValue;
@@ -28,5 +28,5 @@ int* AnalogSensor::readInputs() {
 //readyToCheck
 bool AnalogSensor::readyToCheck() {
     //millis gets arduino time
-    return (waitTime <= int(millis()) - previousUpdateTime);
+    return (waitTime <= millis() - previousUpdateTime);
 };
