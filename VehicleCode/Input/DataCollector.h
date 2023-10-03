@@ -11,20 +11,27 @@ private:
     int timeZero;
     int numSensors;
     
-    // Method to send signals to sensors
-    void sendSignals();
+    // CHECK new function
+    // Read signals from sensors
+    void readData(Sensor* sensor);
 
-    // Method to create SensorData
-    SensorData createSensorData();
+    // CHECK add sensor parameter
+    // Send a signal to Car and Dashboard objects
+    void sendSignal(SensorData* sensorData);
+
+    // CHECK remove this method
+    // SensorData createSensorData(int raw_data, int sensorID, int priority);
 
 public:
+    // CHECK change startTime to unsigned long
     // Constructor
-    DataCollector(Sensor** sensors, int numSensors, int startTime);
+    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime);
 
+    // CHECK remove destructor
     // Destructor
-    ~DataCollector();
+    // ~DataCollector();
 
-    // Method to check sensor data
+    // Check sensor data and send signals
     void checkSensors();
 };
 

@@ -27,6 +27,10 @@ public:
 
     // Method to check if it's ready to read
     virtual bool readyToCheck() = 0;
+
+    // CHECK add method to get id and priority
+    int getId() const;
+    int getPriority() const;
 };
 
 #endif // SENSOR_H
