@@ -7,17 +7,18 @@ by David Reinhardt and Dallin Stewart
 | Revision |    Revised By     |    Checked By        |     Date     |
 |    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
 |    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
+|    1.2   |  Dallin Stewart   |   TBD                | 02 OCT 2023  |
 
 ```mermaid
 classDiagram
 
     class Sensor
     Sensor : -int[] inputPins
-    Sensor : -int readFrequency
+    Sensor : -int waitTime
     Sensor : -int previousUpdateTime
     Sensor : -enum sensorID 
     Sensor : -int priority
-    Sensor : int readInputs()
+    Sensor : int[] readInputs()
     Sensor : bool readyToCheck()
     UARTSensor --|> Sensor : Is
     note for UARTSensor "GPS\nAccelerometer"
@@ -43,10 +44,12 @@ classDiagram
     class SensorData
     SensorData : -int id
     SensorData : -int priority
-    SensorData : -double data
-    SensorData : -int timeStamp
-    SensorData : +int[] formatCAN()
+    SensorData : -int data
+    SensorData : -unsigned long timeStamp
+    SensorData : +CAN_message_t formatCAN()
     SensorData : SensorData(CANMessage)
+    SensorData : SensorData(id, priority, data, timeStamp)
+    SensorData : SensorData()
 
     class Dashboard
     Dashboard : -Actuator[] display
@@ -56,10 +59,11 @@ classDiagram
 
     class DataCollector
     DataCollector : -Sensor[] sensors
-    DataCollector : -int timeZero
+    DataCollector : -int numSensors
+    DataCollector : -unsigned long timeZero
     DataCollector : +void checkSensors()
-    DataCollector : -void sendSignals()
-    DataCollector : -SensorData createSensorData()
+    DataCollector : -void sendSignal(SensorData*)
+    DataCollector : -void readData(Sensor*)
 
     class Car
     Car : -bool active

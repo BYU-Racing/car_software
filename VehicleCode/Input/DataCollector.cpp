@@ -1,5 +1,4 @@
 #include "DataCollector.h"
-// TODO figure out why this CAN stuff doesn't work
 // #include <Arduino.h>
 // #include <FlexCAN_T4.h>
 
@@ -14,17 +13,24 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
+    // can2 attribute
 }
-
-// TODO do we want a default constructor with getters and setters?
 
 
 // CHECK define function
-// Check each sensor for new data
+/*!
+ * @brief Check each sensor for new data
+ * 
+ * Determines whether each sensor is ready to send data. If so, it calls the
+ * readData method for that sensor.
+ * 
+ * @param None
+ * 
+ * @return None
+ */ 
 void DataCollector::checkSensors() {
     for (int i = 0; i < numSensors; i++) {
         // Check if the sensor is ready to send more data
-        // TODO do we want to send CAN messages as we get data, or read all data first?
         if (sensors[i]->readyToCheck()) {
             readData(sensors[i]);
         }
@@ -33,7 +39,17 @@ void DataCollector::checkSensors() {
 
 
 // CHECK define function
-// Method to read data from sensors
+/*!
+ * @brief Read data from sensors
+ * 
+ * Reads data from a sensor, then builds a SensorData object for each piece of
+ * data and sends it over CAN with the sendSignal method.
+ * 
+ * @param sensor (Sensor*) A pointer to a Sensor object
+ * 
+ * @return None
+ */
+// 
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     int* rawData = sensor->readInputs();
@@ -43,6 +59,7 @@ void DataCollector::readData(Sensor* sensor) {
 
     // Create a new sensor data object for each int in the array
     // TODO readInputs must always return an array of ints that ends with -1
+    // just do size
     int i = 0;
     while (rawData[i] != -1) {
         SensorData* sensorData = new SensorData(sensorID, priority, rawData[i], timestamp);
@@ -58,15 +75,18 @@ void DataCollector::readData(Sensor* sensor) {
 
 
 // CHECK define function idk what I'm doing here
-// Method to send data to Car and Dashboard objects
+/*!
+ * @brief Send data to Car and Dashboard objects
+ * 
+ * Initializes the CAN bus, then sends a CAN message to the Car and Dashboard
+ * using sensorData's formatCAN method.
+ * 
+ * @param sensorData (SensorData*) A pointer to a SensorData object
+ * 
+ * @return None
+ */
 void DataCollector::sendSignal(SensorData* sensorData) {
-    // TODO Initialize CAN bus somewhere else?
-    // TODO implement logic for sending data to Car and Dashboard
-    can2.begin();
-    can2.setBaudRate(BAUDRATE);
-
     // Create a CAN message
-    // TODO decide whether to formatCAN should output CAN_message_t or std::string
     CAN_message_t canMessage = sensorData->formatCAN();
     can2.write(canMessage);
 

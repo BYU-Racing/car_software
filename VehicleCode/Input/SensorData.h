@@ -8,15 +8,16 @@ private:
     // Instantiate attributes
     int id;
     int priority;
-    double data;
+    int data;
     int timeStamp;
 
 public:
     // Constructor
     SensorData();
-    // CHECK change data to double, timeStamp to unsigned long
+    // CHECK change timeStamp to unsigned long
     SensorData(int id, int priority, int data, unsigned long timeStamp);
-    SensorData(int canMessage);
+    // CHECK change canMessage to CAN_message_t
+    SensorData(CAN_message_t canMessage);
 
     // CHECK add destructor
     // Destructor
