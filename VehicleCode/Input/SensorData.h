@@ -8,22 +8,22 @@ private:
     // Instantiate attributes
     int id;
     int priority;
-    double data;
+    int* data;
     int timeStamp;
 
 public:
     SensorData();
-    SensorData(int id, int priority, double data, int timeStamp);
+    SensorData(int id, int priority, int* data, int timeStamp);
     SensorData(int canMessage);
 
     int getTimeStamp() const;
     int getId() const;
     int getPriority() const;
-    double getData() const;
+    int* getData() const;
 
     void setId(int id);
     void setPriority(int priority);
-    void setData(double data);
+    void setData(int* data);
 
     std::string formatCAN() const;
 };

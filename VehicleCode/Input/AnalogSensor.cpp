@@ -7,7 +7,7 @@ AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins):Sensor(id, f
     int waitTime = freq;
     int priority = prio;
     int* inputPins = inPins;
-    int sensorValue = 0;
+    int* sensorValue = {0};
 };
 
 //readInputs
@@ -17,10 +17,10 @@ int* AnalogSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    sensorValue = analogRead(inputPins[0]);
+    sensorValue[0] = analogRead(inputPins[0]);
 
     //Return a pointer to the private value
-    return &sensorValue;
+    return sensorValue;
     
 };
 
