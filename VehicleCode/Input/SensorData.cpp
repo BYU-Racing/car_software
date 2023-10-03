@@ -1,11 +1,13 @@
 #include "SensorData.h"
 
 SensorData::SensorData() {
-    //Default Constructor
+    id = 0;
+    priority = 0;
+    data = {0};
+    timeStamp = 0;
 }
 
 SensorData::SensorData(int inId, int inPriority, int* inData, int inTimeStamp) {
-    //Constructor 1
     id = inId;
     priority = inPriority;
     data = inData;
@@ -13,7 +15,7 @@ SensorData::SensorData(int inId, int inPriority, int* inData, int inTimeStamp) {
 }
 
 SensorData::SensorData(int canMessage) {
-    //CAN MESSAGE
+    //Need can message template to know where to find each attribute
 }
 
 int SensorData::getTimeStamp() const {
@@ -29,7 +31,7 @@ int SensorData::getPriority() const {
 }
 
 int* SensorData::getData() const {
-    return {0};
+    return data;
 }
 
 void SensorData::setId(int inId) {
