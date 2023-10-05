@@ -25,23 +25,23 @@ private:
     unsigned long timeZero;
     int numSensors;
     
-    // CHECK new function for single use principle
+    // TEST: new function for single use principle
     // Read signals from sensors
     void readData(Sensor* sensor);
 
-    // CHECK add sensor parameter
+    // TEST: add sensor parameter
     // Send a signal to Car and Dashboard objects
     void sendSignal(SensorData* sensorData);
 
-    // CHECK remove this method
+    // TEST: remove this method
     // SensorData createSensorData(int raw_data, int sensorID, int priority);
 
 public:
-    // CHECK change startTime to unsigned long
+    // TEST: change startTime to unsigned long
     // Constructor
     DataCollector(Sensor** sensors, int numSensors, unsigned long startTime);
 
-    // CHECK remove destructor
+    // TEST: remove destructor
     // Destructor
     // ~DataCollector();
 

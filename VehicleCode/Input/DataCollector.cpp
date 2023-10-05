@@ -3,21 +3,20 @@
 // #include <FlexCAN_T4.h>
 
 // Global variables
-FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
-const int BAUDRATE = 250000;
+#define BAUDRATE 250000
 
 
-// CHECK define function
+// TEST: define function
 // Constructor
 DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime) {
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
-    // can2 attribute
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 }
 
 
-// CHECK define function
+// TEST: define function
 /*!
  * @brief Check each sensor for new data
  * 
@@ -38,7 +37,7 @@ void DataCollector::checkSensors() {
 }
 
 
-// CHECK define function
+// TEST define function
 /*!
  * @brief Read data from sensors
  * 
@@ -49,7 +48,6 @@ void DataCollector::checkSensors() {
  * 
  * @return None
  */
-// 
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     int* rawData = sensor->readInputs();
@@ -73,8 +71,7 @@ void DataCollector::readData(Sensor* sensor) {
     }
 }
 
-
-// CHECK define function idk what I'm doing here
+// TEST: define function idk what I'm doing here
 /*!
  * @brief Send data to Car and Dashboard objects
  * 
@@ -87,6 +84,7 @@ void DataCollector::readData(Sensor* sensor) {
  */
 void DataCollector::sendSignal(SensorData* sensorData) {
     // Create a CAN message
+    // TODO: make formatCan() return a CAN_message_t object
     CAN_message_t canMessage = sensorData->formatCAN();
     can2.write(canMessage);
 
@@ -109,7 +107,7 @@ void DataCollector::sendSignal(SensorData* sensorData) {
 
     // // Set the message length and id and send the message
     // msg.len = messageLength;
-    // // TODO set msg.id to sensor id or priority
+    // // set msg.id to sensor id or priority
     // msg.id = 2;
     // can2.write(msg);
 }
