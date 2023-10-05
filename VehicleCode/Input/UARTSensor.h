@@ -3,18 +3,6 @@
 
 #include "Sensor.h"
 
-/*  UART INFO FOR TEENSY AND UART SENSORS
-
-    PINS
-    RX1     ->  0
-    TX1     ->  1
-    RX2     ->  7
-    TX2     ->  8
-
-    IMPORTANT DATA
-    BAUD    ->  9600 (default)
-    
-*/
 
 class UARTSensor : public Sensor {
 private:
@@ -24,7 +12,7 @@ public:
     // Constructor
     UARTSensor(enum SensorID id, int freq, int prio);
 
-    // Destructor
+    // TODO Destructor
 
     // Implement the pure virtual functions from the base class
     int* readInputs() override;
