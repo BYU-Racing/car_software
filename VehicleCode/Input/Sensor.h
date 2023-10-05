@@ -7,10 +7,10 @@
 #include "../SensorID.h"
 
 class Sensor {
-private:
+protected:
     // Instantiate attributes
     int* inputPins;
-    int readFrequency;
+    int waitTime;
     int previousUpdateTime = 0;
     int sensorID;
     int priority;

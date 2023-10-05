@@ -8,16 +8,17 @@
 class AnalogSensor : public Sensor {
 private:
     // Additional attributes specific to AnalogSensor
-
+    int sensorValue;
 public:
     // Constructor
-    AnalogSensor(enum SensorID id, int freq, int prio);
+    AnalogSensor(int id, int freq, int prio, int* inPins); // Id, Frequency, Priority
 
     // Destructor
+    ~AnalogSensor();
 
     // Implement the pure virtual functions from the base class
-    int* readInputs() override;
-    bool readyToCheck() override;
+    int* readInputs();
+    bool readyToCheck();
 
     // Additional methods for AnalogSensor
 };
