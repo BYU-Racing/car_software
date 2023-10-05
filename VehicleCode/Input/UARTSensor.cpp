@@ -23,11 +23,22 @@
 
 #define UART_ID   0x0
 #define BAUD      9600
-#define UART_PRIO 0x0
+
+static int uart_Prio;           //UART priority var
+static int uart_freq;           //UART frequency var
+static SensorID uart_sensor_id; //UART sensor id var
+static int uart_data;
+
+
 
 // FIXME constructor
  UARTSensor::UARTSensor(enum SensorID id, int freq, int prio) {
+    uart_sensor_id = id;
+    uart_freq = freq;
+    uart_Prio = prio;
+    uart_data = 0x0;
 
+    Serial.begin(BAUD); // initialize UART with baud rate of 9600 bps
  }
 
 
@@ -36,7 +47,11 @@
 
 // TODO Implement the pure virtual functions from the base class
 int* readInputs() {
-
+    if (Serial.available())
+    {
+        uart_data = Serial.read();
+    }
+    
 }
 
 bool readyToCheck() {
