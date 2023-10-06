@@ -16,30 +16,26 @@
     
 */
 
-// UART recieving and transmitting pins
-#define RX1 0
-#define TX1 1
-#define RX2 7
-#define TX2 8
+#define UART_ID_1   0x0         //Sensor ID 1
+#define UART_ID_2   0x1         //Sensor ID 2
+#define BAUD        9600        //BAUD rate
 
-#define UART_ID_1   0x0
-#define UART_ID_2   0x1
-#define BAUD      9600
 
-static int uart_Prio;           //UART priority var
-static int uart_freq;           //UART frequency var
-static SensorID uart_sensor_id; //UART sensor id var
-static int uart_data;
-
+static int uart_data[2];        //UART sensor data array, 0 for sensor 1, 1 for sensor 2
 
 
 // FIXME constructor
- UARTSensor::UARTSensor(enum SensorID id, int freq, int prio) {
-    uart_sensor_id = id;
-    uart_freq = freq;
-    uart_Prio = prio;
-    uart_data = 0x0;
+ UARTSensor::UARTSensor(enum SensorID id, int freq, int prio):Sensor(id, freq, prio) {
+    int priority = prio;                //UART priority var
+    int waitTime = freq;                //UART wait time var
+    SensorID uart_sensor_id = id;       //UART sensor id var
+    int previousUpdateTime = 0;
+    
+    UARTSensor_init(uart_sensor_id);  // initialize uart sensors
+ };
 
+// TEST uart initilization function
+void UARTSensor_init(SensorID id){
     // switch statement to initialize specific uart pins depending on given sensor id
     switch (id)
     {
@@ -52,23 +48,27 @@ static int uart_data;
     default:
         break;
     }
-   
- }
+};
 
 
-// TODO Destructor
-
-
-// read inputs from uart, save to uart_data, return pointer to uart_data
-int* readInputs() {
-    if (Serial1.available())     // checks to see if data is available to be read
+// TEST read inputs from both uart ports at the same time, save to uart_data array, return pointer to uart_data
+int* UARTSensor::readInputs() {
+    if (Serial1.available())     // checks to see if data is available to be read from Serial1 port
     {
-        uart_data = Serial1.read();
+        uart_data[0] = Serial1.read();
     }
-    return &uart_data;
-}
+    if (Serial2.available())    // checks to see if data is available to be read from serial2 port
+    {
+        uart_data[1] = Serial2.read();
+    }
+    //Update previous update time
+    previousUpdateTime = int(millis());
 
-// FIXME checks to see if there is data to read
+    return uart_data;
+};
+
+// FIXME checks to see if there is data to read from both uart ports
 bool readyToCheck() {
-    return Serial1.available();
-}
+
+    return (waitTime <= int(millis()) - previousUpdateTime);
+};
