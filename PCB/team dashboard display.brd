@@ -1845,7 +1845,7 @@ design rules under a new name.</description>
 <element name="U$5" library="David_Pinlayouts" package="5IL" value="1.2_7SEGMENTDISPLAY" x="85.09" y="69.85" smashed="yes" rot="R90">
 <attribute name="NAME" x="76.2" y="66.04" size="1.27" layer="25" rot="R90"/>
 </element>
-<element name="U$8" library="F-E library custom components" library_urn="urn:adsk.eagle:library:37896846" package="CAN_BUS" value="CAN_BUS" x="62.23" y="90.17" smashed="yes"/>
+<element name="U$8" library="F-E library custom components" library_urn="urn:adsk.eagle:library:37896846" package="CAN_BUS" value="CAN_BUS" x="62.23" y="68.58" smashed="yes"/>
 <element name="U$9" library="F-E library custom components" library_urn="urn:adsk.eagle:library:37896846" package="CAN_TEN" value="CAN_TEE" x="81.28" y="88.9" smashed="yes" rot="R270"/>
 </elements>
 <signals>
