@@ -24,6 +24,7 @@ Dashboard::Dashboard(unsigned long startTime) {
     can2.setBaudRate(BAUDRATE);
 
     // Instantiate the actuators
+    // TODO include pin information
     Screen* lapScreen = new Screen();
     Screen* totalScreen = new Screen(); 
     LEDArray* batteryLife = new LEDArray(); 
