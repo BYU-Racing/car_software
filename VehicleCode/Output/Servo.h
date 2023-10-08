@@ -9,6 +9,7 @@ private:
 
 public:
     // Constructor
+    Servo();
     Servo(int* pins, int numPins);
 
     // Destructor

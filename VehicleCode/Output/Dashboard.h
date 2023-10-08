@@ -8,20 +8,27 @@ private:
     // Instantiate attributes
     Actuator** display;
     int numActuators;
-    int timeZero;
+    // CHECK change startTime to unsigned long
+    unsigned long startTime;
+
+    // CHECK add getSensorIndex method
+    int getSensorIndex(SensorID sensor);
 
 public:
     // Constructor
-    Dashboard(int numActuators, int startTime);
+    // CHECK change startTime to unsigned long
+    // CHECK remove numActuators, Dashboard should decide how many actuators there are
+    Dashboard(unsigned long startTime);
 
     // Destructor
     ~Dashboard();
 
-    // Method to read data from the CAN bus
-    void readCANBus();
-
     // Method to update the display based on sensor data
     void updateDisplay();
+
+    // CHECK remove readCANBus 
+    // Method to read data from the CAN bus
+    // void readCANBus();
 };
 
 #endif // DASHBOARD_H
