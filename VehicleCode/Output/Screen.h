@@ -9,6 +9,7 @@ private:
 
 public:
     // Constructor
+    Screen();
     Screen(int* pins, int numPins);
 
     // Destructor

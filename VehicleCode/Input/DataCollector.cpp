@@ -16,6 +16,7 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
 }
 
 
+
 // TEST: define function
 /*!
  * @brief Check each sensor for new data
@@ -57,7 +58,6 @@ void DataCollector::readData(Sensor* sensor) {
 
     // Create a new sensor data object for each int in the array
     // TODO readInputs must always return an array of ints that ends with -1
-    // just do size
     int i = 0;
     while (rawData[i] != -1) {
         SensorData* sensorData = new SensorData(sensorID, priority, rawData[i], timestamp);

@@ -23,7 +23,7 @@ public:
     virtual ~Sensor();
 
     // Declare a pure virtual function
-    // CHECK output: array of ints that ends with -1 as an end of array marker
+    // TODO output: array of ints that ends with -1 as an end of array marker
     virtual int* readInputs() = 0;
 
     // Method to check if it's ready to read
