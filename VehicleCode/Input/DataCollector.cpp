@@ -7,7 +7,15 @@
 
 
 // TEST: define function
-// Constructor
+/*!
+ * @brief Constructor
+ * Initializes the CAN bus and the sensors
+ * 
+ * @param sensors (Sensor**) An array of pointers to Sensor objects
+ * @param numSensors (int) The number of sensors in the array
+ * @param startTime (unsigned long) The time the car started
+ * @return None
+ */
 DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime) {
     this->sensors = sensors;
     this->numSensors = numSensors;
@@ -20,12 +28,10 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
 // TEST: define function
 /*!
  * @brief Check each sensor for new data
- * 
  * Determines whether each sensor is ready to send data. If so, it calls the
  * readData method for that sensor.
  * 
  * @param None
- * 
  * @return None
  */ 
 void DataCollector::checkSensors() {
@@ -41,12 +47,10 @@ void DataCollector::checkSensors() {
 // TEST define function
 /*!
  * @brief Read data from sensors
- * 
  * Reads data from a sensor, then builds a SensorData object for each piece of
  * data and sends it over CAN with the sendSignal method.
  * 
  * @param sensor (Sensor*) A pointer to a Sensor object
- * 
  * @return None
  */
 void DataCollector::readData(Sensor* sensor) {
@@ -71,15 +75,13 @@ void DataCollector::readData(Sensor* sensor) {
     }
 }
 
-// TEST: define function idk what I'm doing here
+// TEST: define function
 /*!
  * @brief Send data to Car and Dashboard objects
- * 
  * Initializes the CAN bus, then sends a CAN message to the Car and Dashboard
  * using sensorData's formatCAN method.
  * 
  * @param sensorData (SensorData*) A pointer to a SensorData object
- * 
  * @return None
  */
 void DataCollector::sendSignal(SensorData* sensorData) {

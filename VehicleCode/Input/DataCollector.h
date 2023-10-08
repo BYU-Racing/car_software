@@ -8,7 +8,6 @@
  * @param sensors (Sensor**) An array of pointers to Sensor objects
  * @param numSensors (int) The number of sensors in the array
  * @param startTime (unsigned long) The time that the program started in milliseconds
- * 
  * @return None 
  */
 

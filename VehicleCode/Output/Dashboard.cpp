@@ -13,7 +13,13 @@
 #define BAUDRATE 250000
 
 // CHECK: define function
-// Constructor
+/*!
+ * @brief Constructor
+ * Initializes the CAN bus and the actuators
+ * 
+ * @param startTime (unsigned long) The time the car started
+ * @return None
+*/
 Dashboard::Dashboard(unsigned long startTime) {
     // load parameters
     this->startTime = startTime;
@@ -44,12 +50,26 @@ Dashboard::Dashboard(unsigned long startTime) {
     numActuators = sizeof(display);
 }
 
+// CHECK: define function
+/*!
+ * @brief Destructor
+ * Deletes the actuators
+ * 
+ * @param None
+ * @return None
+*/
+Dashboard::~Dashboard() {
+    // Delete the actuators
+    for (int i = 0; i < numActuators; i++) {
+        delete display[i];
+    }
+}
+
 // CHECK: define function. idk if this is the most efficient approach
 /*!
  * @brief Get the index of a sensor in the display array
  * 
  * @param sensor (SensorID) The sensor ID
- * 
  * @return (int) The index of the sensor in the display array
  */
 int getSensorIndex(int id) {
@@ -67,15 +87,12 @@ int getSensorIndex(int id) {
 }
 
 
-
 // TODO: define function
 /*!
  * @brief Update the driver's display
- * 
  * Reads data from the CAN bus and updates the display based on the data.
  * 
  * @param None
- * 
  * @return None
  */
 void Dashboard::updateDisplay() {
@@ -86,6 +103,7 @@ void Dashboard::updateDisplay() {
         if (actuatorIndex >= 0 && actuatorIndex < numActuators) {
             SensorData* sensorData = new SensorData(rmsg);
             display[actuatorIndex]->updateValue(sensorData);
+            delete sensorData;
         }
     }
 }

@@ -1,3 +1,13 @@
+// CHECK add docstring
+/*!
+ * @brief Read CAN bus data and update the display
+ * Whenever updateDisplay gets called, this class reads data from the CAN bus
+ * and updates the appropriate display object based on the data.
+ * 
+ * @param startTime (unsigned long) The time that the program started in milliseconds
+ * @return None
+*/
+
 #ifndef DASHBOARD_H
 #define DASHBOARD_H
 
