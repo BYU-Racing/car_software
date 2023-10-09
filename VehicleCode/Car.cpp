@@ -39,7 +39,8 @@ void Car::updateState(){
 
 
 // TODO: Define difference between shutdown and emergencyShutdown
-/* The difference could be that emergency shutdown is for if the 
+/* 
+ * The difference could be that emergency shutdown is for if the 
  * car is still in motion
  */
 // TODO: Method to shut down the car
