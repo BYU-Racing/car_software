@@ -6,14 +6,16 @@
 class Servo : public Actuator {
 private:
     // Additional attributes specific to Servo
-
+    int* pins;
+    int numPins;
+    double dataValue;
+    
 public:
     // Constructor
-    Servo();
     Servo(int* pins, int numPins);
 
     // Destructor
-
+    ~Servo();
     // Override the writeToDisplay method
     void updateValue(const SensorData& data);
 
