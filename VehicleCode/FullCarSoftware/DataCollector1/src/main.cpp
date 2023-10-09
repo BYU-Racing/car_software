@@ -1,18 +1,15 @@
 #include <Arduino.h>
+#include "input/DataCollector.h"
+#include "input/AnalogSensor.h"
+#include "input/UARTSensor.h"
+#include "input/DigitialSensor.h"
 
-// put function declarations here:
-int myFunction(int, int);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Sensor** sensors = {new AnalogSensor(),
+                       new DigitalSensor()};
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  
 }
