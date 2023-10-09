@@ -12,7 +12,7 @@
 // Global variables
 #define BAUDRATE 250000
 
-// CHECK: define function
+// EDIT: define function
 /*!
  * @brief Constructor
  * Initializes the CAN bus and the actuators
@@ -65,7 +65,7 @@ Dashboard::~Dashboard() {
     }
 }
 
-// CHECK: define function. idk if this is the most efficient approach
+// EDIT: define function. idk if this is the most efficient approach
 /*!
  * @brief Get the index of a sensor in the display array
  * 
