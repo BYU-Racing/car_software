@@ -50,7 +50,7 @@ Dashboard::Dashboard(unsigned long startTime) {
     numActuators = sizeof(display);
 }
 
-// CHECK: define function
+// TEST: define function
 /*!
  * @brief Destructor
  * Deletes the actuators
@@ -87,7 +87,7 @@ int getSensorIndex(int id) {
 }
 
 
-// TODO: define function
+// TEST: define function
 /*!
  * @brief Update the driver's display
  * Reads data from the CAN bus and updates the display based on the data.
