@@ -1,3 +1,5 @@
+// TODO: Add class docstring
+
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
@@ -9,12 +11,12 @@ private:
     int id;
     int priority;
     int* data;
-    int timeStamp;
+    unsigned long timeStamp;
 
 public:
     SensorData();
-    SensorData(int id, int priority, int* data, int timeStamp);
-    SensorData(int canMessage);
+    SensorData(int id, int priority, int* data, unsigned long timeStamp);
+    SensorData(CAN_Message_t canMessage);
 
     int getTimeStamp() const;
     int getId() const;
@@ -24,6 +26,7 @@ public:
     void setId(int id);
     void setPriority(int priority);
     void setData(int* data);
+    void setTimeStamp(int timeStamp);
 
     std::string formatCAN() const;
 };
