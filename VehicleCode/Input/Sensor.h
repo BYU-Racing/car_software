@@ -11,7 +11,7 @@ protected:
     // Instantiate attributes
     int* inputPins;
     int waitTime;
-    int previousUpdateTime = 0;
+    unsigned long previousUpdateTime = 0;
     int sensorID;
     int priority;
 
