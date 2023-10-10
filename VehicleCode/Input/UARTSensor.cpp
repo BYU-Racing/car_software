@@ -67,8 +67,7 @@ int* UARTSensor::readInputs() {
     return uart_data;
 };
 
-// FIXME checks to see if there is data to read from both uart ports
+// TEST checks to see if time to read values
 bool readyToCheck() {
-
     return (waitTime <= int(millis()) - previousUpdateTime);
 };
