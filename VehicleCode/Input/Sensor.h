@@ -20,13 +20,18 @@ public:
     Sensor(int id, int freq, int prio, int* inputPins);
 
     // Destructor
-    virtual ~Sensor();  // Make the destructor virtual
+    virtual ~Sensor();
 
     // Declare a pure virtual function
+    // TODO output: array of ints that ends with -1 as an end of array marker
     virtual int* readInputs() = 0;
 
     // Method to check if it's ready to read
     virtual bool readyToCheck() = 0;
+
+    // CHECK add method to get id and priority
+    int getId() const;
+    int getPriority() const;
 };
 
 #endif // SENSOR_H
