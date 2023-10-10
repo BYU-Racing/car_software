@@ -12,14 +12,6 @@
 // Global variables
 #define BAUDRATE 250000
 
-#define SEVEN_SEG_1 12
-#define SEVEN_SEG_2 13
-#define LED_ARRAY_1 9
-#define LED_ARRAY_2 10
-#define LED_ARRAY_3 11
-#define SERVO 14
-#define HORN 15
-
 
 // CHECK: define function
 /*!
@@ -56,6 +48,7 @@ Dashboard::~Dashboard() {
         delete display[i];
     }
 }
+
 
 // CHECK: define function
 /*!
