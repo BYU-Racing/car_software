@@ -1,3 +1,5 @@
+// TODO: Add class docstring
+
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
@@ -9,7 +11,7 @@ private:
     int id;
     int priority;
     int* data;
-    int timeStamp;
+    unsigned long timeStamp;
 
 public:
     // Constructor

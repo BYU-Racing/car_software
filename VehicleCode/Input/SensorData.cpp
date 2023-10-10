@@ -1,4 +1,5 @@
 #include "SensorData.h"
+// TODO: add docstrings for each method
 
 SensorData::SensorData() {
     id = 0;
@@ -7,14 +8,15 @@ SensorData::SensorData() {
     timeStamp = 0;
 }
 
-SensorData::SensorData(int inId, int inPriority, int* inData, int inTimeStamp) {
+SensorData::SensorData(int inId, int inPriority, int* inData, unsigned long inTimeStamp) {
     id = inId;
     priority = inPriority;
     data = inData;
     timeStamp = inTimeStamp;
 }
 
-SensorData::SensorData(int canMessage) {
+// TODO: Implement this method
+SensorData::SensorData(CAN_Message_t canMessage) {
     //Need can message template to know where to find each attribute
 }
 
@@ -46,6 +48,12 @@ void SensorData::setData(int* inData) {
     data = inData;
 }
 
+// CHECK: Implement this method
+void SensorData::setTimeStamp(int inTimeStamp) {
+    timeStamp = inTimeStamp;
+}
+
+// TODO: Implement this method
 std::string SensorData::formatCAN() const {
     return "";
 }
