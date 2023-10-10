@@ -40,6 +40,11 @@ Dashboard::Dashboard(Actuator** display, unsigned long startTime) {
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     can2.begin();
     can2.setBaudRate(BAUDRATE);
+
+    // output constant match
+    if (!checkSensorIDS()) {
+        printf("Sensor ID constants do not match\n");
+    }
 }
 
 // TEST: define function
@@ -55,6 +60,24 @@ Dashboard::~Dashboard() {
     for (int i = 0; i < numActuators; i++) {
         delete display[i];
     }
+}
+
+// CHECK: define function
+/*!
+ * @brief double check sensor id constants
+ * 
+ * 
+ */
+bool checkSensorIDS() {
+    SensorID ids = SensorID();
+    if (ids.checkSEVEN_SEG_1(SEVEN_SEG_1)) { return false;}
+    if (ids.checkSEVEN_SEG_2(SEVEN_SEG_2)) { return false;}
+    if (ids.checkLED_ARRAY_1(LED_ARRAY_1)) { return false;}
+    if (ids.checkLED_ARRAY_2(LED_ARRAY_2)) { return false;}
+    if (ids.checkLED_ARRAY_3(LED_ARRAY_3)) { return false;}
+    if (ids.checkSERVO(SERVO)) {             return false;}
+    if (ids.checkHORN(HORN)) {               return false;}
+    return true;
 }
 
 // CHECK: define function
