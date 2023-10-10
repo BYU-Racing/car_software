@@ -9,6 +9,7 @@ private:
 
 public:
     // Constructor
+    LEDArray();
     LEDArray(int* pins, int numPins);
 
     // Destructor
