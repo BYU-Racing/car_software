@@ -18,27 +18,21 @@ private:
     // Instantiate attributes
     Actuator** display;
     int numActuators;
-    // CHECK change startTime to unsigned long
     unsigned long startTime;
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
-    // CHECK add getSensorIndex method
-    int getSensorIndex(SensorID sensor);
+    // CHECK: change to int
+    int getSensorIndex(int id);
 
 public:
     // Constructor
-    // CHECK change startTime to unsigned long
-    // CHECK remove numActuators, Dashboard should decide how many actuators there are
-    Dashboard(unsigned long startTime);
+    Dashboard(Actuator** display, unsigned long startTime);
 
     // Destructor
     ~Dashboard();
 
     // Method to update the display based on sensor data
     void updateDisplay();
-
-    // CHECK remove readCANBus 
-    // Method to read data from the CAN bus
-    // void readCANBus();
 };
 
 #endif // DASHBOARD_H
