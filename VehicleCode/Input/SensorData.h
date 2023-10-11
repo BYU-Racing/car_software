@@ -1,3 +1,5 @@
+// TODO: Add class docstring
+
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
@@ -8,14 +10,14 @@ private:
     // Instantiate attributes
     int id;
     int priority;
-    int data;
-    int timeStamp;
+    int* data;
+    unsigned long timeStamp;
 
 public:
     // Constructor
     SensorData();
     // CHECK change timeStamp to unsigned long
-    SensorData(int id, int priority, int data, unsigned long timeStamp);
+    SensorData(int id, int priority, int* data, unsigned long timeStamp);
     // CHECK change canMessage to CAN_message_t
     SensorData(CAN_message_t canMessage);
 
@@ -26,11 +28,11 @@ public:
     int getTimeStamp() const;
     int getId() const;
     int getPriority() const;
-    double getData() const;
+    int* getData() const;
 
     void setId(int id);
     void setPriority(int priority);
-    void setData(double data);
+    void setData(int* data);
     // CHECK allow for setting timestamp
     void setTimeStamp(int timeStamp);
 
