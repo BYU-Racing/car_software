@@ -1,6 +1,8 @@
 # BYU Racing
+
+![Fast car go brrrrrrrrrrrrrrrrrrrrr](https://brightspotcdn.byu.edu/18/68/ccf45f104014895c3a31e0d42d66/car.jpg)
 BYU Racing Team Repository
-<br>BYU Racing Logo</br>
+
 
 ## Our Goals
  - Build a car that runs and won't break
