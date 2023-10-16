@@ -136,15 +136,6 @@
 <wire x1="1.27" y1="1.27" x2="1.27" y2="-1.27" width="0.127" layer="21"/>
 <text x="1.27" y="1.27" size="1.27" layer="21">+</text>
 </package>
-<package name="STR_GAUGE">
-<pad name="P$1" x="-2.54" y="0" drill="0.6" shape="long" rot="R90"/>
-<pad name="P$2" x="2.54" y="0" drill="0.6" shape="long" rot="R90"/>
-<wire x1="-3.81" y1="2.54" x2="-3.81" y2="-2.54" width="0.254" layer="21"/>
-<wire x1="-3.81" y1="-2.54" x2="3.81" y2="-2.54" width="0.254" layer="21"/>
-<wire x1="3.81" y1="-2.54" x2="3.81" y2="2.54" width="0.254" layer="21"/>
-<wire x1="3.81" y1="2.54" x2="-3.81" y2="2.54" width="0.254" layer="21"/>
-<text x="-6.35" y="-5.08" size="1.778" layer="21">STRAIN GAUGE</text>
-</package>
 </packages>
 <packages3d>
 <package3d name="3BY3PINS" urn="urn:adsk.eagle:package:37896854/1" type="box">
@@ -226,14 +217,6 @@
 <wire x1="7.62" y1="5.08" x2="12.7" y2="5.08" width="0.254" layer="94"/>
 <pin name="P$1" x="12.7" y="5.08" length="middle" rot="R180"/>
 <pin name="P$2" x="0" y="5.08" length="middle"/>
-</symbol>
-<symbol name="STR_GAUGE">
-<wire x1="-12.7" y1="5.08" x2="-12.7" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="-12.7" y1="-5.08" x2="12.7" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="12.7" y1="-5.08" x2="12.7" y2="5.08" width="0.254" layer="94"/>
-<wire x1="12.7" y1="5.08" x2="-12.7" y2="5.08" width="0.254" layer="94"/>
-<pin name="H$1" x="-7.62" y="-10.16" length="middle" rot="R90"/>
-<pin name="L$1" x="7.62" y="-10.16" length="middle" rot="R90"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -329,22 +312,6 @@
 <connects>
 <connect gate="G$1" pin="P$1" pad="P$1"/>
 <connect gate="G$1" pin="P$2" pad="P$2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="STR_GAUGE">
-<gates>
-<gate name="G$1" symbol="STR_GAUGE" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="STR_GAUGE">
-<connects>
-<connect gate="G$1" pin="H$1" pad="P$1"/>
-<connect gate="G$1" pin="L$1" pad="P$2"/>
 </connects>
 <technologies>
 <technology name=""/>
