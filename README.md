@@ -10,9 +10,11 @@ BYU Racing Team Repository
 ## Requirements
 <details>
 <summary><B>Rules</B></summary>
-### Rules
-- Brake light [T.3.4]
+<b>Rules</b> 
+ <br>
 
+- Brake light [T.3.4]
+- - Must be visible, even in intense sunlight
 - Accelerator system [T.4]
 -  - Must have two electrically separate sensors 
 - - Sensors must have different transfer functions
