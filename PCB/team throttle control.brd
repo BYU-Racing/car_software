@@ -1915,12 +1915,21 @@ design rules under a new name.</description>
 <signal name="WH_SP3_D">
 <contactref element="WHEEL_SP3" pad="2"/>
 <contactref element="U$3" pad="18-A4/SDA0"/>
-<wire x1="53.34" y1="50.8" x2="53.34" y2="66.04" width="0" layer="19" extent="1-1"/>
+<wire x1="50.3581125" y1="64.5668" x2="49.7332" y2="63.9418875" width="0.3048" layer="16"/>
+<wire x1="49.7332" y1="63.9418875" x2="49.7332" y2="63.0581125" width="0.3048" layer="16"/>
+<wire x1="53.34" y1="59.4513125" x2="53.34" y2="50.8" width="0.3048" layer="16"/>
+<wire x1="49.7332" y1="63.0581125" x2="53.34" y2="59.4513125" width="0.3048" layer="16"/>
+<wire x1="53.34" y1="66.04" x2="51.8668" y2="64.5668" width="0.3048" layer="16"/>
+<wire x1="51.8668" y1="64.5668" x2="50.3581125" y2="64.5668" width="0.3048" layer="16"/>
 </signal>
 <signal name="WH_SP4_D">
 <contactref element="WHEEL_SP4" pad="2"/>
 <contactref element="U$3" pad="19-A5/SCL0"/>
-<wire x1="50.8" y1="50.8" x2="50.8" y2="66.04" width="0" layer="19" extent="1-1"/>
+<wire x1="50.8" y1="61.34473125" x2="50.8" y2="50.8" width="0.3048" layer="16"/>
+<wire x1="49.276" y1="64.13126875" x2="49.276" y2="62.86873125" width="0.3048" layer="16"/>
+<wire x1="49.276" y1="62.86873125" x2="50.8" y2="61.34473125" width="0.3048" layer="16"/>
+<wire x1="50.8" y1="66.04" x2="50.8" y2="65.65526875" width="0.3048" layer="16"/>
+<wire x1="50.8" y1="65.65526875" x2="49.276" y2="64.13126875" width="0.3048" layer="16"/>
 </signal>
 <signal name="ACC_DATA_OUT_1">
 <contactref element="THROTTLE1" pad="2"/>
