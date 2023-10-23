@@ -1,0 +1,4 @@
+{
+  "C_Cpp.errorSquiggles": "enabled",
+  "C_Cpp.default.compilerPath": "/Users/rental/.platformio/packages/toolchain-atmelavr/bin/avr-gcc"
+}
