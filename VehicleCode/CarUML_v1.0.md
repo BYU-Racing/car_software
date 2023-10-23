@@ -7,7 +7,8 @@ by David Reinhardt and Dallin Stewart
 | Revision |    Revised By     |    Checked By        |     Date     |
 |    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
 |    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
-|    1.2   |  Dallin Stewart   |   TBD                | 02 OCT 2023  |
+|    1.2   |  Dallin Stewart   |   TBD                | 02 OCT  2023 |
+|    1.3   |  Dallin Stewart   |   TBD                | 17 OCT  2023 |
 
 ```mermaid
 classDiagram
@@ -35,9 +36,7 @@ classDiagram
     Screen --|> Actuator : Is
     note for Screen "Time\nLap number"
     LEDArray --|> Actuator : Is
-    note for LEDArray "Battery Temperature\mBattery Draw\nBattery Life"
-    Servo --|> Actuator : Is
-    note for Servo "Speed"
+    note for LEDArray "Battery Temp\mBattery Draw\nBattery Life"
     Horn --|> Actuator : Is
     note for Horn "Horn"
 
