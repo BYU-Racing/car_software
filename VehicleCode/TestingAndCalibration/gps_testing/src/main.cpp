@@ -1,9 +1,9 @@
 #include <Arduino.h>
-#include "Input/UARTSensor.h"
+#include "UARTSensor.h"
 #include <SoftwareSerial.h>
 
 // Choose two Arduino pins to use for software serial
-int RXPin = 2;s
+int RXPin = 2;
 int TXPin = 3;
 
 //Default baud of NEO-6M is 9600

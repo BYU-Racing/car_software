@@ -2,10 +2,11 @@
 #define UARTSENSOR_H
 
 #include "Sensor.h"
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 
 
-class UARTSensors : public Sensor {
+class UARTSensor : public Sensor {
 private:
     // Additional attributes specific to UARTSensor
     int* inputPins;
@@ -15,10 +16,8 @@ private:
     int priority;
 public:
     // Constructor
-    UARTSensor(enum SensorID id, int wait_time, int prio);
+    UARTSensor(int id, int wait_time, int prio);
 
-    // Destructor
-    ~UARTSensor();
 
     // Implement the pure virtual functions from the base class
     int* readInputs() override;
