@@ -21,10 +21,9 @@ public:
 
     // Implement the pure virtual functions from the base class
     int* readInputs() override;
-    bool readyToCheck() override;
 
     // Additional methods for UARTSensor
-    void UARTSensor_init(SensorID id);
+    void UARTSensor_init(int id);
 };
 
 #endif // UARTSENSOR_H

@@ -39,5 +39,11 @@
 #define WALKIE_TALKIE 29
 #define UNKNOWN 30
 
+/* 
+ * // CHECK: Got rid of the string component because the arduino code was not 
+ * having it. Hopefully it wasn't super necessary but if it was then we 
+ * might need to think of a different approach. I think arduino prefers to
+ * work with arrays of characters
+ */ 
 
 # endif // SENSORID_H

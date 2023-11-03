@@ -25,7 +25,7 @@ static int uart_data[2];        //UART sensor data array, 0 for sensor 1, 1 for 
 
 
 // FIXME constructor
- UARTSensor::UARTSensor(enum SensorID id, int freq, int prio):Sensor(id, freq, prio) {
+ UARTSensor::UARTSensor(enum SensorID id, int freq, int prio){
     int priority = prio;                //UART priority var
     int waitTime = freq;                //UART wait time var
     SensorID uart_sensor_id = id;       //UART sensor id var
@@ -65,9 +65,4 @@ int* UARTSensor::readInputs() {
     previousUpdateTime = int(millis());
 
     return uart_data;
-};
-
-// TEST checks to see if time to read values
-bool readyToCheck() {
-    return (waitTime <= int(millis()) - previousUpdateTime);
 };
