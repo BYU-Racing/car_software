@@ -1,9 +1,6 @@
-// CHECK all
 #include "DigitalSensor.h"
 #include "../SensorID.h"
 
-
-// CHECK Constructor
 /*!
  * @brief Constructor
  * Initializes the sensor
@@ -24,22 +21,6 @@ DigitalSensor::DigitalSensor(int id, int freq, int prio, int* inputPins) {
 };
 
 
-// CHECK Destructor
-/*! 
- * @brief Destructor
- * Deletes the sensorValue and inputPins arrays
- *
- * @param None
- * @return None
- */
-DigitalSensor::~DigitalSensor() {
-    // delete sensorValue
-    delete[] sensorValue;
-    delete[] inputPins;
-};
-
-
-// CHECK readInputs
 /*! 
  * @brief Read inputs
  * Reads the digital sensor value and returns it
@@ -59,7 +40,6 @@ int* DigitalSensor::readInputs() {
 };
 
 
-// CHECK readyToCheck
 /*! 
  * @brief Ready to check
  * Determines whether the sensor is ready to be read
@@ -73,7 +53,6 @@ bool DigitalSensor::readyToCheck() {
 };
 
 
-// CHECK getId
 /*! 
  * @brief Get ID
  * Returns the ID of the sensor
@@ -86,7 +65,6 @@ int DigitalSensor::getId() const {
 };
 
 
-// CHECK getPriority
 /*!
  * @brief Get priority
  * Returns the priority of the sensor
