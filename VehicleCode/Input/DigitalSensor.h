@@ -2,31 +2,32 @@
 #define DIGITALSENSOR_H
 
 #include "Sensor.h"
+#include "../SensorID.h"
 
 class DigitalSensor : public Sensor {
 private:
-    // Additional attributes specific to DigitalSensor
-
-    int sensorValue = 0;
+    // Instantiate attributes
+    int* inputPins;
+    int waitTime;
+    unsigned long previousUpdateTime = 0;
+    int sensorID;
+    int priority;
+    int* sensorValue;
 
 public:
     // Constructor
-    DigitalSensor(int id, int freq, int prio, int inPins);
+    DigitalSensor(int id, int freq, int prio, int* inputPins);
 
     // Destructor
-    //~DigitalSensor();
+    ~DigitalSensor();
 
     // Implement the pure virtual functions from the base class
-    int readInputs() override;
+    int* readInputs() override;
     bool readyToCheck() override;
 
-    // Additional methods for DigitalSensor
-    int getPins();
-    int getWaitTime();
-    
-    void setPin(int inPins);
-    void setWaitTime(int inWait);
-    void setId(int inId);
+    // CHECK add method to get id and priority
+    int getId() const;
+    int getPriority() const;
 };
 
 #endif // DIGITALSENSOR_H

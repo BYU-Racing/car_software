@@ -1,47 +1,77 @@
 #include "DigitalSensor.h"
+#include "../SensorID.h"
 
-DigitalSensor::DigitalSensor(int id, int freq, int prio, int inPins) {
-    sensorID = id;
-    waitTime = freq;
-    previousUpdateTime = 0;
-    inputPins[4] = -1;
-    inputPins[0] = inPins;
-    priority = prio;
+/*!
+ * @brief Constructor
+ * Initializes the sensor
+ * 
+ * @param id (int) The ID of the sensor
+ * @param freq (int) The frequency at which the sensor should be read
+ * @param prio (int) The priority of the sensor
+ * @param inputPins (int*) An array of ints representing the input pins
+ * @return None
+ */
+DigitalSensor::DigitalSensor(int id, int freq, int prio, int* inputPins) {
+    this->sensorID = id;
+    this->waitTime = freq;
+    this->priority = prio;
+    this->inputPins = inputPins;
+    this->sensorValue = {0};
+    this->previousUpdateTime = millis();
+};
 
-    //Add code so that  -1 is added to the end of the input pins array
-} 
 
-int DigitalSensor::readInputs() {
-
+/*! 
+ * @brief Read inputs
+ * Reads the digital sensor value and returns it
+ * 
+ * @param None
+ * @return sensorValue (int*) A pointer to an array of ints representing the sensor value
+ */
+int* DigitalSensor::readInputs() {
+    //Update previous update time
     previousUpdateTime = millis();
 
-    sensorValue = digitalRead(inputPins[0]);
+    //Grab Sensor Value
+    sensorValue[0] = digitalRead(inputPins[0]);
 
+    //Return a pointer to the private value
     return sensorValue;
-}
-//bool Ready to check
+};
 
+
+/*! 
+ * @brief Ready to check
+ * Determines whether the sensor is ready to be read
+ * 
+ * @param None
+ * @return (bool) True if the sensor is ready to be read, false otherwise
+ */
 bool DigitalSensor::readyToCheck() {
+    //millis gets arduino time
     return (waitTime <= millis() - previousUpdateTime);
-}
+};
 
-int DigitalSensor::getPins() {
-    return inputPins[0];
-}
 
-int DigitalSensor::getWaitTime() {
-    return waitTime;
-}
+/*! 
+ * @brief Get ID
+ * Returns the ID of the sensor
+ * 
+ * @param None
+ * @return sensorID (int) The ID of the sensor
+ */
+int DigitalSensor::getId() const {
+    return sensorID;
+};
 
-void DigitalSensor::setPin(int pin) {
-    inputPins[0] = pin;
-}
 
-void DigitalSensor::setWaitTime(int inWait) {
-    waitTime = inWait;
-}
-
-void DigitalSensor::setId(int inId) {
-    sensorID = inId;
-}
-
+/*!
+ * @brief Get priority
+ * Returns the priority of the sensor
+ * 
+ * @param None
+ * @return priority (int) The priority of the sensor
+ */
+int DigitalSensor::getPriority() const {
+    return priority;
+};
