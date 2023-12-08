@@ -1,8 +1,8 @@
-// TODO: all
+// TODO doc string
 #include "AnalogSensor.h"
 
 //Constructor
-AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins):Sensor(id, freq, prio, inPins) {
+AnalogSensor::AnalogSensor(int id, int freq, int prio, int* inPins){
     int sensorID = id;
     int waitTime = freq;
     int priority = prio;

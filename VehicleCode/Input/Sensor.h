@@ -1,4 +1,4 @@
-// TODO: Add doc string
+// TODO Add doc string
 
 
 #ifndef SENSOR_H
@@ -16,17 +16,18 @@ protected:
     int priority;
 
 public:
-    // Constructor
-    Sensor(int id, int freq, int prio, int* inputPins);
-
-    // Destructor
-    virtual ~Sensor();  // Make the destructor virtual
+    // CHECK: deleted  the constructer and destructor declaration bc we never defined it
 
     // Declare a pure virtual function
     virtual int* readInputs() = 0;
 
     // Method to check if it's ready to read
-    virtual bool readyToCheck() = 0;
+    bool readyToCheck(){
+        // CHECK: @dallin I defined this in this file because it will 
+        // be the same in all of the sensors so it would be redundant 
+        // to define it in each individually
+        return (waitTime <= millis() - previousUpdateTime);
+    }
 };
 
 #endif // SENSOR_H

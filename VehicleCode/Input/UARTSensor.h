@@ -27,8 +27,7 @@ public:
     // Destructor
 
     // Implement the pure virtual functions from the base class
-    int* readInputs() override;
-    bool readyToCheck() override;
+    int* readInputs();
 
     // Additional methods for UARTSensor
 };
