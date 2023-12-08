@@ -6753,7 +6753,6 @@ W = angled&lt;p&gt;
 <sheet>
 <plain>
 <text x="147.32" y="52.07" size="1.778" layer="91">LED dashboard display</text>
-<text x="124.46" y="12.7" size="1.778" layer="91">3 pin header</text>
 </plain>
 <instances>
 <instance part="U$2" gate="G$1" x="88.9" y="72.39" smashed="yes"/>
@@ -7006,11 +7005,6 @@ W = angled&lt;p&gt;
 <junction x="180.34" y="59.69"/>
 <label x="185.42" y="59.69" size="1.778" layer="95"/>
 </segment>
-<segment>
-<pinref part="SV1" gate="G$1" pin="1"/>
-<wire x1="137.16" y1="17.78" x2="139.7" y2="17.78" width="0.1524" layer="91"/>
-<label x="139.7" y="17.78" size="1.778" layer="95"/>
-</segment>
 </net>
 <net name="3.3V" class="0">
 <segment>
@@ -7039,11 +7033,6 @@ W = angled&lt;p&gt;
 <pinref part="U$5" gate="G$1" pin="VCC"/>
 <wire x1="20.32" y1="72.39" x2="15.24" y2="72.39" width="0.1524" layer="91"/>
 <label x="15.24" y="72.39" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="SV1" gate="G$1" pin="2"/>
-<wire x1="137.16" y1="20.32" x2="139.7" y2="20.32" width="0.1524" layer="91"/>
-<label x="139.7" y="20.32" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="N$1" class="0">
@@ -7396,12 +7385,25 @@ W = angled&lt;p&gt;
 <label x="180.34" y="82.55" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="12V" class="0">
+<net name="N$2" class="0">
 <segment>
 <pinref part="SV1" gate="G$1" pin="3"/>
 <wire x1="137.16" y1="22.86" x2="139.7" y2="22.86" width="0.1524" layer="91"/>
 <label x="139.7" y="22.86" size="1.778" layer="95"/>
-<label x="139.7" y="22.86" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$3" class="0">
+<segment>
+<pinref part="SV1" gate="G$1" pin="2"/>
+<wire x1="137.16" y1="20.32" x2="139.7" y2="20.32" width="0.1524" layer="91"/>
+<label x="139.7" y="20.32" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="N$4" class="0">
+<segment>
+<pinref part="SV1" gate="G$1" pin="1"/>
+<wire x1="137.16" y1="17.78" x2="139.7" y2="17.78" width="0.1524" layer="91"/>
+<label x="139.7" y="17.78" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
