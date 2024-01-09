@@ -1099,7 +1099,6 @@
 <part name="WHEEL_SP2" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X3" device="" package3d_urn="urn:adsk.eagle:package:6240710/1"/>
 <part name="CAN1_TEE" library="F-E library custom components" library_urn="urn:adsk.eagle:library:37896846" deviceset="CAN_TEE" device=""/>
 <part name="U$1" library="teensy" deviceset="TEENSY41" device=""/>
-<part name="PWR_H" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="PINHD-1X3" device="" package3d_urn="urn:adsk.eagle:package:6240710/1"/>
 </parts>
 <sheets>
 <sheet>
@@ -1145,10 +1144,6 @@
 <attribute name="NAME" x="30.48" y="76.2" size="1.778" layer="94"/>
 </instance>
 <instance part="U$1" gate="G$1" x="109.22" y="73.66" smashed="yes"/>
-<instance part="PWR_H" gate="A" x="38.1" y="48.26" smashed="yes" rot="R180">
-<attribute name="NAME" x="44.45" y="42.545" size="1.778" layer="95" rot="R180"/>
-<attribute name="VALUE" x="44.45" y="55.88" size="1.778" layer="96" rot="R180"/>
-</instance>
 </instances>
 <busses>
 <bus name="CL">
@@ -1230,11 +1225,6 @@
 <wire x1="109.22" y1="30.48" x2="109.22" y2="22.86" width="0.1524" layer="91"/>
 <label x="111.76" y="22.86" size="1.778" layer="95"/>
 </segment>
-<segment>
-<pinref part="PWR_H" gate="A" pin="1"/>
-<wire x1="40.64" y1="45.72" x2="50.8" y2="45.72" width="0.1524" layer="91"/>
-<label x="50.8" y="45.72" size="1.778" layer="95"/>
-</segment>
 </net>
 <net name="12V" class="0">
 <segment>
@@ -1246,11 +1236,6 @@
 <pinref part="WHEEL_SP2" gate="A" pin="1"/>
 <wire x1="175.26" y1="180.34" x2="165.1" y2="180.34" width="0.1524" layer="91"/>
 <label x="165.1" y="180.34" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="PWR_H" gate="A" pin="3"/>
-<wire x1="40.64" y1="50.8" x2="50.8" y2="50.8" width="0.1524" layer="91"/>
-<label x="50.8" y="50.8" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="3.3V" class="0">
@@ -1281,11 +1266,6 @@
 <pinref part="U$1" gate="G$1" pin="VIN"/>
 <wire x1="111.76" y1="121.92" x2="111.76" y2="124.46" width="0.1524" layer="91"/>
 <label x="111.76" y="124.46" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="PWR_H" gate="A" pin="2"/>
-<wire x1="40.64" y1="48.26" x2="50.8" y2="48.26" width="0.1524" layer="91"/>
-<label x="50.8" y="48.26" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="TX" class="0">
