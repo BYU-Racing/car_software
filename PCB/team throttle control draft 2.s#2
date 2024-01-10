@@ -4876,11 +4876,6 @@ W = angled&lt;p&gt;
 <wire x1="83.82" y1="167.64" x2="83.82" y2="175.26" width="0.1524" layer="91"/>
 <label x="83.82" y="175.26" size="1.778" layer="95"/>
 </segment>
-<segment>
-<wire x1="68.58" y1="101.6" x2="68.58" y2="111.76" width="0.1524" layer="91"/>
-<label x="68.58" y="111.76" size="1.778" layer="95"/>
-<pinref part="U$3" gate="G$1" pin="3V3-1"/>
-</segment>
 </net>
 <net name="5V" class="0">
 <segment>

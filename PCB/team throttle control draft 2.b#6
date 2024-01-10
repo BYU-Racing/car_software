@@ -1895,8 +1895,6 @@ design rules under a new name.</description>
 <wire x1="43.18" y1="66.04" x2="45.72" y2="66.04" width="0.3048" layer="16"/>
 <wire x1="40.64" y1="69.85" x2="46.99" y2="69.85" width="0.3048" layer="16"/>
 <wire x1="34.29" y1="63.5" x2="40.64" y2="69.85" width="0.3048" layer="16"/>
-<contactref element="U$3" pad="3V3-1"/>
-<wire x1="38.1" y1="54.61" x2="68.58" y2="35.56" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="5V">
 <contactref element="STEERING_ANGLE" pad="VCC"/>

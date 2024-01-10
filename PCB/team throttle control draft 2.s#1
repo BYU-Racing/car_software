@@ -4867,11 +4867,6 @@ W = angled&lt;p&gt;
 <label x="114.3" y="48.26" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="THROTTLE1" gate="A" pin="1"/>
-<wire x1="83.82" y1="185.42" x2="83.82" y2="195.58" width="0.1524" layer="91"/>
-<label x="83.82" y="195.58" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="THROTTLE2" gate="A" pin="1"/>
 <wire x1="83.82" y1="167.64" x2="83.82" y2="175.26" width="0.1524" layer="91"/>
 <label x="83.82" y="175.26" size="1.778" layer="95"/>
