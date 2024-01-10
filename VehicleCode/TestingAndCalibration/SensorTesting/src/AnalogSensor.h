@@ -4,7 +4,7 @@
 #define ANALOGSENSOR_H
 
 #include "Sensor.h"
-
+#include <Arduino.h>
 class AnalogSensor : public Sensor {
 private:
     // Additional attributes specific to AnalogSensor
@@ -22,11 +22,9 @@ public:
 
     // Additional methods for AnalogSensor
     
-    //These 2 for testing
     int getPins();
     int getWaitTime();
 
-    //These 3 helped with testing as well
     void setPin(int inPins);
     void setWaitTime(int inWait);
     void setId(int inId);

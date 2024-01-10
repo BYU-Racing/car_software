@@ -4,7 +4,7 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "../SensorID.h"
+#include "SensorID.h"
 
 class Sensor {
 protected:
@@ -22,6 +22,8 @@ public:
     //virtual ~Sensor();
 
     // Declare a pure virtual function
+    // TODO output: array of ints that ends with -1 as an end of array marker
+        // ^^ This for the inputPins Array?
     virtual int readInputs() = 0;
 
     // Method to check if it's ready to read

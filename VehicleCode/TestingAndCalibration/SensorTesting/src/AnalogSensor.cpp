@@ -1,4 +1,6 @@
+// TODO: FIX THE CONSTRUCTOR
 #include "AnalogSensor.h"
+#include <Arduino.h>
 
 //Constructor
 AnalogSensor::AnalogSensor(int id, int freq, int prio, int inPins) {
