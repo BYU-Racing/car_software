@@ -25,6 +25,9 @@
 
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
+#include "AnalogSensor.h"
+#include "Sensor.h"
+#include "SensorData.h"
 // #include "../include/ThrottleWrite.h"
 
 #define POT 24
@@ -41,6 +44,13 @@ int getLow(int percent);
 int getHigh(int percent);
 int speedCalc(int pot);
 
+// initialize throttle sensor
+int throttleID = 1;
+int throttleFreq = 10;
+int throttlePrio = 1;
+int throttlePin = POT;
+AnalogSensor throttle = AnalogSensor(throttleID, throttleFreq, throttlePrio, throttlePin);
+
 
 void setup() {
   Serial.begin(9600);
@@ -49,55 +59,54 @@ void setup() {
   // SET UP CAN
   can1.begin();
   can1.setBaudRate(250000);
+
 }
 
 void loop() {
-  int percent = percentCalc1(analogRead(POT),0);
-  Serial.println(percent/100);
-  int torqueLow = getLow(200);
-  Serial.print("Torque Low: ");
-  Serial.println(torqueLow);
-  int torqueHigh = getHigh(200);
-  Serial.print("Torque High: ");
-  Serial.println(torqueHigh);
-  int speedLow = getLow(percent);
-  Serial.print("Speed Low: ");
-  Serial.println(speedLow);
-  int speedHigh = getHigh(percent);
-  Serial.print("Speed High: ");
-  Serial.println(speedHigh);
-  Serial.println();
+  int percent = 0;
+  double bias = 0;
+  const int torque = 200;
+  if (throttle.readyToCheck()) {
+    // read throttle sensor
+    percent = percentCalc1(throttle.readInputs(), bias);
+    Serial.println(percent/100);
 
-  CAN_message_t msg;
-  msg.len=8;
-  msg.id=1;
-  msg.buf[0]=torqueLow;
-  msg.buf[1]=torqueHigh;
-  msg.buf[2]=speedLow;
-  msg.buf[3]=speedHigh;
-  msg.buf[4]=1;
-  msg.buf[5]=1;
-  msg.buf[6]=0;
-  msg.buf[7]=0;
-  msg.id=2;
-  can1.write(msg);
-  delay(200);
+    // convert to motor controller format
+    int torqueLow = getLow(torque);
+    int torqueHigh = getHigh(torque);
+    int speedLow = getLow(percent);
+    int speedHigh = getHigh(percent);
+
+    // construct formatted data
+    int length = 8;
+    int* sendData = new int[length];
+    sendData[0] = torqueLow;
+    sendData[1] = torqueHigh;
+    sendData[2] = speedLow;
+    sendData[3] = speedHigh;
+    sendData[4] = 1;
+    sendData[5] = 1;
+    sendData[6] = 0;
+    sendData[7] = 0;
+
+    // send CAN message
+    SensorData message = SensorData(throttleID, throttlePrio, sendData, length, millis());
+    can1.write(message.formatCAN());
+  }
+
 }
 
-int percentCalc1(double pot, double bias = 0) {
+int percentCalc1(double pot, double bias=0) {
   double max = 1024;
-  double weight = 10000/max;
-  double percent = (max - pot + bias)* weight;
+  double weight = 10000 / max;
+  double percent = (max - pot + bias) * weight;
   return static_cast<int>(percent);
-  // return percent;
 }
 
 int getLow(int percent) {
-  int low = percent%256;
-  return low;
+  return percent % 256;
 }
 
 int getHigh(int percent) {
-  int high = percent/256;
-  return high;
+  return percent / 256;
 }
