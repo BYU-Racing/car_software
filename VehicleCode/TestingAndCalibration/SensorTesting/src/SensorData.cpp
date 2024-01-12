@@ -47,10 +47,6 @@ void SensorData::setId(int inId) {
     id = inId;
 }
 
-void SensorData::setPriority(int inPriority) {
-    priority = inPriority;
-}
-
 void SensorData::setData(int* inData) {
     data = inData;
 }
