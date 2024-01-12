@@ -17,7 +17,7 @@ SensorData::SensorData(int inId, int inPriority, int* inData, unsigned long inTi
 }
 
 // TODO: Implement this method
-SensorData::SensorData(CAN_Message_t canMessage) {
+SensorData::SensorData(CAN_message_t canMessage) {
     //Need can message template to know where to find each attribute
     id = canMessage.id;
     priority = canMessage.id;
