@@ -3,15 +3,14 @@
 #include <Arduino.h>
 
 //Constructor
-AnalogSensor::AnalogSensor(int id, int freq, int prio, int inPins) {
+AnalogSensor::AnalogSensor(int id, int freq, int inPins) {
 
     sensorID = id;
     waitTime = freq;
-    previousUpdateTime = 0;
+    previousUpdateTime = millis();
     inputPins[0] = inPins;
     inputPins[4] = -1;
     sensorValue = 0;
-    priority = prio;
 };
 
 //readInputs
@@ -32,7 +31,7 @@ int AnalogSensor::readInputs() {
 //readyToCheck
 bool AnalogSensor::readyToCheck() {
     //millis gets arduino time
-    return (waitTime <= millis() - previousUpdateTime);
+    return (waitTime <= int(millis() - previousUpdateTime));
 };
 
 int AnalogSensor::getPins() {

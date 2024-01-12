@@ -11,7 +11,7 @@ private:
     int sensorValue = 0;
 public:
     // Constructor
-    AnalogSensor(int id, int freq, int prio, int inPins); // Id, Frequency, Priority
+    AnalogSensor(int id, int freq, int inPins); // Id, Frequency, Priority
 
     // Destructor
     //~AnalogSensor();
