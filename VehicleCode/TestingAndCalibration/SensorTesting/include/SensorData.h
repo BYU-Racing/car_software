@@ -11,7 +11,6 @@ class SensorData {
 private:
     // Instantiate attributes
     int id;
-    int priority;
     int* data;
     unsigned long timeStamp;
     int dataLength;
@@ -20,7 +19,7 @@ public:
     // Constructor
     SensorData();
     // CHECK change timeStamp to unsigned long
-    SensorData(int id, int priority, int* data, int dataLength, unsigned long timeStamp);
+    SensorData(int id, int* data, int dataLength, unsigned long timeStamp);
     // CHECK change canMessage to CAN_message_t
     SensorData(CAN_message_t canMessage);
 
@@ -34,7 +33,6 @@ public:
     int* getData() const;
 
     void setId(int id);
-    void setPriority(int priority);
     void setData(int* data);
     // CHECK allow for setting timestamp
     void setTimeStamp(unsigned long timeStamp);

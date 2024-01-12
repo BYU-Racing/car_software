@@ -8,25 +8,22 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
 SensorData::SensorData() {
     id = 0;
-    priority = 0;
     data = {0};
     timeStamp = 0;
     dataLength = 0;
 }
 
-SensorData::SensorData(int inId, int inPriority, int* inData, int dataLength, unsigned long inTimeStamp) {
+SensorData::SensorData(int inId, int* inData, int dataLength, unsigned long inTimeStamp) {
     id = inId;
-    priority = inPriority;
     data = inData;
     dataLength = dataLength;
     timeStamp = inTimeStamp;
 }
 
 // CHECK: Implement this method
-SensorData::SensorData(CAN_Message_t canMessage) {
+SensorData::SensorData(CAN_message_t canMessage) {
     id = canMessage.id;
-    priority = canMessage.id;
-    timeStamp = canMessage.timeStamp;
+    timeStamp = canMessage.timestamp;
     dataLength = canMessage.len;
     data = new int[dataLength];
     for (size_t i = 0; i < dataLength; i++) {
@@ -40,10 +37,6 @@ int SensorData::getTimeStamp() const {
 
 int SensorData::getId() const {
     return id;
-}
-
-int SensorData::getPriority() const {
-    return priority;
 }
 
 int* SensorData::getData() const {
@@ -68,14 +61,13 @@ void SensorData::setTimeStamp(unsigned long inTimeStamp) {
 }
 
 // TODO: Implement this method
-CAN_Message_t SensorData::formatCAN() const {
-    CAN_Message_t canMessage;
+CAN_message_t SensorData::formatCAN() const {
+    CAN_message_t canMessage;
     canMessage.id = id;
-    canMessage.priority = priority;
     for (size_t i = 0; i < dataLength; i++) {
         canMessage.buf[i] = data[i];
     }
     canMessage.len = dataLength;
-    canMessage.timeStamp = timeStamp;
+    canMessage.timestamp = timeStamp;
     return canMessage;
 }
