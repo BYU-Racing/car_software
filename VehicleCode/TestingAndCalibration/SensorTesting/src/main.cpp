@@ -55,7 +55,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Start");
 
-  // SET UP CAN
+  // set up CAN
   can1.begin();
   can1.setBaudRate(250000);
 
@@ -65,6 +65,7 @@ void loop() {
   int percent = 0;
   double bias = 0;
   const int torque = 200;
+  Serial.println("not ready");
   if (throttle.readyToCheck()) {
     // read throttle sensor
     percent = percentCalc1(throttle.readInputs(), bias);
@@ -90,6 +91,7 @@ void loop() {
 
     // send CAN message
     SensorData message = SensorData(throttleID, sendData, length, millis());
+    message.toString();
     can1.write(message.formatCAN());
   }
 

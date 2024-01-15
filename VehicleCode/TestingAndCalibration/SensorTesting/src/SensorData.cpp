@@ -14,7 +14,7 @@ SensorData::SensorData() {
 SensorData::SensorData(int inId, int* inData, int dataLength, unsigned long inTimeStamp) {
     id = inId;
     data = inData;
-    dataLength = dataLength;
+    dataLength = 8;
     timeStamp = inTimeStamp;
 }
 
@@ -69,4 +69,16 @@ CAN_message_t SensorData::formatCAN() const {
     canMessage.len = dataLength;
     canMessage.timestamp = timeStamp;
     return canMessage;
+}
+
+void SensorData::toString() const {
+    Serial.println("ID: " + String(id));
+    Serial.println("Timestamp: " + String(timeStamp));
+    Serial.println("Data Length: " + String(dataLength));
+    Serial.print("Data: ");
+    for (int i = 0; i < dataLength; i++) {
+        Serial.print(data[i]);
+        Serial.print(" ");
+    }
+    Serial.println();
 }

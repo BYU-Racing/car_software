@@ -39,6 +39,9 @@ public:
 
     // CHECK change output to CAN_message_t
     CAN_message_t formatCAN() const;
+
+    // print out the data
+    void toString() const;
 };
 
 #endif // SENSORDATA_H
