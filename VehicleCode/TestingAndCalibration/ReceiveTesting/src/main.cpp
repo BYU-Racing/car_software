@@ -5,6 +5,9 @@
 #define POT A0
 const float BIAS = 200;
 const float RANGE = 800 - BIAS;
+const int rescale = 100;
+const int startThreshold = 10;
+const int byteValue = 256;
 
 CAN_message_t rmsg;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
@@ -26,9 +29,15 @@ void loop() {
     Serial.print("ID: ");
     Serial.println(rmsg.id, HEX);
     Serial.print("TORQUE: ");
-    Serial.println(data[1]*256 + data[0]);
+    Serial.println(data[1] * byteValue + data[0]);
     Serial.print("SPEED: ");
-    Serial.println(data[3]*256 + data[2]);
+    
+    // Calculate speed and set it to zero if less than 10
+    int speed = int(data[3] * byteValue + data[2]) / rescale;
+    if (speed < startThreshold) {
+        speed = 0;
+    }   
+    Serial.println(speed);
     Serial.println("");
   }
   else {
