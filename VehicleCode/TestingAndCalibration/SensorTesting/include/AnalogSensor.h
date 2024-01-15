@@ -1,5 +1,3 @@
-// TODO: add doc string
-
 #ifndef ANALOGSENSOR_H
 #define ANALOGSENSOR_H
 
@@ -13,18 +11,15 @@ public:
     // Constructor
     AnalogSensor(int id, int freq, int inPins); // Id, Frequency, Priority
 
-    // Destructor
-    //~AnalogSensor();
-
     // Implement the pure virtual functions from the base class
     int readInputs() override;
     bool readyToCheck() override;
 
-    // Additional methods for AnalogSensor
-    
+    // Getters
     int getPins();
     int getWaitTime();
 
+    // Setters
     void setPin(int inPins);
     void setWaitTime(int inWait);
     void setId(int inId);
