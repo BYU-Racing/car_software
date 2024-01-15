@@ -2,8 +2,6 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 
-FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
-
 // TODO: add docstrings for each method
 
 SensorData::SensorData() {
@@ -26,9 +24,14 @@ SensorData::SensorData(CAN_message_t canMessage) {
     timeStamp = canMessage.timestamp;
     dataLength = canMessage.len;
     data = new int[dataLength];
-    for (size_t i = 0; i < dataLength; i++) {
+    for (int i = 0; i < dataLength; i++) {
         data[i] = canMessage.buf[i];
     }
+}
+
+// CHECK: Implement destructor
+SensorData::~SensorData() {
+    delete[] data;
 }
 
 int SensorData::getTimeStamp() const {
@@ -60,7 +63,7 @@ void SensorData::setTimeStamp(unsigned long inTimeStamp) {
 CAN_message_t SensorData::formatCAN() const {
     CAN_message_t canMessage;
     canMessage.id = id;
-    for (size_t i = 0; i < dataLength; i++) {
+    for (int i = 0; i < dataLength; i++) {
         canMessage.buf[i] = data[i];
     }
     canMessage.len = dataLength;

@@ -39,7 +39,7 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
 // int speedCalc(int);
 
-int percentCalc1(double pot, double bias = 0);
+int percentCalc1(double pot, double bias=0.);
 int getLow(int percent);
 int getHigh(int percent);
 int speedCalc(int pot);
@@ -47,9 +47,8 @@ int speedCalc(int pot);
 // initialize throttle sensor
 int throttleID = 1;
 int throttleFreq = 10;
-int throttlePrio = 1;
 int throttlePin = POT;
-AnalogSensor throttle = AnalogSensor(throttleID, throttleFreq, throttlePrio, throttlePin);
+AnalogSensor throttle = AnalogSensor(throttleID, throttleFreq, throttlePin);
 
 
 void setup() {
@@ -90,13 +89,13 @@ void loop() {
     sendData[7] = 0;
 
     // send CAN message
-    SensorData message = SensorData(throttleID, throttlePrio, sendData, length, millis());
+    SensorData message = SensorData(throttleID, sendData, length, millis());
     can1.write(message.formatCAN());
   }
 
 }
 
-int percentCalc1(double pot, double bias=0) {
+int percentCalc1(double pot, double bias) {
   double max = 1024;
   double weight = 10000 / max;
   double percent = (max - pot + bias) * weight;
