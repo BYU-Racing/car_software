@@ -22,7 +22,7 @@ public:
     SensorData(int id, int* data, int dataLength, unsigned long timeStamp);
     // CHECK change canMessage to CAN_message_t
     SensorData(CAN_message_t canMessage);
-
+    
     // CHECK add destructor
     // Destructor
     ~SensorData();

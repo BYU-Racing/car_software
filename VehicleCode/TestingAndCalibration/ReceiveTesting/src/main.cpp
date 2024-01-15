@@ -23,13 +23,13 @@ void loop() {
   if (can2.read(rmsg)) {
     SensorData msg = SensorData(rmsg);
     int* data = msg.getData();
-    // Serial.print("ID: ");
-    // Serial.println(rmsg.id, HEX);
+    Serial.print("ID: ");
+    Serial.println(rmsg.id, HEX);
     Serial.print("TORQUE: ");
     Serial.println(data[1]*256 + data[0]);
     Serial.print("SPEED: ");
     Serial.println(data[3]*256 + data[2]);
-    Serial.println(" ");
+    Serial.println("");
   }
   else {
     Serial.println("error");
