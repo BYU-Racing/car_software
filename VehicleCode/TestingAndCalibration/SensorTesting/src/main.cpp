@@ -65,7 +65,6 @@ void loop() {
   int percent = 0;
   double bias = 0;
   const int torque = 200;
-  Serial.println("not ready");
   if (throttle.readyToCheck()) {
     // read throttle sensor
     percent = percentCalc1(throttle.readInputs(), bias);
@@ -94,13 +93,14 @@ void loop() {
     message.toString();
     can1.write(message.formatCAN());
   }
-
+  delay(200);
 }
 
 int percentCalc1(double pot, double bias) {
+  Serial.println(pot);
   double max = 1024;
   double weight = 10000 / max;
-  double percent = (max - pot + bias) * weight;
+  double percent = (pot + bias) * weight;
   return static_cast<int>(percent);
 }
 

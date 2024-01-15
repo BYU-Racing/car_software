@@ -11,10 +11,10 @@ SensorData::SensorData() {
     dataLength = 0;
 }
 
-SensorData::SensorData(int inId, int* inData, int dataLength, unsigned long inTimeStamp) {
+SensorData::SensorData(int inId, int* inData, int inDataLength, unsigned long inTimeStamp) {
     id = inId;
     data = inData;
-    dataLength = 8;
+    dataLength = inDataLength;
     timeStamp = inTimeStamp;
 }
 
