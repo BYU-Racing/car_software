@@ -1812,14 +1812,14 @@ design rules under a new name.</description>
 <attribute name="NAME" x="48.9712" y="62.1538" size="1.27" layer="25" ratio="10" rot="R90"/>
 <attribute name="VALUE" x="53.975" y="62.23" size="1.27" layer="27" rot="R90"/>
 </element>
-<element name="SV1" library="con-lstb" library_urn="urn:adsk.eagle:library:162" package="MA03-1" package3d_urn="urn:adsk.eagle:package:8339/1" value="" x="30.48" y="6.35" smashed="yes">
-<attribute name="MF" value="" x="30.48" y="6.35" size="1.778" layer="27" display="off"/>
-<attribute name="MPN" value="" x="30.48" y="6.35" size="1.778" layer="27" display="off"/>
-<attribute name="NAME" x="26.67" y="8.001" size="1.27" layer="25" ratio="10"/>
-<attribute name="OC_FARNELL" value="unknown" x="30.48" y="6.35" size="1.778" layer="27" display="off"/>
-<attribute name="OC_NEWARK" value="unknown" x="30.48" y="6.35" size="1.778" layer="27" display="off"/>
-<attribute name="POPULARITY" value="48" x="30.48" y="6.35" size="1.778" layer="27" display="off"/>
-<attribute name="VALUE" x="26.67" y="3.429" size="1.27" layer="27" ratio="10"/>
+<element name="SV1" library="con-lstb" library_urn="urn:adsk.eagle:library:162" package="MA03-1" package3d_urn="urn:adsk.eagle:package:8339/1" value="" x="60.96" y="68.58" smashed="yes">
+<attribute name="MF" value="" x="60.96" y="68.58" size="1.778" layer="27" display="off"/>
+<attribute name="MPN" value="" x="60.96" y="68.58" size="1.778" layer="27" display="off"/>
+<attribute name="NAME" x="57.15" y="70.231" size="1.27" layer="25" ratio="10"/>
+<attribute name="OC_FARNELL" value="unknown" x="60.96" y="68.58" size="1.778" layer="27" display="off"/>
+<attribute name="OC_NEWARK" value="unknown" x="60.96" y="68.58" size="1.778" layer="27" display="off"/>
+<attribute name="POPULARITY" value="48" x="60.96" y="68.58" size="1.778" layer="27" display="off"/>
+<attribute name="VALUE" x="57.15" y="65.659" size="1.27" layer="27" ratio="10"/>
 </element>
 </elements>
 <signals>
@@ -1862,21 +1862,24 @@ design rules under a new name.</description>
 <wire x1="33.02" y1="35.56" x2="35.56" y2="50.8" width="0" layer="19" extent="1-1"/>
 <wire x1="46.99" y1="38.56" x2="33.02" y2="35.56" width="0" layer="19" extent="1-1"/>
 <wire x1="49.53" y1="38.56" x2="46.99" y2="38.56" width="0" layer="19" extent="1-1"/>
-<wire x1="27.94" y1="6.35" x2="33.02" y2="35.56" width="0" layer="19" extent="1-1"/>
+<wire x1="58.42" y1="68.58" x2="33.02" y2="35.56" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="12V">
 <contactref element="WHEEL_SP3" pad="1"/>
 <contactref element="WHEEL_SP4" pad="1"/>
 <contactref element="BRAKE_SW" pad="2"/>
 <wire x1="53.34" y1="63.5" x2="50.8" y2="63.5" width="0.3048" layer="16"/>
-<wire x1="55.88" y1="63.5" x2="57.15" y2="64.77" width="0.3048" layer="16"/>
+<wire x1="58.42" y1="63.5" x2="55.88" y2="63.5" width="0.3048" layer="16"/>
 <wire x1="55.88" y1="63.5" x2="53.34" y2="63.5" width="0.3048" layer="16"/>
-<wire x1="57.15" y1="64.77" x2="60.96" y2="60.96" width="0.3048" layer="16"/>
+<wire x1="58.42" y1="63.5" x2="60.96" y2="60.96" width="0.3048" layer="16"/>
 <wire x1="93.98" y1="60.96" x2="96.52" y2="58.42" width="0.3048" layer="16"/>
 <wire x1="96.52" y1="58.42" x2="96.52" y2="36.83" width="0.3048" layer="16"/>
 <wire x1="60.96" y1="60.96" x2="93.98" y2="60.96" width="0.3048" layer="16"/>
 <contactref element="SV1" pad="2"/>
-<wire x1="30.48" y1="6.35" x2="50.8" y2="63.5" width="0" layer="19" extent="1-1"/>
+<wire x1="55.88" y1="63.5" x2="57.15" y2="64.77" width="0.3048" layer="16"/>
+<wire x1="57.15" y1="64.77" x2="59.69" y2="64.77" width="0.3048" layer="16"/>
+<wire x1="59.69" y1="64.77" x2="60.96" y2="66.04" width="0.3048" layer="16"/>
+<wire x1="60.96" y1="66.04" x2="60.96" y2="68.58" width="0.3048" layer="16"/>
 </signal>
 <signal name="3.3V">
 <contactref element="U$11" pad="P$1"/>
@@ -1885,20 +1888,22 @@ design rules under a new name.</description>
 <wire x1="38.1" y1="54.61" x2="35.56" y2="54.61" width="0.3048" layer="16"/>
 <wire x1="35.56" y1="54.61" x2="34.29" y2="55.88" width="0.3048" layer="16"/>
 <wire x1="34.29" y1="55.88" x2="34.29" y2="63.5" width="0.3048" layer="16"/>
-<wire x1="48.26" y1="71.12" x2="46.99" y2="69.85" width="0.3048" layer="16"/>
+<wire x1="49.53" y1="72.39" x2="46.99" y2="69.85" width="0.3048" layer="16"/>
 <wire x1="46.99" y1="69.85" x2="46.99" y2="67.31" width="0.3048" layer="16"/>
 <wire x1="45.72" y1="66.04" x2="46.99" y2="67.31" width="0.3048" layer="16"/>
-<wire x1="63.5" y1="71.12" x2="48.26" y2="71.12" width="0.3048" layer="16"/>
+<wire x1="63.5" y1="72.39" x2="49.53" y2="72.39" width="0.3048" layer="16"/>
 <wire x1="43.18" y1="66.04" x2="45.72" y2="66.04" width="0.3048" layer="16"/>
 <wire x1="40.64" y1="69.85" x2="46.99" y2="69.85" width="0.3048" layer="16"/>
 <wire x1="34.29" y1="63.5" x2="40.64" y2="69.85" width="0.3048" layer="16"/>
+<contactref element="U$3" pad="3V3-1"/>
+<wire x1="38.1" y1="54.61" x2="68.58" y2="35.56" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="5V">
 <contactref element="STEERING_ANGLE" pad="VCC"/>
-<wire x1="67.31" y1="69.85" x2="68.58" y2="68.58" width="0.3048" layer="16"/>
-<wire x1="68.58" y1="68.58" x2="68.58" y2="62.23" width="0.3048" layer="16"/>
 <contactref element="SV1" pad="3"/>
-<wire x1="33.02" y1="6.35" x2="68.58" y2="62.23" width="0" layer="19" extent="1-1"/>
+<wire x1="68.58" y1="62.23" x2="68.58" y2="66.04" width="0.3048" layer="16"/>
+<wire x1="68.58" y1="66.04" x2="66.04" y2="68.58" width="0.3048" layer="16"/>
+<wire x1="66.04" y1="68.58" x2="63.5" y2="68.58" width="0.3048" layer="16"/>
 </signal>
 <signal name="T2_DP_2">
 <contactref element="STEERING_ANGLE" pad="PH_B"/>
