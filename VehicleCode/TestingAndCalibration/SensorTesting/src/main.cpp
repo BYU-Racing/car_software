@@ -45,14 +45,14 @@ void loop() {
   const int torque = 200;
   if (throttle1.readyToCheck() && throttle2.readyToCheck()) {
     // read throttle sensor
-    // percent1 = percentCalc(throttle1.readInputs(), bias, 1024);
-    percent2 = percentCalc(throttle2.readInputs(), 93, 962);
-    // Serial.print("Throttle 1: ");
-    // Serial.println(percent1);
+    percent1 = percentCalc(throttle1.readInputs(), bias, 1024);
+    percent2 = percentCalc(throttle2.readInputs(), 0, 300);
+    Serial.print("Throttle 1: ");
+    Serial.println(percent1);
     Serial.print("Throttle 2: ");
     Serial.println(percent2);
 
-    // if(abs(percent1 - percent2) < 25){
+    if(abs(percent1 - percent2) < 1000){
       int length = 8;
 
       int* sendData = buildData(torque, percent2);
@@ -61,9 +61,12 @@ void loop() {
       SensorData message = SensorData(ID1, sendData, length, millis());
       // message.toString();
       can1.write(message.formatCAN());
-    // }
+    }
+    else{
+      Serial.println("Throttle mismatch");
+    }
   }
-  delay(1000);
+  // delay(1000);
 }
 
 int* buildData(int torque, int percent){
@@ -89,7 +92,7 @@ int* buildData(int torque, int percent){
 }
 
 int percentCalc(double pot, double bias, double max) {
-  Serial.println(pot);
+  // Serial.println(pot);
   double weight = 10000 / max;
   double percent = (pot + bias) * weight;
   return static_cast<int>(percent);
