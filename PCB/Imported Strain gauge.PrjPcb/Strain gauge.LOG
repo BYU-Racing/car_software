@@ -1,0 +1,128 @@
+Importer Log Report
+Project : Group
+
+Section : Analyze Document - C:\Users\david\Documents\GitHub\FormulaE\PCB\F-E library custom components.lbr
+    Analyzing data of C:\Users\david\Documents\GitHub\FormulaE\PCB\F-E library custom components.lbr
+    Load settings
+    Load layers 62
+    Load library
+    Load Library library
+    Load Library ""
+    Load Packages 4
+    ERROR: Unhandled typepackages3d
+    Load Symbols 4
+    Load DeviceSets 4
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+EndSection
+
+Section : Analyze Document - C:\Users\david\Documents\GitHub\FormulaE\PCB\Teensy4.1.lbr
+    Analyzing data of C:\Users\david\Documents\GitHub\FormulaE\PCB\Teensy4.1.lbr
+    Load settings
+    Load layers 46
+    Load library
+    Load Library library
+    Load Library ""
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+EndSection
+
+Section : Analyze Document - C:\Users\david\Documents\GitHub\FormulaE\PCB\Strain gauge.brd
+    Analyzing data of C:\Users\david\Documents\GitHub\FormulaE\PCB\Strain gauge.brd
+    Load settings
+    Load layers 131
+    Load board
+    Load Library "adafruit"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Library "con-molex"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Library "teensy"
+    Load Packages 1
+    ERROR: Unhandled typemfgpreviewcolors
+EndSection
+
+Section : Analyze Document - C:\Users\david\Documents\GitHub\FormulaE\PCB\Strain gauge.sch
+    Analyzing data of C:\Users\david\Documents\GitHub\FormulaE\PCB\Strain gauge.sch
+    Load settings
+    Load layers 131
+    Load schematic
+    Load Libraries 3
+    Load Library "teensy"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "con-molex"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Symbols 2
+    Load DeviceSets 1
+    ERROR: Unhandled typepackage3dinstances
+    Load Library "adafruit"
+    Load Packages 2
+    ERROR: Unhandled typepackages3d
+    Load Symbols 1
+    Load DeviceSets 1
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    Load Attributes 0
+    Load Classes 1
+    Load Parts 9
+    Load Sheets 1
+EndSection
+
+Section : Analyze Document - C:\Users\david\Documents\GitHub\FormulaE\PCB\team back ECU.brd
+    Analyzing data of C:\Users\david\Documents\GitHub\FormulaE\PCB\team back ECU.brd
+    Load settings
+    Load layers 131
+    Load board
+    Load Library "adafruit"
+    Load Packages 5
+    ERROR: Unhandled typepackages3d
+    Load Library "F-E library custom components"
+    Load Packages 1
+    Load Library "teensy"
+    Load Packages 1
+    ERROR: Unhandled typemfgpreviewcolors
+EndSection
+
+Section : Analyze Document - C:\Users\david\Documents\GitHub\FormulaE\PCB\team back ECU.sch
+    Analyzing data of C:\Users\david\Documents\GitHub\FormulaE\PCB\team back ECU.sch
+    Load settings
+    Load layers 131
+    Load schematic
+    Load Libraries 3
+    Load Library "teensy"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "F-E library custom components"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "adafruit"
+    Load Packages 13
+    ERROR: Unhandled typepackages3d
+    Load Symbols 3
+    Load DeviceSets 3
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    Load Attributes 0
+    Load Classes 1
+    Load Parts 11
+    Load Sheets 1
+EndSection
