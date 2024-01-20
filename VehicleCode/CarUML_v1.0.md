@@ -55,7 +55,6 @@ classDiagram
     Error : -int errorType
     Error : -std:string errorMessage
     Error : -bool shutDown
-    Error --|> SensorData : Is
 
     class Dashboard
     Dashboard : -Actuator[] display
