@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
+#include <string>
 #include "AnalogSensor.h"
 #include "Sensor.h"
 #include "SensorData.h"
+#include "Error.h"
 
 
 // throttle sensor variables
@@ -92,21 +94,41 @@ void loop() {
 
     // build normal CAN message
     int* sendData = new int[length];
+    bool errorFound = false;
     if (countMismatch <= maintainTol) {
       sendData = buildData(torque, percent1);
     }
     // build 0 value CAN message
     else if (countMismatch < shutdownTol) {
       sendData = buildData(0, 0);
+      // int errorLevel = 1;
+      // int errLength = 2
+      // int* mismatch = new int[errLength]{ percent1, percent2 };
+      // std::string errorMessage = "throttle mismatch";
+      
+      // Error message = Error(ID1, mismatch, errLength, millis(), "Throttle", errorLevel, errorMessage, false);
+      // can1.write(message.formatCAN());
+      // delete[] mismatch;
     }
-    // TODO build error message to shut down
+    
+    // TODO figure out how to send the error over can or otherwise communicate with Car
     else {
-      sendData = buildData(-1, -1);
+      errorFound = true;
+      // int errorLevel = 3;
+      // int errLength = 2
+      // int* mismatch = new int[errLength]{ percent1, percent2 };
+      // std::string errorMessage = "throttle mismatch for over 100 ms";
+      
+      // Error message = Error(ID1, mismatch, errLength, millis(), "Throttle", errorLevel, errorMessage, true);
+      // can1.write(message.formatCAN());
+      // delete[] mismatch;
     }
     
     // send CAN message
-    SensorData message = SensorData(ID1, sendData, length, millis());
-    can1.write(message.formatCAN());
+    if (!errorFound) {
+      SensorData message = SensorData(ID1, sendData, length, millis());
+      can1.write(message.formatCAN());
+    }
     delete[] sendData;
 
   }

@@ -1,5 +1,3 @@
-// TODO: Add class docstring
-
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
@@ -8,7 +6,7 @@
 #include <FlexCAN_T4.h>
 
 class SensorData {
-private:
+protected:
     // Instantiate attributes
     int id;
     int* data;
@@ -39,8 +37,6 @@ public:
 
     // CHECK change output to CAN_message_t
     CAN_message_t formatCAN() const;
-
-    // print out the data
     void toString() const;
 };
 
