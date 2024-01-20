@@ -9,6 +9,7 @@ by David Reinhardt and Dallin Stewart
 |    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
 |    1.2   |  Dallin Stewart   |   TBD                | 02 OCT  2023 |
 |    1.3   |  Dallin Stewart   |   TBD                | 17 OCT  2023 |
+|    1.4   |  Dallin Stewart   |   TBD                | 20 JAN  2024 |
 
 ```mermaid
 classDiagram
@@ -51,10 +52,11 @@ classDiagram
     SensorData : SensorData()
 
     class Error
-    Error : -std:string sensorName
+    Error : -string sensorName
     Error : -int errorType
-    Error : -std:string errorMessage
+    Error : -string errorMessage
     Error : -bool shutDown
+    Error --|> SensorData : Is
 
     class Dashboard
     Dashboard : -Actuator[] display
