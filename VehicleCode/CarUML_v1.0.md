@@ -50,6 +50,13 @@ classDiagram
     SensorData : SensorData(id, priority, data, timeStamp)
     SensorData : SensorData()
 
+    class Error
+    Error : -std:string sensorName
+    Error : -int errorType
+    Error : -std:string errorMessage
+    Error : -bool shutDown
+    Error --|> SensorData : Is
+
     class Dashboard
     Dashboard : -Actuator[] display
     Dashboard : -int timeZero
