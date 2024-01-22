@@ -5,6 +5,21 @@
 
 /**
  * @brief Default constructor for SensorData class
+ * 
+ * Instructions to send an ERROR message:
+ * inId = IDERROR = 0
+ * inData = {sensorID, shutDown, errorType, **errorData}
+ * inDataLength = 3 + errorDataLength
+ * inTimeStamp = millis()
+ * 
+ * shutDown:
+ *      0: No shutdown
+ *      1: Shutdown
+ * errorType:
+ *      0: No Error
+ *      1: Warning
+ *      2: Critical
+ *      3: Fatal
 */
 SensorData::SensorData() {
     id = 0;

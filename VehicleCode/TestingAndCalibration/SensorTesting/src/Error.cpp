@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "SensorData.h"
 
+// Note from the author Dallin
+// I don't think we need this class. Instead we will send a SensorData object with a custom format.
 
 /**
  * @brief Default constructor for Error class
