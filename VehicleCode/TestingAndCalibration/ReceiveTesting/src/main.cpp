@@ -25,24 +25,29 @@ void loop() {
   
   if (can2.read(rmsg)) {
     SensorData msg = SensorData(rmsg);
-    int* data = msg.getData();
-    Serial.print("ID: ");
-    Serial.println(rmsg.id, HEX);
-    Serial.print("TORQUE: ");
-    Serial.println(data[1] * byteValue + data[0]);
-    Serial.print("SPEED: ");
-    
-    // Calculate speed and set it to zero if less than 10
-    int speed = int(data[3] * byteValue + data[2]) / rescale;
-    if (speed < startThreshold) {
-        speed = 0;
-    }   
-    Serial.println(speed);
-    Serial.println("");
+    if (msg.getId() == 0) {
+      Serial.println("Error message received");
+    }
+    else {
+      int* data = msg.getData();
+      Serial.print("ID: ");
+      Serial.println(rmsg.id, HEX);
+      Serial.print("TORQUE: ");
+      Serial.println(data[1] * byteValue + data[0]);
+      Serial.print("SPEED: ");
+      
+      // Calculate speed and set it to zero if less than 10
+      int speed = int(data[3] * byteValue + data[2]) / rescale;
+      if (speed < startThreshold) {
+          speed = 0;
+      }   
+      Serial.println(speed);
+      Serial.println("");
+    }
   }
   else {
     Serial.println("error");
     delay(10);
   }
-  delay(1000);
+  // delay(1000);
 }
