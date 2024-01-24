@@ -20,8 +20,8 @@
 #define maxPercent 10000
 
 // error variables
-#define errorTol 400
-#define maintainTol 1
+#define errorTol 1000
+#define maintainTol 2
 #define shutdownTol 10
 #define errorDataLength 7
 #define shutDown 1
@@ -34,7 +34,7 @@
 // CAN message variables
 #define length 8
 #define byteSize 256
-#define delayBy 500
+#define delayBy 0
 
 
 // HELPER FUNCTIONS
@@ -42,6 +42,7 @@
 int* buildData(int, int);
 int getLow(int);
 int getHigh(int);
+void sendError(int*, int, int);
 
 
 // initialize data processing variables
@@ -86,10 +87,10 @@ void loop() {
     Serial.print(input1);
     Serial.print(" | 2: ");
     Serial.println(input2);
-    Serial.print("Throttle 1: ");
-    Serial.print(percent1);
-    Serial.print(" | 2: ");
-    Serial.println(percent2);
+    // Serial.print("Throttle 1: ");
+    // Serial.print(percent1);
+    // Serial.print(" | 2: ");
+    // Serial.println(percent2);
 
     // check for mismatch
     int* sendData = new int[length];
@@ -98,7 +99,7 @@ void loop() {
     }
     else {
       countMismatch++;
-      Serial.print("^ throttle mismatch ^ = ");
+      Serial.print("\t\t\t << throttle mismatch ^ = ");
       Serial.println(countMismatch);
     }
 
@@ -108,14 +109,9 @@ void loop() {
       sendData = buildData(torque, percent1);
     }
     // build 0 value CAN message
-    else if (countMismatch < shutdownTol) {
-      sendData = buildData(0, 0);
-      sendError(sendData, noShutDown, warning);
-    }
-    // build error CAN message
     else {
-      errorFound = true;
-      sendError(sendData, shutDown, fatal);
+      sendData = buildData(0, 0);
+      // sendError(sendData, noShutDown, warning);
     }
     
     // send CAN message
@@ -123,7 +119,7 @@ void loop() {
       SensorData message = SensorData(ID1, sendData, length, millis());
       can1.write(message.formatCAN());
     }
-    delete[] sendData;
+    // delete sendData;
 
   }
   delay(delayBy);

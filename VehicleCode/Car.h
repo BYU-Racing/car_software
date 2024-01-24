@@ -12,6 +12,7 @@ private:
     std::string fileName;     // File name for logging data
     int throttlePosition;     // Throttle position
     int timeZero;             // Starting time
+    File dataFile;            // File for logging data
 
 public:
     // Constructor
@@ -29,17 +30,17 @@ public:
     // Method to shut down the car
     void shutdown();
 
-    // Method for emergency shutdown
-    void emergencyShutdown();
-
     // Method to update the motor
-    void updateMotor();
+    void updateMotor(CAN_message_t canMessage);
 
     // Method to check if the car is active
     bool checkActive();
 
-    // Method to read sensors
-    void readSensors();
+    // Method to turn the key
+    void turnKey();
+
+    // Method to push to start
+    void pushStart();
 };
 
 #endif // CAR_H
