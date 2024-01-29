@@ -8,11 +8,12 @@
 //  *  INSTRUCTIONS:
 //  * Copy the constants you need into your code
 // */
-// #define KEY_SWITCH 0
-// #define BATTERY_TEMP 1
-// #define COOLANT_TEMP 2
-// #define ACCELERATOR_POT_1 3
-// #define ACCELERATOR_POT_2 4
+// #define ID_ERROR 0
+// #define KEY_SWITCH !
+// #define BATTERY_TEMP 3
+// #define COOLANT_TEMP 4
+// #define ACCELERATOR_POT_1 1
+// #define ACCELERATOR_POT_2 2
 // #define WHEEL_SPEED_FL 5
 // #define WHEEL_SPEED_FR 6
 // #define WHEEL_SPEED_RL 7

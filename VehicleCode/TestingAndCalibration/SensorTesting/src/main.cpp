@@ -5,36 +5,37 @@
 #include "Sensor.h"
 #include "SensorData.h"
 #include "Error.h"
+#include "DataCollector.h"
 
 
 // throttle sensor variables
 #define POT1 24
 #define POT2 25
-#define IDERROR 0
-#define ID1 1
-#define ID2 2
-#define bias1 0
-#define bias2 0
-#define max1 1024
-#define max2 1000
-#define maxPercent 10000
+#define ID_ERROR 0
+#define ACCELERATOR_POT_1 1
+#define ACCELERATOR_POT_2 2
+#define WHEEL_SPEED_FL 5
+#define BIAS1 0
+#define BIAS2 0
+#define MAX1 1024
+#define MAX2 1000
+#define MAX_PERCENT 10000 // 10,000
 
 // error variables
-#define errorTol 1000
-#define maintainTol 2
-#define shutdownTol 10
-#define errorDataLength 7
-#define shutDown 1
-#define noShutDown 0
-#define noError 0
-#define warning 1
-#define critical 2
-#define fatal 3
+#define ERROR_TOL 1000
+#define MAINTAIN_TOL 2
+#define ERRORDATALENGTH 7
+#define SHUTDOWN 1
+#define NO_SHUTDOWN 0
+#define WARNING 1
+#define CRITICAL 2
+#define FATAL 3
 
 // CAN message variables
-#define length 8
-#define byteSize 256
-#define delayBy 0
+#define LENGTH 8
+#define DELAYBY 0
+#define BEGIN 9600      // 9,600
+#define BAUDRATE 250000 // 250,000
 
 
 // HELPER FUNCTIONS
@@ -56,20 +57,28 @@ int countMismatch = 0;
 
 // initialize throttle sensor
 int throttleFreq = 10;
-AnalogSensor throttle1 = AnalogSensor(ID1, throttleFreq, POT1);
-AnalogSensor throttle2 = AnalogSensor(ID2, throttleFreq, POT2);
+int numSensors = 3;
+AnalogSensor throttle1 = AnalogSensor(ACCELERATOR_POT_1, throttleFreq, POT1, BIAS1, MAX1, LENGTH);
+AnalogSensor throttle2 = AnalogSensor(ACCELERATOR_POT_2, throttleFreq, POT2, BIAS2, MAX2, LENGTH);
+AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
+Sensor* sensors[] = {&throttle1, &throttle2, &tireSpeed1};
+DataCollector collector = DataCollector(sensors, numSensors, millis());
 
 
 
 // MAIN -------------------------------------------------------------------------------------------
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(BEGIN);
   Serial.println("Start");
 
   // set up CAN
   can1.begin();
-  can1.setBaudRate(250000);
+  can1.setBaudRate(BAUDRATE);
+
+  // TEST: I think this should be here but idk if it will cause a problem
+  collector.setCAN(can1);
+  collector.resetTimeZero(millis());
 }
 
 
@@ -77,10 +86,10 @@ void loop() {
  
   if (throttle1.readyToCheck() && throttle2.readyToCheck()) {
     // read throttle sensor
-    input1 = throttle1.readInputs();
-    input2 = throttle2.readInputs();
-    percent1 = map(input1, bias1, max1, 0, maxPercent);
-    percent2 = map(input2, bias2, max2, 0, maxPercent);
+    percent1 = throttle1.readInputs();
+    percent2 = throttle2.readInputs();
+    // percent1 = map(input1, BIAS1, MAX1, 0, MAX_PERCENT);
+    // percent2 = map(input2, BIAS2, MAX2, 0, MAX_PERCENT);
 
     // print throttle values
     Serial.print("  Input  1: ");
@@ -93,8 +102,8 @@ void loop() {
     // Serial.println(percent2);
 
     // check for mismatch
-    int* sendData = new int[length];
-    if (abs(percent1 - percent2) < errorTol) {
+    int* sendData = new int[LENGTH];
+    if (abs(percent1 - percent2) < ERROR_TOL) {
       countMismatch = 0;
     }
     else {
@@ -105,58 +114,30 @@ void loop() {
 
     // build normal CAN message
     bool errorFound = false;
-    if (countMismatch <= maintainTol) {
-      sendData = buildData(torque, percent1);
+    if (countMismatch <= MAINTAIN_TOL) {
+      sendData = throttle1.buildData(torque, percent1);
     }
     // build 0 value CAN message
     else {
-      sendData = buildData(0, 0);
-      // sendError(sendData, noShutDown, warning);
+      sendData = throttle1.buildData(0, 0);
     }
     
     // send CAN message
     if (!errorFound) {
-      SensorData message = SensorData(ID1, sendData, length, millis());
+      SensorData message = SensorData(ACCELERATOR_POT_1, sendData, LENGTH, millis());
       can1.write(message.formatCAN());
     }
     // delete sendData;
 
   }
-  delay(delayBy);
+  delay(DELAYBY);
 }
 
 
 
 // HELPER FUNCTIONS -------------------------------------------------------------------------------
 
-/**
- * @brief Builds the data array for the CAN message.
- * 
- * @param torque (int) The torque value to be sent.
- * @param percent (int) The percent value to be sent.
- * 
- * @return (int*) The data array for the CAN message.
-*/
-int* buildData(int torque, int percent){
-    // convert to motor controller format
-    int torqueLow = getLow(torque);
-    int torqueHigh = getHigh(torque);
-    int speedLow = getLow(percent);
-    int speedHigh = getHigh(percent);
 
-    // construct formatted data
-    int* sendData = new int[length];
-    sendData[0] = torqueLow;
-    sendData[1] = torqueHigh;
-    sendData[2] = speedLow;
-    sendData[3] = speedHigh;
-    sendData[4] = 1;
-    sendData[5] = 1;
-    sendData[6] = 0;
-    sendData[7] = 0;
-
-    return sendData;
-}
 
 
 /**
@@ -173,37 +154,13 @@ int* buildData(int torque, int percent){
  *                          3: Fatal
 */
 void sendError(int* sendData, int command, int errorType) {
-    sendData[0] = ID1;
+    sendData[0] = ACCELERATOR_POT_1;
     sendData[1] = command;
     sendData[2] = errorType;
     sendData[3] = input1;
     sendData[4] = input2;
     sendData[5] = percent1;
     sendData[6] = percent2;
-    SensorData message = SensorData(IDERROR, sendData, errorDataLength, millis());
+    SensorData message = SensorData(ID_ERROR, sendData, ERRORDATALENGTH, millis());
     can1.write(message.formatCAN());
-}
-
-
-/**
- * @brief Gets the low byte of a percent value.
- * 
- * @param percent (int) The percent value to be converted.
- * 
- * @return (int) The low byte of the percent value.
-*/
-int getLow(int percent) {
-  return percent % byteSize;
-}
-
-
-/**
- * @brief Gets the high byte of a percent value.
- * 
- * @param percent (int) The percent value to be converted.
- * 
- * @return (int) The high byte of the percent value.
-*/
-int getHigh(int percent) {
-  return percent / byteSize;
 }
