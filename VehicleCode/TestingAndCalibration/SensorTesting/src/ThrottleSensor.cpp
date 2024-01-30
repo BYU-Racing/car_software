@@ -18,14 +18,15 @@
  * @param freq (int) The update delay of the sensor in milliseconds.
  * @param inPins (int) The input pin id for the analog sensor.
  */
-ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPins, int bias, int max, int dataLength) {
+ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int bias, int max, int dataLength) {
     sensorID = id;
     this->waitTime = waitTime;
     previousUpdateTime = millis();
-    inputPins[0] = inPins;
-    inputPins[4] = -1;
+    inputPins[0] = inPin1;
+    inputPins[1] = inPin2;
     throttle1 = 0;
     throttle2 = 0;
+    torque = 200;
     this->bias = bias;
     this->max = max;
     this->dataLength = dataLength;
@@ -47,31 +48,34 @@ int ThrottleSensor::readInputs() {
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
-      return throttle1;
+      return (throttle1 + throttle2) / 2;
     }
     return 0;
     
 };
 
+
+/**
+ * @brief Check if both throttle sensors are within ERROR_TOL of each other.
+
+ * @param percent1 (int) The percent value recorded by throttle 1.
+ * @param percent2 (int) The percent value recorded by throttle 2.
+ * 
+ * @return (bool) True if the number of consequetive mismatches is less than MAINTAIN_TOL,
+ *                  False otherwise.
+*/
 bool ThrottleSensor::checkError(int percent1, int percent2) {
+    
+    // update countMismatch
     if (abs(percent1 - percent2) < ERROR_TOL) {
       countMismatch = 0;
     }
     else {
       countMismatch++;
-      Serial.print("\t\t\t << throttle mismatch ^ = ");
-      Serial.println(countMismatch);
     }
 
-    // build normal CAN message
-    bool errorFound = false;
-    if (countMismatch <= MAINTAIN_TOL) {
-      sendData = buildData(torque, percent1);
-    }
-    // build 0 value CAN message
-    else {
-      sendData = buildData(0, 0);
-    }
+    // return the status of the error
+    return countMismatch <= MAINTAIN_TOL;
 }
 
 
@@ -83,7 +87,10 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * 
  * @return (int*) The data array for the CAN message.
 */
-int* ThrottleSensor::buildData(int torque, int percent){
+int* ThrottleSensor::buildData(int percent){
+    // determine torque
+    int torque = computeTorque(percent);
+
     // convert to motor controller format
     int torqueLow = getLow(torque);
     int torqueHigh = getHigh(torque);
@@ -102,6 +109,15 @@ int* ThrottleSensor::buildData(int torque, int percent){
     sendData[7] = 0;
 
     return sendData;
+}
+
+/**
+ * @brief Compute the torque value from the percent value.
+ * @param percent (int) The percent value to be converted.
+ * @return (int) The torque value.
+*/
+int ThrottleSensor::computeTorque(int percent) {
+  return torque;
 }
 
 
@@ -188,8 +204,8 @@ int ThrottleSensor::getDataLength() {
  * @brief Set the input pin for the analog sensor.
  * @param inPins (int) The new input pin number.
  */
-void ThrottleSensor::setPin(int inPins) {
-    inputPins[0] = inPins;
+void ThrottleSensor::setPin(int inPin, int index=0) {
+    inputPins[index] = inPin;
 }
 
 /**

@@ -16,12 +16,11 @@
  * @param freq (int) The update delay of the sensor in milliseconds.
  * @param inPins (int) The input pin id for the analog sensor.
  */
-AnalogSensor::AnalogSensor(int id, int waitTime, int inPins, int bias, int max, int dataLength) {
+AnalogSensor::AnalogSensor(int id, int waitTime, int inPin, int bias, int max, int dataLength) {
     sensorID = id;
     this->waitTime = waitTime;
     previousUpdateTime = millis();
-    inputPins[0] = inPins;
-    inputPins[4] = -1;
+    inputPins[0] = inPin;
     sensorValue = 0;
     this->bias = bias;
     this->max = max;
@@ -121,10 +120,10 @@ int AnalogSensor::getDataLength() {
 
 /**
  * @brief Set the input pin for the analog sensor.
- * @param inPins (int) The new input pin number.
+ * @param inPin (int) The new input pin number.
  */
-void AnalogSensor::setPin(int inPins) {
-    inputPins[0] = inPins;
+void AnalogSensor::setPin(int inPin, int index=0) {
+    inputPins[index] = inPin;
 }
 
 /**

@@ -55,11 +55,11 @@ void DataCollector::checkSensors() {
  */
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
-    int rawData = sensor->readInputs();
     int sensorID = sensor->getId();
+    int rawData = sensor->readInputs();
     int dataLength = sensor->getDataLength();
     unsigned long timestamp = millis() - timeZero;
-    int* sendData = sensor->buildData(TORQUE_DEFAULT, rawData);
+    int* sendData = sensor->buildData(rawData);
 
     // Create a new sensor data object for each int in the array
     SensorData sensorData = SensorData(sensorID, sendData, dataLength, timestamp);
