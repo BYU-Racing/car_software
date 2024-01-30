@@ -2,13 +2,25 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 
-FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
-
 
 /**
- * @brief Default constructor for SensorData class.
- * Initializes a SensorData object with default values.
- */
+ * @brief Default constructor for SensorData class
+ * 
+ * Instructions to send an ERROR message:
+ * inId = IDERROR = 0
+ * inData = {sensorID, shutDown, errorType, **errorData}
+ * inDataLength = 3 + errorDataLength
+ * inTimeStamp = millis()
+ * 
+ * shutDown:
+ *      0: No shutdown
+ *      1: Shutdown
+ * errorType:
+ *      0: No Error
+ *      1: Warning
+ *      2: Critical
+ *      3: Fatal
+*/
 SensorData::SensorData() {
     id = 0;
     data = {0};
@@ -17,24 +29,27 @@ SensorData::SensorData() {
 }
 
 /**
- * @brief Parameterized constructor for SensorData class.
- *
- * @param inId (int) The ID of the sensor data.
- * @param inData (int*) Pointer to the data array of arbitrary length.
- * @param dataLength (int) Length of the data array.
- * @param inTimeStamp (unsigned long) The timestamp of the sensor data.
- */
-SensorData::SensorData(int inId, int* inData, int dataLength, unsigned long inTimeStamp) {
+ * @brief Constructor for SensorData class
+ * 
+ * @param inId (int) The unique identifier for the sensor.
+ * @param inData (int*) The data from the sensor.
+ * @param inDataLength (int) The length of the data array.
+ * @param inTimeStamp (unsigned long) The timestamp of the data.
+*/
+SensorData::SensorData(int inId, int* inData, int inDataLength, unsigned long inTimeStamp) {
     id = inId;
     data = inData;
-    dataLength = dataLength;
+    dataLength = inDataLength;
     timeStamp = inTimeStamp;
 }
 
+// CHECK: Implement this method
 /**
- * @brief Constructor for SensorData class from CAN message.
- * @param canMessage (CAN_message_t) The CAN message to convert to SensorData.
- */
+ * @brief CAN Constructor for SensorData class
+ * 
+ * @param canMessage (CAN_message_t) The CAN message to be converted to a SensorData.
+ * Everything else is the same as the other constructor.
+*/
 SensorData::SensorData(CAN_message_t canMessage) {
     id = canMessage.id;
     timeStamp = canMessage.timestamp;
@@ -46,65 +61,49 @@ SensorData::SensorData(CAN_message_t canMessage) {
 }
 
 /**
- * @brief Destructor for SensorData class.
- * Deallocates memory for the data array.
- */
+ * @brief Destructor for SensorData class
+*/
 SensorData::~SensorData() {
     delete[] data;
 }
 
-/**
- * @brief Get the timestamp of the sensor data.
- * @return (int) The timestamp value.
- */
+
+// Getters and Setters
+
 int SensorData::getTimeStamp() const {
     return timeStamp;
 }
 
-/**
- * @brief Get the ID of the sensor data.
- * @return (int) The ID value.
- */
 int SensorData::getId() const {
     return id;
 }
 
-/**
- * @brief Get the pointer to the data array.
- * @return (int*) Pointer to the data array.
- */
 int* SensorData::getData() const {
     return data;
 }
 
-/**
- * @brief Set the ID of the sensor data.
- * @param inId (int) The new ID value.
- */
+int SensorData::length() const {
+    return dataLength;
+}
+
 void SensorData::setId(int inId) {
     id = inId;
 }
 
-/**
- * @brief Set the data array for the sensor data.
- * @param inData (int*) Pointer to the new data array.
- */
 void SensorData::setData(int* inData) {
     data = inData;
 }
 
-/**
- * @brief Set the timestamp of the sensor data.
- * @param inTimeStamp (unsigned long) The new timestamp value.
- */
 void SensorData::setTimeStamp(unsigned long inTimeStamp) {
     timeStamp = inTimeStamp;
 }
 
+// TODO: Implement this method
 /**
- * @brief Format SensorData as a CAN message.
- * @return (CAN_message_t) The formatted CAN message.
- */
+ * @brief Format the SensorData into a CAN_message_t.
+ * 
+ * @return (CAN_message_t) The formmatted CAN message.
+*/
 CAN_message_t SensorData::formatCAN() const {
     CAN_message_t canMessage;
     canMessage.id = id;
@@ -114,4 +113,19 @@ CAN_message_t SensorData::formatCAN() const {
     canMessage.len = dataLength;
     canMessage.timestamp = timeStamp;
     return canMessage;
+}
+
+/**
+ * @brief Print the SensorData to the Serial Monitor.
+*/
+void SensorData::toString() const {
+    Serial.println("ID: " + String(id));
+    Serial.println("Timestamp: " + String(timeStamp));
+    Serial.println("Data Length: " + String(dataLength));
+    Serial.print("Data: ");
+    for (int i = 0; i < dataLength; i++) {
+        Serial.print(data[i]);
+        Serial.print(" ");
+    }
+    Serial.println();
 }

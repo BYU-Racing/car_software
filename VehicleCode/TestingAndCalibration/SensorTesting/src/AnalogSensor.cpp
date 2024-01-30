@@ -2,7 +2,6 @@
 #include <Arduino.h>
 
 #define ACCELERATOR_POT_1 3
-#define ACCELERATOR_POT_2 4
 #define MAXPERCENT 10000
 #define LENGTH 8
 #define BYTESIZE 256
@@ -59,16 +58,26 @@ int* AnalogSensor::buildData(int value) {
 }
 
 /**
+ * @brief Builds the error data array for the CAN message.
+ * 
+ * @param errorType (int) The type of error.
+ * @param errorData (int*) The data associated with the error.
+ * 
+ * @return (int*) The error data array for the CAN message.
+*/
+// TODO: implement this method
+int* AnalogSensor::buildError() {
+    return new int[1]{0};
+}
+
+/**
  * @brief Transform the sensor data into new scale.
  * @param data (int) The data to be rescaled.
  * @return (int) The rescaled data.
  */
 int AnalogSensor::rescale(int data) {
     //Transform data
-    if (sensorID == ACCELERATOR_POT_1 || sensorID == ACCELERATOR_POT_2) {
-        return map(data, bias, max, 0, MAXPERCENT);
-    } 
-    return data;
+    return map(data, bias, max, 0, MAXPERCENT);
 };
 
 

@@ -18,7 +18,8 @@ public:
     int readInputs() override;
     bool readyToCheck() override;
     int rescale(int data) override;
-    int* buildData(int value);
+    int* buildData(int value) override;
+    int* buildError() override;
 
     // Getters
     int getId();

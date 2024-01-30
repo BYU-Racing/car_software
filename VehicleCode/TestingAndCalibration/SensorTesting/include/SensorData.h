@@ -29,6 +29,7 @@ public:
     int getId() const;
     int getPriority() const;
     int* getData() const;
+    int length() const;
 
     void setId(int id);
     void setData(int* data);

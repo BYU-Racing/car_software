@@ -59,7 +59,13 @@ void DataCollector::readData(Sensor* sensor) {
     int rawData = sensor->readInputs();
     int dataLength = sensor->getDataLength();
     unsigned long timestamp = millis() - timeZero;
-    int* sendData = sensor->buildData(rawData);
+    
+    int* sendData;
+    if (rawData != -1) {
+        sendData = sensor->buildData(rawData);
+    } else {
+        sendData = sensor->buildError();
+    }
 
     // Create a new sensor data object for each int in the array
     SensorData sensorData = SensorData(sensorID, sendData, dataLength, timestamp);

@@ -2,6 +2,7 @@
 #define THROTTLESENSOR_H
 
 #include "Sensor.h"
+#include "SensorData.h"
 #include <Arduino.h>
 class ThrottleSensor : public Sensor {
 private:
@@ -12,6 +13,8 @@ private:
     int bias = 0;
     int max = 1023;
     int countMismatch = 0;
+    int command = 0;
+    int errorType = 0;
     
     bool checkError(int percent1, int percent2);
     int computeTorque(int percent);
@@ -26,7 +29,8 @@ public:
     int readInputs() override;
     bool readyToCheck() override;
     int rescale(int data) override;
-    int* buildData(int percent);
+    int* buildData(int percent) override;
+    int* buildError() override;
 
     // Getters
     int getId();

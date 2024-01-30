@@ -12,6 +12,7 @@ const int byteValue = 256;
 
 CAN_message_t rmsg;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+Car car("data.csv");
 
 void setup() {
   Serial.begin(9600);
@@ -20,9 +21,13 @@ void setup() {
   // SET UP CAN
   can2.begin();
   can2.setBaudRate(250000);
+  car.setCAN(can2);
 }
 
 void loop() {
+  car.checkButton();
+  car.checkKey();
+  car.readSensors();
   
   if (can2.read(rmsg)) {
     SensorData msg = SensorData(rmsg);
@@ -38,10 +43,7 @@ void loop() {
       Serial.print("SPEED: ");
       
       // Calculate speed and set it to zero if less than 10
-      int speed = int(data[3] * byteValue + data[2]) / rescale;
-      if (speed < startThreshold) {
-          speed = 0;
-      }   
+      int speed = car.deconstructSpeed(data);  
       Serial.println(speed);
       Serial.println("");
     }

@@ -82,6 +82,10 @@ int* SensorData::getData() const {
     return data;
 }
 
+int SensorData::length() const {
+    return dataLength;
+}
+
 void SensorData::setId(int inId) {
     id = inId;
 }

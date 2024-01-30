@@ -33,8 +33,8 @@ public:
 
     // Method to transform data
     virtual int rescale(int data) = 0;
-    virtual int* buildData(int torque, int percent);
-    virtual int* buildData(int value);
+    virtual int* buildData(int value) = 0;
+    virtual int* buildError() = 0;
 };
 
 #endif // SENSOR_H

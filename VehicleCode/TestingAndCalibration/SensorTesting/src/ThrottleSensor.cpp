@@ -8,6 +8,14 @@
 #define BYTESIZE 256
 #define ERROR_TOL 1000
 #define MAINTAIN_TOL 2
+#define SHUTDOWN_TOL 500
+#define ID_ERROR 0
+#define ERROR_LENGTH 6
+#define SHUTDOWN 1
+#define NO_SHUTDOWN 0
+#define WARNING 1
+#define CRITICAL 2
+#define FATAL 3
 
 /**
  * @brief Constructor for ThrottleSensor class.
@@ -50,9 +58,13 @@ int ThrottleSensor::readInputs() {
     if (checkError(throttle1, throttle2)) {
       return (throttle1 + throttle2) / 2;
     }
+    if (countMismatch > SHUTDOWN_TOL) {
+        command = SHUTDOWN;
+        errorType = FATAL;
+        return -1;
+    }
     return 0;
-    
-};
+}
 
 
 /**
@@ -109,6 +121,30 @@ int* ThrottleSensor::buildData(int percent){
     sendData[6] = 0;
     sendData[7] = 0;
 
+    return sendData;
+}
+
+/**
+ * @brief Sends an error message.
+ * 
+ * @param sendData (int*) The data array for the CAN message.
+ * @param command (int) The command to be sent.
+ *                          0: No shutdown
+ *                          1: Shutdown
+ * @param errorType (int) The type of error.
+ *                          0: No Error
+ *                          1: Warning
+ *                          2: Critical
+ *                          3: Fatal
+*/
+int* ThrottleSensor::buildError() {
+    int* sendData = new int[dataLength];
+    sendData[0] = ACCELERATOR_POT_1;
+    sendData[1] = command;
+    sendData[2] = errorType;
+    sendData[3] = countMismatch;
+    sendData[4] = throttle1;
+    sendData[5] = throttle2;
     return sendData;
 }
 
