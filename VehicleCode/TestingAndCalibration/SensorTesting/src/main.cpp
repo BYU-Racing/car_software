@@ -6,6 +6,7 @@
 #include "SensorData.h"
 #include "Error.h"
 #include "DataCollector.h"
+#include "ThrottleSensor.h"
 
 
 // throttle sensor variables
@@ -58,8 +59,8 @@ int countMismatch = 0;
 // initialize throttle sensor
 int throttleFreq = 10;
 int numSensors = 3;
-AnalogSensor throttle1 = AnalogSensor(ACCELERATOR_POT_1, throttleFreq, POT1, BIAS1, MAX1, LENGTH);
-AnalogSensor throttle2 = AnalogSensor(ACCELERATOR_POT_2, throttleFreq, POT2, BIAS2, MAX2, LENGTH);
+ThrottleSensor throttle1 = ThrottleSensor(ACCELERATOR_POT_1, throttleFreq, POT1, BIAS1, MAX1, LENGTH);
+ThrottleSensor throttle2 = ThrottleSensor(ACCELERATOR_POT_2, throttleFreq, POT2, BIAS2, MAX2, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
 Sensor* sensors[] = {&throttle1, &throttle2, &tireSpeed1};
 DataCollector collector = DataCollector(sensors, numSensors, millis());
@@ -86,6 +87,7 @@ void loop() {
  
   if (throttle1.readyToCheck() && throttle2.readyToCheck()) {
     // read throttle sensor
+    collector.checkSensors();
     percent1 = throttle1.readInputs();
     percent2 = throttle2.readInputs();
     // percent1 = map(input1, BIAS1, MAX1, 0, MAX_PERCENT);

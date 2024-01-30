@@ -63,6 +63,7 @@ void DataCollector::readData(Sensor* sensor) {
 
     // Create a new sensor data object for each int in the array
     SensorData sensorData = SensorData(sensorID, sendData, dataLength, timestamp);
+    sendSignal(&sensorData);
 }
 
 
@@ -80,29 +81,6 @@ void DataCollector::sendSignal(SensorData* sensorData) {
     // TODO: make formatCan() return a CAN_message_t object
     CAN_message_t canMessage = sensorData->formatCAN();
     can2.write(canMessage);
-
-    // // Create a CAN message
-    // std::string canMessage = sensorData->formatCAN();
-    // CAN_message_t msg;
-
-    // // Fill the buffer with the message
-    // uint8_t messageLength = static_cast<uint8_t>(canMessage.length());
-    // if (messageLength <= sizeof(msg.buf)) {
-    //     // Copy characters from the string into the buffer
-    //     for (uint8_t i = 0; i < messageLength; i++) {
-    //         msg.buf[i] = canMessage[i];
-    //     }
-    // } else {
-    //     for (uint8_t i = 0; i < sizeof(msg.buf); i++) {
-    //         msg.buf[i] = 0;
-    //     }
-    // }
-
-    // // Set the message length and id and send the message
-    // msg.len = messageLength;
-    // // set msg.id to sensor id or priority
-    // msg.id = 2;
-    // can2.write(msg);
 }
 
 /**
