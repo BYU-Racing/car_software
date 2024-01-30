@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 #include "SensorData.h"
+#include "Car.h"
 
 #define POT A0
 const float BIAS = 200;

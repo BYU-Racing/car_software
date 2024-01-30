@@ -98,6 +98,7 @@ int* ThrottleSensor::buildData(int percent){
     int speedHigh = getHigh(percent);
 
     // construct formatted data
+    // CHECK: do we need to delete this?
     int* sendData = new int[LENGTH];
     sendData[0] = torqueLow;
     sendData[1] = torqueHigh;
@@ -117,7 +118,7 @@ int* ThrottleSensor::buildData(int percent){
  * @return (int) The torque value.
 */
 int ThrottleSensor::computeTorque(int percent) {
-  return torque;
+  return torque; // 200
 }
 
 

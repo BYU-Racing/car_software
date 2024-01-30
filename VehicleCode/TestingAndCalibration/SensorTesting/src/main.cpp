@@ -58,7 +58,7 @@ int countMismatch = 0;
 
 // initialize throttle sensor
 int throttleFreq = 10;
-int numSensors = 3;
+int numSensors = 1;
 ThrottleSensor throttle = ThrottleSensor(ACCELERATOR_POT_1, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
 Sensor* sensors[] = {&throttle};

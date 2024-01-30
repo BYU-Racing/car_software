@@ -78,9 +78,7 @@ void DataCollector::readData(Sensor* sensor) {
  */
 void DataCollector::sendSignal(SensorData* sensorData) {
     // Create a CAN message
-    // TODO: make formatCan() return a CAN_message_t object
-    CAN_message_t canMessage = sensorData->formatCAN();
-    can2.write(canMessage);
+    can2.write(sensorData->formatCAN());
 }
 
 /**
