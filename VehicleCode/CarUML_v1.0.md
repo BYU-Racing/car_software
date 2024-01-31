@@ -27,6 +27,8 @@ classDiagram
     note for AnalogSensor "Damper Pots\nThrottle Position\nWheel Speed\nWheatstone Bridges\nBrake Pressure\nCoolant Temp"
     DigitalSensor --|> Sensor : Is
     note for DigitalSensor "Buttons\nSwitches\nKey"
+    ThrottleSensor --|> Sensor : Is
+    note for ThrottleSensor "Throttle Position"
 
     class Actuator
     Actuator : -int[] outputPins
@@ -36,7 +38,7 @@ classDiagram
     Screen --|> Actuator : Is
     note for Screen "Time\nLap number"
     LEDArray --|> Actuator : Is
-    note for LEDArray "Battery Temp\mBattery Draw\nBattery Life"
+    note for LEDArray "Battery Temp\nBattery Draw\nBattery Life"
     Horn --|> Actuator : Is
     note for Horn "Horn"
 
@@ -79,8 +81,8 @@ classDiagram
     Car : +bool checkActive()
     Car : +void readSensors()
 
-    DataCollector --> Car : CAN
-    DataCollector --> Dashboard : CAN
+    DataCollector <--> Car : CAN
+    DataCollector <--> Dashboard : CAN
 
     Car ..> SensorData : Uses
     DataCollector ..> SensorData : Uses
