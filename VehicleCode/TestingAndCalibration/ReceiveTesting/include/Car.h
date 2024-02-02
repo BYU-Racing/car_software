@@ -23,6 +23,7 @@ private:
 
 public:
     // Constructor
+    Car();
     Car(const std::string& logFileName);
     Car(const std::string& logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
@@ -46,6 +47,7 @@ public:
     void checkButton();
 
     // Method to log sensor data
+    void startSD(const std::string& logFileName);
     void logData(const SensorData& data);
     int deconstructSpeed(int* &data);
 

@@ -12,11 +12,13 @@ const int byteValue = 256;
 
 CAN_message_t rmsg;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
-Car car("data.csv");
+Car car;
 
 void setup() {
   Serial.begin(9600);
+  delay(100);
   Serial.println("Start");
+  car.startSD("data.csv");
 
   // SET UP CAN
   can2.begin();
@@ -50,7 +52,7 @@ void loop() {
   }
   else {
     Serial.println("error");
-    delay(10);
+    delay(500);
   }
   // delay(1000);
 }

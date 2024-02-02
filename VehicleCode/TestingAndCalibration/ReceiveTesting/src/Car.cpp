@@ -9,6 +9,25 @@
 #define NO_SHUTDOWN 0
 #define COMMAND_IDX 1
 
+Car::Car(){
+    active = false;
+    key = false;
+    pushToStart = false;
+    throttlePosition = 0;
+    timeZero = millis();
+}
+
+void Car::startSD(const std::string& logFileName){
+    fileName = logFileName;
+    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+
+    // Initialize SD card
+    if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
+        Serial.println("SD initialization failed!");
+    }
+    Serial.println("SD initialization done.");
+}
+
 // Constructor
 Car::Car(const std::string& logFileName) {
     active = false;
@@ -22,7 +41,6 @@ Car::Car(const std::string& logFileName) {
     // Initialize SD card
     if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
         Serial.println("SD initialization failed!");
-        return;
     }
     Serial.println("SD initialization done.");
 }
