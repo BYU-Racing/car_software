@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 #include "SensorData.h"
+#include <fstream>
+    using std::ifstream, std::ostream;
 
 /**
  * @brief Default constructor
@@ -41,11 +43,11 @@ void Car::logData(const SensorData& data) {
 
         // write the data to the file
         int id = data.getSensorID();
-        if (id == 0) {
+        // if (id == 0) {
             dataFile.print(id, data.getTimeStamp(), data.getData());
-        } else {
-            dataFile.print(id, data.getTimeStamp(), data.getData());
-        }
+        // } else {
+        //     dataFile.print(id, data.getTimeStamp(), data.getData());
+        // }
     }
 }
 

@@ -34,7 +34,7 @@
 
 // CAN message variables
 #define LENGTH 8
-#define DELAYBY 0
+#define DELAYBY 500
 #define BEGIN 9600      // 9,600
 #define BAUDRATE 250000 // 250,000
 
@@ -89,14 +89,14 @@ void loop() {
   // if (throttle1.readyToCheck() && throttle2.readyToCheck()) {
   //   // read throttle sensor
     
-  //   percent1 = throttle1.readInputs();
+    // percent1 = throttle1.readInputs();
   //   percent2 = throttle2.readInputs();
   //   // percent1 = map(input1, BIAS1, MAX1, 0, MAX_PERCENT);
   //   // percent2 = map(input2, BIAS2, MAX2, 0, MAX_PERCENT);
 
   //   // print throttle values
-  //   Serial.print("  Input  1: ");
-  //   Serial.print(input1);
+    // Serial.print("  Input  1: ");
+    // Serial.print(input1);
   //   Serial.print(" | 2: ");
   //   Serial.println(input2);
   //   // Serial.print("Throttle 1: ");

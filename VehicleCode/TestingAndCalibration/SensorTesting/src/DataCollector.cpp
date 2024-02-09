@@ -35,9 +35,11 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
  * @return None
  */ 
 void DataCollector::checkSensors() {
+    Serial.println("checking sensors");
     for (int i = 0; i < numSensors; i++) {
         // Check if the sensor is ready to send more data
         if (sensors[i]->readyToCheck()) {
+            Serial.println("Sensors ready");
             readData(sensors[i]);
         }
     }
@@ -57,6 +59,7 @@ void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     int sensorID = sensor->getId();
     int rawData = sensor->readInputs();
+    Serial.println(rawData);
     int dataLength = sensor->getDataLength();
     unsigned long timestamp = millis() - timeZero;
     

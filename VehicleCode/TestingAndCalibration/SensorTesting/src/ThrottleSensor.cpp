@@ -176,7 +176,7 @@ int ThrottleSensor::rescale(int data) {
  * @param percent (int) The percent value to be converted.
  * @return (int) The low byte of the percent value.
 */
-int getLow(int percent) {
+int ThrottleSensor::getLow(int percent) {
   return percent % BYTESIZE;
 }
 
@@ -186,7 +186,7 @@ int getLow(int percent) {
  * @param percent (int) The percent value to be converted.
  * @return (int) The high byte of the percent value.
 */
-int getHigh(int percent) {
+int ThrottleSensor::getHigh(int percent) {
   return percent / BYTESIZE;
 }
 
