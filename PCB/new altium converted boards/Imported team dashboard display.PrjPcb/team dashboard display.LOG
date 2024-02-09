@@ -1,0 +1,240 @@
+Importer Log Report
+Project : Group
+
+Section : Analyze Document - C:\Git\formula_e\FormulaE\PCB\team dashboard display.brd
+    Analyzing data of C:\Git\formula_e\FormulaE\PCB\team dashboard display.brd
+    Load settings
+    Load layers 145
+    Load board
+    Load Library "adafruit"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Library "rcl"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Library "teensy"
+    Load Packages 1
+    Load Library "David_Pinlayouts"
+    Load Packages 1
+    Load Library "F-E library custom components"
+    Load Packages 2
+    Load Library "con-lstb"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    ERROR: Unhandled typemfgpreviewcolors
+EndSection
+
+Section : Analyze Document - C:\Git\formula_e\FormulaE\PCB\team dashboard display.sch
+    Analyzing data of C:\Git\formula_e\FormulaE\PCB\team dashboard display.sch
+    Load settings
+    Load layers 145
+    Load schematic
+    Load Libraries 6
+    Load Library "teensy"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "F-E library custom components"
+    Load Packages 2
+    Load Symbols 2
+    Load DeviceSets 2
+    Load Library "adafruit"
+    Load Packages 31
+    ERROR: Unhandled typepackages3d
+    Load Symbols 1
+    Load DeviceSets 1
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    Load Library "David_Pinlayouts"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "rcl"
+    Load Packages 85
+    ERROR: Unhandled typepackages3d
+    Load Symbols 1
+    Load DeviceSets 1
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    ERROR: Unhandled typepackage3dinstances
+    Load Library "con-lstb"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Symbols 1
+    Load DeviceSets 1
+    ERROR: Unhandled typepackage3dinstances
+    Load Attributes 0
+    Load Classes 1
+    Load Parts 36
+    Load Sheets 1
+EndSection
+
+Section : Analyze Document - C:\Git\formula_e\FormulaE\PCB\team throttle control draft 2.brd
+    Analyzing data of C:\Git\formula_e\FormulaE\PCB\team throttle control draft 2.brd
+    Load settings
+    Load layers 145
+    Load board
+    Load Library "special"
+    Load Packages 1
+    Load Library "adafruit"
+    Load Packages 3
+    Load Library "rcl"
+    Load Packages 1
+    Load Library "F-E library custom components"
+    Load Packages 3
+    Load Library "teensy"
+    Load Packages 1
+    Load Library "con-lstb"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    ERROR: Unhandled typemfgpreviewcolors
+EndSection
+
+Section : Analyze Document - C:\Git\formula_e\FormulaE\PCB\team throttle control draft 2.sch
+    Analyzing data of C:\Git\formula_e\FormulaE\PCB\team throttle control draft 2.sch
+    Load settings
+    Load layers 145
+    Load schematic
+    Load Libraries 6
+    Load Library "teensy"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "F-E library custom components"
+    Load Packages 3
+    Load Symbols 3
+    Load DeviceSets 3
+    Load Library "adafruit"
+    Load Packages 6
+    Load Symbols 2
+    Load DeviceSets 2
+    Load Library "special"
+    Load Packages 1
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "rcl"
+    Load Packages 85
+    Load Symbols 1
+    Load DeviceSets 1
+    Load Library "con-lstb"
+    Load Packages 1
+    ERROR: Unhandled typepackages3d
+    Load Symbols 1
+    Load DeviceSets 1
+    ERROR: Unhandled typepackage3dinstances
+    Load Attributes 0
+    Load Classes 1
+    Load Parts 15
+    Load Sheets 1
+EndSection
