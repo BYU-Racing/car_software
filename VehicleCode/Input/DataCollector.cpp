@@ -4,6 +4,7 @@
 
 // Global variables
 #define BAUDRATE 250000
+#define TORQUE_DEFAULT 200
 
 
 // TEST: define function
@@ -20,7 +21,6 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
-    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 }
 
 
@@ -55,25 +55,24 @@ void DataCollector::checkSensors() {
  */
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
-    int* rawData = sensor->readInputs();
     int sensorID = sensor->getId();
-    int priority = sensor->getPriority();
+    int rawData = sensor->readInputs();
+    Serial.println(rawData);
+    int dataLength = sensor->getDataLength();
     unsigned long timestamp = millis() - timeZero;
+    
+    int* sendData;
+    if (rawData != -1) {
+        sendData = sensor->buildData(rawData);
+    } else {
+        sendData = sensor->buildError();
+    }
 
     // Create a new sensor data object for each int in the array
-    // TODO readInputs must always return an array of ints that ends with -1
-    int i = 0;
-    while (rawData[i] != -1) {
-        SensorData* sensorData = new SensorData(sensorID, priority, rawData[i], timestamp);
-        try {
-            sendSignal(sensorData);
-        } catch (...) {
-            delete sensorData;
-        }
-        delete sensorData;
-        i++;
-    }
+    SensorData sensorData = SensorData(sensorID, sendData, dataLength, timestamp);
+    sendSignal(&sensorData);
 }
+
 
 // TEST: define function
 /*!
@@ -86,30 +85,22 @@ void DataCollector::readData(Sensor* sensor) {
  */
 void DataCollector::sendSignal(SensorData* sensorData) {
     // Create a CAN message
-    // TODO: make formatCan() return a CAN_message_t object
-    CAN_message_t canMessage = sensorData->formatCAN();
-    can2.write(canMessage);
+    can2.write(sensorData->formatCAN());
+}
 
-    // // Create a CAN message
-    // std::string canMessage = sensorData->formatCAN();
-    // CAN_message_t msg;
+/**
+ * @brief Set the CAN bus
+ * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+*/
+void DataCollector::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
+    this->can2 = can2;
+}
 
-    // // Fill the buffer with the message
-    // uint8_t messageLength = static_cast<uint8_t>(canMessage.length());
-    // if (messageLength <= sizeof(msg.buf)) {
-    //     // Copy characters from the string into the buffer
-    //     for (uint8_t i = 0; i < messageLength; i++) {
-    //         msg.buf[i] = canMessage[i];
-    //     }
-    // } else {
-    //     for (uint8_t i = 0; i < sizeof(msg.buf); i++) {
-    //         msg.buf[i] = 0;
-    //     }
-    // }
 
-    // // Set the message length and id and send the message
-    // msg.len = messageLength;
-    // // set msg.id to sensor id or priority
-    // msg.id = 2;
-    // can2.write(msg);
+/**
+ * @brief Reset the time zero
+ * @param startTime (unsigned long) The time the car started
+ */
+void DataCollector::resetTimeZero(unsigned long startTime) {
+    timeZero = startTime;
 }

@@ -1,33 +1,34 @@
-#ifndef DIGITALSENSOR_H
-#define DIGITALSENSOR_H
+// #ifndef DIGITALSENSOR_H
+// #define DIGITALSENSOR_H
 
-#include "Sensor.h"
-#include "../SensorID.h"
+// #include "Sensor.h"
+// #include <Arduino.h>
 
-class DigitalSensor : public Sensor {
-private:
-    // Instantiate attributes
-    int* inputPins;
-    int waitTime;
-    unsigned long previousUpdateTime = 0;
-    int sensorID;
-    int priority;
-    int* sensorValue;
+// class DigitalSensor : public Sensor {
+// private:
+//     // Additional attributes specific to DigitalSensor
 
-public:
-    // Constructor
-    DigitalSensor(int id, int freq, int prio, int* inputPins);
+//     int sensorValue = 0;
 
-    // Destructor
-    ~DigitalSensor();
+// public:
+//     // Constructor
+//     DigitalSensor(int id, int freq, int prio, int inPins);
+//     DigitalSensor(int id);
 
-    // Implement the pure virtual functions from the base class
-    int* readInputs() override;
-    bool readyToCheck() override;
+//     // Destructor
+//     //~DigitalSensor();
 
-    // CHECK add method to get id and priority
-    int getId() const;
-    int getPriority() const;
-};
+//     // Implement the pure virtual functions from the base class
+//     int readInputs() override;
+//     bool readyToCheck() override;
 
-#endif // DIGITALSENSOR_H
+//     // Additional methods for DigitalSensor
+//     int getPins();
+//     int getWaitTime();
+    
+//     void setPin(int inPins);
+//     void setWaitTime(int inWait);
+//     void setId(int inId);
+// };
+
+// #endif // DIGITALSENSOR_H
