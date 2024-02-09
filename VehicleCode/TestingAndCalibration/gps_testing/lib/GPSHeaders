@@ -1,0 +1,4 @@
+#include "Sensor.h"
+#include <Arduino.h>
+#include <SoftwareSerial.h>
+#include <../src/Input/UARTSensor.h>

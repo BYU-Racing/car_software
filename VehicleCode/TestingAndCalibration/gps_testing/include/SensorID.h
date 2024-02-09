@@ -1,0 +1,49 @@
+#ifndef SENSORID_H
+#define SENSORID_H
+
+
+// CHECK: Define all Sensor IDs
+/*
+ *  INSTRUCTIONS:
+ * Copy the constants you need into your code
+*/
+#define KEY_SWITCH 0
+#define BATTERY_TEMP 1
+#define COOLANT_TEMP 2
+#define ACCELERATOR_POT_1 3
+#define ACCELERATOR_POT_2 4
+#define WHEEL_SPEED_FL 5
+#define WHEEL_SPEED_FR 6
+#define WHEEL_SPEED_RL 7
+#define WHEEL_SPEED_RR 8
+#define LED_ARRAY_1 9
+#define LED_ARRAY_2 10
+#define LED_ARRAY_3 11
+#define SEVEN_SEG_1 12
+#define SEVEN_SEG_2 13
+#define SERVO 14
+#define HORN 15
+#define ACCELEROMETER 16
+#define GPS 17
+#define DAMPER_POT_FL 18
+#define DAMPER_POT_FR 19
+#define DAMPER_POT_RL 20
+#define DAMPER_POT_RR 21
+#define STEERING_ENCODER 22
+#define BRAKE_SWITCH 23
+#define STRAIN_GAUGE_1 24
+#define STRAIN_GAUGE_2 25
+#define STRAIN_GAUGE_3 26
+#define STRAIN_GAUGE_4 27
+#define MOTOR_TEMP 28
+#define WALKIE_TALKIE 29
+#define UNKNOWN 30
+
+/* 
+ * // CHECK: Got rid of the string component because the arduino code was not 
+ * having it. Hopefully it wasn't super necessary but if it was then we 
+ * might need to think of a different approach. I think arduino prefers to
+ * work with arrays of characters
+ */ 
+
+# endif // SENSORID_H
