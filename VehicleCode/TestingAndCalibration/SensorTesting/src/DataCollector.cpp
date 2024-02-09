@@ -35,11 +35,9 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
  * @return None
  */ 
 void DataCollector::checkSensors() {
-    Serial.println("checking sensors");
     for (int i = 0; i < numSensors; i++) {
         // Check if the sensor is ready to send more data
         if (sensors[i]->readyToCheck()) {
-            Serial.println("Sensors ready");
             readData(sensors[i]);
         }
     }

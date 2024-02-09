@@ -1,8 +1,6 @@
 #include "ThrottleSensor.h"
 #include <Arduino.h>
 
-#define ACCELERATOR_POT_1 3
-#define ACCELERATOR_POT_2 4
 #define MAXPERCENT 10000
 #define LENGTH 8
 #define BYTESIZE 256
@@ -139,7 +137,7 @@ int* ThrottleSensor::buildData(int percent){
 */
 int* ThrottleSensor::buildError() {
     int* sendData = new int[dataLength];
-    sendData[0] = ACCELERATOR_POT_1;
+    sendData[0] = sensorID;
     sendData[1] = command;
     sendData[2] = errorType;
     sendData[3] = countMismatch;
@@ -165,10 +163,7 @@ int ThrottleSensor::computeTorque(int percent) {
  */
 int ThrottleSensor::rescale(int data) {
     //Transform data
-    if (sensorID == ACCELERATOR_POT_1 || sensorID == ACCELERATOR_POT_2) {
-        return map(data, bias, max, 0, MAXPERCENT);
-    } 
-    return data;
+    return map(data, bias, max, 0, MAXPERCENT);
 };
 
 /**
