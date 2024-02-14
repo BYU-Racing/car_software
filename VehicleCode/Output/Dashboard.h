@@ -19,7 +19,7 @@ private:
     Actuator** display;
     int numActuators;
     unsigned long startTime;
-    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
     // CHECK: change to int
     int getSensorIndex(int id);
@@ -33,6 +33,8 @@ public:
 
     // Method to update the display based on sensor data
     void updateDisplay();
+
+    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN);
 };
 
 #endif // DASHBOARD_H
