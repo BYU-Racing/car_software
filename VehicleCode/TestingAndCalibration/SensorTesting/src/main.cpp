@@ -13,14 +13,12 @@
 #define POT1 24
 #define POT2 25
 #define ID_ERROR 0
-#define ACCELERATOR_POT_1 1
-#define ACCELERATOR_POT_2 2
+#define THROTTLE_POT 192
 #define WHEEL_SPEED_FL 5
 #define BIAS1 0
 #define BIAS2 0
 #define MAX1 1024
 #define MAX2 1000
-#define MAX_PERCENT 10000 // 10,000
 
 // error variables
 #define ERROR_TOL 1000
@@ -34,7 +32,7 @@
 
 // CAN message variables
 #define LENGTH 8
-#define DELAYBY 500
+#define DELAYBY 10
 #define BEGIN 9600      // 9,600
 #define BAUDRATE 250000 // 250,000
 
@@ -59,7 +57,7 @@ int countMismatch = 0;
 // initialize throttle sensor
 int throttleFreq = 10;
 int numSensors = 1;
-ThrottleSensor throttle = ThrottleSensor(ACCELERATOR_POT_1, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
+ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
 Sensor* sensors[] = {&throttle};
 DataCollector collector = DataCollector(sensors, numSensors, millis());
