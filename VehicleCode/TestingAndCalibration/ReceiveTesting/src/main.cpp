@@ -9,6 +9,7 @@ const float RANGE = 800 - BIAS;
 const int rescale = 100;
 const int startThreshold = 10;
 const int byteValue = 256;
+unsigned long startTime = 0;
 
 CAN_message_t rmsg;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
@@ -24,6 +25,7 @@ void setup() {
   can2.begin();
   can2.setBaudRate(250000);
   car.setCAN(can2);
+  startTime = millis();
 }
 
 void loop() {
@@ -32,6 +34,11 @@ void loop() {
   car.readSensors();
 
   // make a basic sensor data pointer
+  if (millis() - startTime > 5000) {
+    car.shutdown();
+    Serial.println("Shutting down");
+    while(1);
+  }
   int* data = new int[4];
   data[0] = 0;
   data[1] = 1;

@@ -21,13 +21,20 @@ Car::Car(){
 
 void Car::startSD(const std::string& logFileName){
     fileName = logFileName;
-    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    // dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    dataFile = SD.open("test.csv", FILE_WRITE);
 
     // Initialize SD card
-    if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
+    if (!SD.begin(BUILTIN_SDCARD)) {  // Use the appropriate pin for your SD module
         Serial.println("SD initialization failed!");
     }
     Serial.println("SD initialization done.");
+    if (dataFile) {
+        dataFile.println("ID, Time, Data");
+    } else {
+        Serial.println("Error opening file: DNE");
+    } 
+    delay(1000);
 }
 
 // Constructor
@@ -38,13 +45,13 @@ Car::Car(const std::string& logFileName) {
     fileName = logFileName;
     throttlePosition = 0;
     timeZero = millis();
-    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    // dataFile = SD.open(fileName.c_str(), FILE_WRITE);
 
-    // Initialize SD card
-    if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
-        Serial.println("SD initialization failed!");
-    }
-    Serial.println("SD initialization done.");
+    // // Initialize SD card
+    // if (!SD.begin(BUILTIN_SDCARD)) {  // Use the appropriate pin for your SD module
+    //     Serial.println("SD initialization failed!");
+    // }
+    // Serial.println("SD initialization done.");
 }
 
 Car::Car(const std::string& logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
@@ -54,16 +61,16 @@ Car::Car(const std::string& logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_1
     fileName = logFileName;
     throttlePosition = 0;
     timeZero = millis();
-    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    // dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     this->can2 = can2;
 
-    // Initialize SD card
-    if (!SD.begin(BUILTIN_SDCARD)) {  // Use the appropriate pin for your SD module
-        Serial.println("SD initialization failed!");
-        while(1);
-        return;
-    }
-    Serial.println("SD initialization done.");
+    // // Initialize SD card
+    // if (!SD.begin(BUILTIN_SDCARD)) {  // Use the appropriate pin for your SD module
+    //     Serial.println("SD initialization failed!");
+    //     while(1);
+    //     return;
+    // }
+    // Serial.println("SD initialization done.");
 }
 
 // Destructor
@@ -74,7 +81,7 @@ Car::~Car() {
 // Method to log sensor data
 void Car::logData(const SensorData& data) {
     Serial.print("Logging? ");
-    if (dataFile) {
+    // if (dataFile) {
         Serial.println("Yes");
         // Write data to the file in CSV format
         dataFile.print(data.getId());
@@ -91,9 +98,9 @@ void Car::logData(const SensorData& data) {
         }
         dataFile.println();
 
-    } else {
-        Serial.println("Error opening file");
-    }
+    // } else {
+    //     Serial.println("Error opening file");
+    // }
 }
 
 // Car is active if key is turned and button is pushed
