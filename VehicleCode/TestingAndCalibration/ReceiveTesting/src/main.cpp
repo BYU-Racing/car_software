@@ -30,6 +30,15 @@ void loop() {
   car.checkButton();
   car.checkKey();
   car.readSensors();
+
+  // make a basic sensor data pointer
+  int* data = new int[4];
+  data[0] = 0;
+  data[1] = 1;
+  data[2] = 2;
+  data[3] = 3;
+  SensorData dataObj = SensorData(0, data, 1, millis());
+  car.logData(dataObj);
   
   if (can2.read(rmsg)) {
     SensorData msg = SensorData(rmsg);

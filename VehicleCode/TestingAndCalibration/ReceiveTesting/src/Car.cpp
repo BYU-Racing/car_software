@@ -15,6 +15,8 @@ Car::Car(){
     pushToStart = false;
     throttlePosition = 0;
     timeZero = millis();
+    buttonState = 0;
+    speed = 0;
 }
 
 void Car::startSD(const std::string& logFileName){
@@ -56,8 +58,9 @@ Car::Car(const std::string& logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_1
     this->can2 = can2;
 
     // Initialize SD card
-    if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
+    if (!SD.begin(BUILTIN_SDCARD)) {  // Use the appropriate pin for your SD module
         Serial.println("SD initialization failed!");
+        while(1);
         return;
     }
     Serial.println("SD initialization done.");
@@ -70,14 +73,16 @@ Car::~Car() {
 
 // Method to log sensor data
 void Car::logData(const SensorData& data) {
+    Serial.print("Logging? ");
     if (dataFile) {
+        Serial.println("Yes");
         // Write data to the file in CSV format
         dataFile.print(data.getId());
         dataFile.print(",");
         dataFile.print(data.getTimeStamp());
         dataFile.print(",");
 
-        int* sensorData = data.getData();
+        sensorData = data.getData();
         for (int i = 0; i < data.length(); i++) {
             dataFile.print(sensorData[i]);
             if (i < data.length() - 1) {
@@ -111,7 +116,7 @@ void Car::checkKey() {
 
 // Method to check if the button is pushed
 void Car::checkButton() {
-    int buttonState = digitalRead(BUTTON_PIN);
+    buttonState = digitalRead(BUTTON_PIN);
     if (buttonState != prevButtonState) {
         if (buttonState == HIGH) {
             buttonPushed();
@@ -168,7 +173,7 @@ void Car::readSensors() {
 
 // Method to deconstruct data
 int Car::deconstructSpeed(int* &data) {
-    int speed = int(data[3] * byteValue + data[2]) / rescale;
+    speed = int(data[3] * byteValue + data[2]) / rescale;
     if (speed < startThreshold) {
         speed = 0;
     }
