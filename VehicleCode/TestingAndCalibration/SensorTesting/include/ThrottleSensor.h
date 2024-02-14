@@ -15,6 +15,7 @@ private:
     int countMismatch = 0;
     int command = 0;
     int errorType = 0;
+    int* sendData;
     
     bool checkError(int percent1, int percent2);
     int computeTorque(int percent);

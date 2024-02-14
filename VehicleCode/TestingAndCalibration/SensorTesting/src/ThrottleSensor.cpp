@@ -15,6 +15,9 @@
 #define CRITICAL 2
 #define FATAL 3
 
+//**Global Variables
+int torque;
+
 /**
  * @brief Constructor for ThrottleSensor class.
  *
@@ -36,6 +39,7 @@ ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int
     this->bias = bias;
     this->max = max;
     this->dataLength = dataLength;
+    sendData = new int[LENGTH];
 };
 
 /**
@@ -99,21 +103,16 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
 */
 int* ThrottleSensor::buildData(int percent){
     // determine torque
-    int torque = computeTorque(percent);
+    torque = computeTorque(percent);
 
     // convert to motor controller format
-    int torqueLow = getLow(torque);
-    int torqueHigh = getHigh(torque);
-    int speedLow = getLow(percent);
-    int speedHigh = getHigh(percent);
 
     // construct formatted data
     // CHECK: do we need to delete this?
-    int* sendData = new int[LENGTH];
-    sendData[0] = torqueLow;
-    sendData[1] = torqueHigh;
-    sendData[2] = speedLow;
-    sendData[3] = speedHigh;
+    sendData[0] = getLow(torque); //torqueLow
+    sendData[1] = getHigh(torque); //torqueHigh
+    sendData[2] = getLow(percent); //speedLow
+    sendData[3] = getHigh(percent); //speedHigh
     sendData[4] = 1;
     sendData[5] = 1;
     sendData[6] = 0;
@@ -136,7 +135,6 @@ int* ThrottleSensor::buildData(int percent){
  *                          3: Fatal
 */
 int* ThrottleSensor::buildError() {
-    int* sendData = new int[dataLength];
     sendData[0] = sensorID;
     sendData[1] = command;
     sendData[2] = errorType;
