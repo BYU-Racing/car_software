@@ -1,0 +1,117 @@
+*************************************************************
+FileName = team dashboard display.GBR
+AutoAperture = True
+*************************************************************
+Generating : Top
+      File : team dashboard display_Copper_Signal_Top.gbr
+
+    Adding Layer      : Top
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+*************************************************************
+
+*************************************************************
+Generating : Bottom
+      File : team dashboard display_Copper_Signal_Bot.gbr
+
+    Adding Layer      : Bottom
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
+    D19
+    D20
+    D21
+    D22
+    D23
+*************************************************************
+
+*************************************************************
+Generating : Top Overlay
+      File : team dashboard display_Legend_Top.gbr
+
+    Adding Layer      : Top Overlay
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : team dashboard display_Legend_Bot.gbr
+
+    Adding Layer      : Bottom Overlay
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Keep-Out Layer
+      File : team dashboard display_Keep-out.gbr
+
+    Adding Layer      : Keep-Out Layer
+
+
+Used DCodes :
+    D24
+*************************************************************
+
+*************************************************************
+Generating : Profile
+      File : team dashboard display_Profile.gbr
+
+
+Used DCodes :
+    D25
+*************************************************************
+
+*************************************************************
+Generating : Non-plated through-hole drill file
+      File : team dashboard display_NPTH_Drill.gbr
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Plated through-hole drill file
+      File : team dashboard display_PTH_Drill.gbr
+
+
+Used DCodes :
+    D26
+    D27
+    D28
+    D29
+    D30
+    D31
+    D32
+*************************************************************
+

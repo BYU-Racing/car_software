@@ -1,7 +1,7 @@
 Protel Design System Design Rule Check
 PCB File : C:\Git\formula_e\FormulaE\PCB\new altium converted boards\Imported team dashboard display.PrjPcb\team dashboard display.PcbDoc
-Date     : 2/8/2024
-Time     : 7:45:51 PM
+Date     : 2/15/2024
+Time     : 5:10:01 PM
 
 Processing Rule : Clearance Constraint (Gap=6mil) (All),(All)
 Rule Violations :0
@@ -10,10 +10,7 @@ Processing Rule : Clearance Constraint (Gap=6mil) (All),(All)
 Rule Violations :0
 
 Processing Rule : Clearance Constraint (Gap=10mil) (All),(All)
-   Violation between Clearance Constraint: (6.38mil < 10mil) Between Pad U$9-P$1(950mil,2550mil) on Multi-Layer And Pad U$9-P$2(1000mil,2550mil) on Multi-Layer 
-   Violation between Clearance Constraint: (6.38mil < 10mil) Between Pad U$9-P$2(1000mil,2550mil) on Multi-Layer And Pad U$9-P$3(1050mil,2550mil) on Multi-Layer 
-   Violation between Clearance Constraint: (6.38mil < 10mil) Between Pad U$9-P$3(1050mil,2550mil) on Multi-Layer And Pad U$9-P$4(1100mil,2550mil) on Multi-Layer 
-Rule Violations :3
+Rule Violations :0
 
 Processing Rule : Short-Circuit Constraint (Allowed=No) (All),(All)
 Rule Violations :0
@@ -55,6 +52,6 @@ Processing Rule : Height Constraint (Min=0mil) (Max=1000mil) (Prefered=500mil) (
 Rule Violations :0
 
 
-Violations Detected : 3
+Violations Detected : 0
 Waived Violations : 0
 Time Elapsed        : 00:00:01

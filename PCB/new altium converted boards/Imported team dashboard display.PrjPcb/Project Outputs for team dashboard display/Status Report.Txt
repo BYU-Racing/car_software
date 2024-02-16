@@ -1,0 +1,19 @@
+Output: Gerber X2 Files
+Type  : GerberX2
+From  : Variant [[No Variations]] of Project [team dashboard display.PrjPcb]
+   Generated File[team dashboard display_Copper_Signal_Top.gbr]
+   Generated File[team dashboard display_Copper_Signal_Bot.gbr]
+   Generated File[team dashboard display_Legend_Top.gbr]
+   Generated File[team dashboard display_Legend_Bot.gbr]
+   Generated File[team dashboard display_Keep-out.gbr]
+   Generated File[team dashboard display_Profile.gbr]
+   Generated File[team dashboard display_NPTH_Drill.gbr]
+   Generated File[team dashboard display_PTH_Drill.gbr]
+   Generated File[team dashboard display.EXTREP]
+   Generated File[team dashboard display.REP]
+
+
+Files Generated   : 10
+Documents Printed : 0
+
+Finished Output Generation At 5:38:49 PM On 2/15/2024
