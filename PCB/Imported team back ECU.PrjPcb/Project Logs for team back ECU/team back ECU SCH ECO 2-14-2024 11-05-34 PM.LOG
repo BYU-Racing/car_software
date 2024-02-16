@@ -1,0 +1,10 @@
+Change Component Comment: Designator=ACCELEROMETER Old Comment=1X4-3.5MM New Comment=
+Change Component Comment: Designator=CAN1_TEE Old Comment=CAN_TEE New Comment=
+Change Component Comment: Designator=COOLANT_TEMP Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=PWR_H Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=WHEEL_SP1 Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=WHEEL_SP2 Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=DAMPER_POT1 Old Comment=PINHD-1X3CB New Comment=
+Change Component Comment: Designator=DAMPER_POT2 Old Comment=PINHD-1X3CB New Comment=
+Change Component Comment: Designator=GPS Old Comment=PINHD-1X6-3.5MM New Comment=
+Change Component Comment: Designator=U$1 Old Comment=TEENSY41 New Comment=

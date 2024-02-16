@@ -1,0 +1,130 @@
+Removed Pin From Net: NetName=5V Pin=IC1-2
+Removed Pin From Net: NetName=3.3V Pin=IC1-3
+Removed Pin From Net: NetName=GND Pin=IC1-4
+Removed Pin From Net: NetName=12V Pin=IC1-8
+Removed Pin From Net: NetName=GND Pin=IC4-2
+Removed Pin From Net: NetName=BR_SW Pin=IC4-3
+Change component parameters: Designator = "BRAKE_SW" ("BRAKE_SW"); Footprint = "EDG-01"; UniqueID = "\DSDOKSXK" ("\DSDOKSXK")
+Change component parameters (AddParameter): Name = "1"; Value = "1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "SW_DIP-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "special"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "ON"; Value = "ON"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "SW_DIP-1"; VariantName = "[No Variations]"
+Change component parameters: Designator = "DAMPER_POT3" ("DAMPER_POT3"); Footprint = "1X03-CLEANBIG"; UniqueID = "\LHDOHXJY" ("\LHDOHXJY")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = "CB"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Change component parameters: Designator = "DAMPER_POT4" ("DAMPER_POT4"); Footprint = "1X03-CLEANBIG"; UniqueID = "\RDXVCXGW" ("\RDXVCXGW")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = "CB"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Change component parameters: Designator = "R1" ("R1"); Footprint = "0204/7"; UniqueID = "\QKEEOUOI" ("\QKEEOUOI")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = "0204/7"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "R-US_"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "rcl"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "48"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SPICEPREFIX"; Value = "R"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "R-US"; VariantName = "[No Variations]"
+Change component parameters: Designator = "R2" ("R2"); Footprint = "0204/7"; UniqueID = "\QOEMOBDX" ("\QOEMOBDX")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = "0204/7"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "R-US_"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "rcl"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "48"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SPICEPREFIX"; Value = "R"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "R-US"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STEERING_ANGLE" ("STEERING_ANGLE"); Footprint = "ROTARY_ENCODER"; UniqueID = "\URHOSJSK" ("\URHOSJSK")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "ROTARY_ENCODER"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "F-E library custom components"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "ROTARY_ENCODER"; VariantName = "[No Variations]"
+Change component parameters: Designator = "THROTTLE1" ("THROTTLE1"); Footprint = "1X03"; UniqueID = "\SISQEORK" ("\SISQEORK")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Change component parameters: Designator = "THROTTLE2" ("THROTTLE2"); Footprint = "1X03"; UniqueID = "\XTAQOKRE" ("\XTAQOKRE")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Change component parameters: Designator = "U$3" ("U$3"); Footprint = "TEENSY41"; UniqueID = "\WLDSNRWD" ("\WLDSNRWD")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "TEENSY41"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "teensy"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "TEENSY41"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "TEENSY4.1"; Value = "TEENSY 4.1"; VariantName = "[No Variations]"
+Change component parameters: Designator = "U$11" ("U$11"); Footprint = "CAN_TEN"; UniqueID = "\MKOMWYYF" ("\MKOMWYYF")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "CAN_TEE"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "F-E library custom components"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "CAN_TEN"; VariantName = "[No Variations]"
+Change component parameters: Designator = "WHEEL_SP3" ("WHEEL_SP3"); Footprint = "1X03"; UniqueID = "\JHPXNOEE" ("\JHPXNOEE")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Change component parameters: Designator = "WHEEL_SP4" ("WHEEL_SP4"); Footprint = "1X03"; UniqueID = "\FUMSTOSI" ("\FUMSTOSI")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Added Component: Designator=P1(61300311121)
+Add component (AddParameter): Name = "Color"; Value = "Black"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Connector Type"; Value = "Male Pin"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Material"; Value = "Copper"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Mating Length"; Value = "5.9944mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Plating"; Value = "Gold"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contact Resistance"; Value = "20mO"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Current Rating"; Value = "3A"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Gender"; Value = "Male"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Height"; Value = "8.94mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Free"; Value = "Lead Free"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Lead Pitch"; Value = "2.54mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Max Operating Temperature"; Value = "105°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Min Operating Temperature"; Value = "-40°C"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Mount"; Value = "Through Hole"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "NexarPartId"; Value = "32855521"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Contacts"; Value = "3"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Pins"; Value = "3"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Positions"; Value = "3"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Number of Rows"; Value = "1"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Operating Supply Voltage"; Value = "250V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Orientation"; Value = "Vertical"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Packaging"; Value = "Bulk"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Pitch"; Value = "2.54mm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "REACH SVHC"; Value = "Unknown"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "RoHS"; Value = "Compliant"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Termination"; Value = "Solder"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Voltage Rating"; Value = "250V"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=5V Pin=P1-1
+Added Pin To Net: NetName=12V Pin=P1-2
+Added Pin To Net: NetName=GND Pin=P1-3
+Add Pin To Net: Unknown Pin: Pin R3-2
+Add Pin To Net: Unknown Pin: Pin R4-2
+Added Pin To Net: NetName=3.3V Pin=U$3-3V3-1
+Added Pin To Net: NetName=3.3V Pin=U$3-3V3-2
+Added Pin To Net: NetName=3.3V Pin=U$3-3V3-3
+Change Net Name : Old Net Name=A3_2 New Net Name=NetDAMPER_POT4_3
+Added Pin To Net: NetName=NetBRAKE_SW_1 Pin=BRAKE_SW-1
+Added Net: Name=NetBRAKE_SW_1
+Added Pin To Net: NetName=NetR5_1 Pin=U$3-18-A4/SDA0
+Added Net: Name=NetR5_1
+Added Pin To Net: NetName=NetR5_2 Pin=WHEEL_SP3-2
+Added Net: Name=NetR5_2
+Added Class: Name=team throttle control

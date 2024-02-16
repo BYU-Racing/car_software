@@ -1,0 +1,2 @@
+Remove Pin=BRAKE_SW1-2 From Net=12V
+Remove Pin=R4-1 From Net=GND

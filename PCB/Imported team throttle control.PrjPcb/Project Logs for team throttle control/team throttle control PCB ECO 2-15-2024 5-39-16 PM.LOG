@@ -1,0 +1,20 @@
+Removed Pin From Net: NetName=12V Pin=BRAKE_SW-2
+Removed Member From Class: ClassName=team throttle control Member=BRAKE_SW
+Add Component: Footprint Not Found EDG-01
+Add Pin To Net: Unknown Pin: Pin BRAKE_SW1-2
+Add Pin To Net: Unknown Pin: Pin R1-1
+Add Pin To Net: Unknown Pin: Pin R1-2
+Add Pin To Net: Unknown Pin: Pin R2-1
+Add Pin To Net: Unknown Pin: Pin R2-2
+Add Pin To Net: Unknown Pin: Pin R3-2
+Add Pin To Net: Unknown Pin: Pin R4-1
+Add Pin To Net: Unknown Pin: Pin R4-2
+Add Pin To Net: Unknown Pin: Pin R5-1
+Add Pin To Net: Unknown Pin: Pin R5-2
+Added Net: Name=NetBRAKE_SW1_1
+Add Class Member: Failed to add class member : Component BRAKE_SW1
+Add Class Member: Failed to add class member : Component R1 Resistor
+Add Class Member: Failed to add class member : Component R2 Resistor
+Add Class Member: Failed to add class member : Component R3 Resistor
+Add Class Member: Failed to add class member : Component R4 Resistor
+Add Class Member: Failed to add class member : Component R5 Resistor

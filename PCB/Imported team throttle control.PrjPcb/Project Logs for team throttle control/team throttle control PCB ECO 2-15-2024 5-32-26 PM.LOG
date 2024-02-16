@@ -1,0 +1,16 @@
+Change Component Footprint: Designator=P1 Old Footprint=61300311121 New Footprint=61300311121
+Change Comment: Unknown Component : R1
+Change Comment: Unknown Component : R2
+Change component parameters: Component "R1" not found
+Change component parameters: Component "R2" not found
+Add Pin To Net: Unknown Pin: Pin R3-1
+Add Pin To Net: Unknown Pin: Pin R3-2
+Add Pin To Net: Unknown Pin: Pin R4-1
+Add Pin To Net: Unknown Pin: Pin R4-2
+Add Pin To Net: Unknown Pin: Pin R5-1
+Add Pin To Net: Unknown Pin: Pin R5-2
+Added Pin To Net: NetName=5V Pin=U$3-VIN
+Added Pin To Net: NetName=GND Pin=U$11-P$2
+Add Class Member: Failed to add class member : Component R3 Resistor
+Add Class Member: Failed to add class member : Component R4 Resistor
+Add Class Member: Failed to add class member : Component R5 Resistor

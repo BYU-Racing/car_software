@@ -1,0 +1,2 @@
+Remove Pin=R4-1 From Net=GND
+Change Component Footprint: Designator=P1 Old Footprint=61300311121 New Footprint=61300311121

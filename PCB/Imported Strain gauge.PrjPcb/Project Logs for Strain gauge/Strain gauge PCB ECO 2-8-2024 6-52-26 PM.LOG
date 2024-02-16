@@ -1,0 +1,146 @@
+Change Component DesignItemId : Designator=JP1 Old DesignItemId=1X03 New DesignItemId=PINHD-1X3
+Change Component Description : Designator=STRAIN1 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=STRAIN2 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=STRAIN3 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=STRAIN4 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=STRAIN5 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=STRAIN6 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=STRAIN7 Old Description= New Description=.100" (2.54mm) Center Header - 2 Pin
+Change Component Description : Designator=JP1 Old Description= New Description=PIN HEADER
+Change Component Library : Designator=JP1 Old Library= New Library=adafruit.IntLib
+Change Component Library : Designator=STRAIN1 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=STRAIN2 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=STRAIN3 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=STRAIN4 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=STRAIN5 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=STRAIN6 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=STRAIN7 Old Library= New Library=con-molex.IntLib
+Change Component Library : Designator=U$1 Old Library= New Library=teensy.IntLib
+Change component parameters: Designator = "JP1" ("JP1"); Footprint = "1X03"; UniqueID = "\YWIRVFXQ" ("YWIRVFXQ")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "PINHD-1X3"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "A"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "adafruit"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "PINHD3"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN1" ("STRAIN1"); Footprint = "22-23-2021"; UniqueID = "\BMKLFHHQ" ("BMKLFHHQ")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN2" ("STRAIN2"); Footprint = "22-23-2021"; UniqueID = "\JXHSDSDE" ("JXHSDSDE")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN3" ("STRAIN3"); Footprint = "22-23-2021"; UniqueID = "\AEILQIKN" ("AEILQIKN")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN4" ("STRAIN4"); Footprint = "22-23-2021"; UniqueID = "\LSDEYMIG" ("LSDEYMIG")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN5" ("STRAIN5"); Footprint = "22-23-2021"; UniqueID = "\GGVADRLY" ("GGVADRLY")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN6" ("STRAIN6"); Footprint = "22-23-2021"; UniqueID = "\OYJNQADP" ("OYJNQADP")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "STRAIN7" ("STRAIN7"); Footprint = "22-23-2021"; UniqueID = "\ABLTGLJY" ("ABLTGLJY")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "-1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_2"; Value = "-2"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "con-molex"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MF"; Value = "MOLEX"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "MPN"; Value = "22-23-2021"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_FARNELL"; Value = "1462926"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "OC_NEWARK"; Value = "25C3832"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "POPULARITY"; Value = "40"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "MV"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_2"; Value = "M"; VariantName = "[No Variations]"
+Change component parameters: Designator = "U$1" ("U$1"); Footprint = "TEENSY41"; UniqueID = "\HSENBWJH" ("HSENBWJH")
+Change component parameters (AddParameter): Name = "DeviceName"; Value = ""; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "DeviceSetName"; Value = "TEENSY41"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "GateName_1"; Value = "G$1"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "LibraryName"; Value = "teensy"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "SymbolName_1"; Value = "TEENSY41"; VariantName = "[No Variations]"
+Change component parameters (AddParameter): Name = "TEENSY4.1"; Value = "TEENSY 4.1"; VariantName = "[No Variations]"
+Add Component: Footprint Not Found CAN_TEN
+Change Net Name : Old Net Name=N$1 New Net Name=NetSTRAIN1_2
+Change Net Name : Old Net Name=N$2 New Net Name=NetSTRAIN1_1
+Change Net Name : Old Net Name=N$3 New Net Name=NetSTRAIN2_2
+Change Net Name : Old Net Name=N$4 New Net Name=NetSTRAIN2_1
+Change Net Name : Old Net Name=N$5 New Net Name=NetSTRAIN3_2
+Change Net Name : Old Net Name=N$6 New Net Name=NetSTRAIN3_1
+Change Net Name : Old Net Name=N$7 New Net Name=NetSTRAIN4_2
+Change Net Name : Old Net Name=N$8 New Net Name=NetSTRAIN4_1
+Change Net Name : Old Net Name=N$9 New Net Name=NetSTRAIN5_2
+Change Net Name : Old Net Name=N$10 New Net Name=NetSTRAIN5_1
+Change Net Name : Old Net Name=N$11 New Net Name=NetSTRAIN6_2
+Change Net Name : Old Net Name=N$12 New Net Name=NetSTRAIN6_1
+Change Net Name : Old Net Name=N$13 New Net Name=NetSTRAIN7_2
+Change Net Name : Old Net Name=N$14 New Net Name=NetSTRAIN7_1
+Added Pin To Net: NetName=3.3V Pin=U$1-3V3-1
+Added Pin To Net: NetName=3.3V Pin=U$1-3V3-2
+Added Pin To Net: NetName=3.3V Pin=U$1-3V3-3
+Added Net: Name=3.3V
+Added Pin To Net: NetName=CRX2 Pin=U$1-30-CRX3
+Added Net: Name=CRX2
+Added Pin To Net: NetName=CTX2 Pin=U$1-31-CTX3
+Added Net: Name=CTX2
+Added Class: Name=Strain gauge

@@ -1,0 +1,9 @@
+Change Component Footprint: Designator=R2 Old Footprint=FP-MRS25-MFG New Footprint=FP-MRS25-MFG
+Change Component Footprint: Designator=R3 Old Footprint=FP-MRS25-MFG New Footprint=FP-MRS25-MFG
+Change Component Footprint: Designator=R4 Old Footprint=FP-MRS25-MFG New Footprint=FP-MRS25-MFG
+Change Component Footprint: Designator=R5 Old Footprint=FP-MRS25-MFG New Footprint=FP-MRS25-MFG
+Change Component Footprint: Designator=R? Old Footprint=FP-MRS25-MFG New Footprint=FP-MRS25-MFG
+Added Pin To Net: NetName=ACC_DATA_OUT_1 Pin=STEERING_ANGLE-PH_A
+Added Pin To Net: NetName=ACC_DATA_OUT_2 Pin=STEERING_ANGLE-PH_B
+Added Pin To Net: NetName=ACC_DATA_OUT_1 Pin=U$3-14-A0/TX3/SPDIF_OUT
+Added Pin To Net: NetName=ACC_DATA_OUT_2 Pin=U$3-15-A1/RX3/SPDIF_IN

@@ -1,0 +1,11 @@
+Remove Pin=U$3-VIN From Net=5V
+Change Component Comment: Designator=U$11 Old Comment=CAN_TEE New Comment=
+Change Component Comment: Designator=THROTTLE1 Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=THROTTLE2 Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=WHEEL_SP3 Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=WHEEL_SP4 Old Comment=PINHD-1X3 New Comment=
+Change Component Comment: Designator=DAMPER_POT3 Old Comment=PINHD-1X3CB New Comment=
+Change Component Comment: Designator=DAMPER_POT4 Old Comment=PINHD-1X3CB New Comment=
+Change Component Comment: Designator=STEERING_ANGLE Old Comment=ROTARY_ENCODER New Comment=
+Change Component Comment: Designator=BRAKE_SW Old Comment=SW_DIP-1 New Comment=
+Change Component Comment: Designator=U$3 Old Comment=TEENSY41 New Comment=
