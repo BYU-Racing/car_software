@@ -4,10 +4,6 @@
 #include "Car.h"
 
 #define POT A0
-const float BIAS = 200;
-const float RANGE = 800 - BIAS;
-const int rescale = 100;
-const int startThreshold = 10;
 const int byteValue = 256;
 unsigned long startTime = 0;
 
@@ -17,9 +13,8 @@ Car car;
 
 void setup() {
   Serial.begin(9600);
-  delay(100);
   Serial.println("Start");
-  car.startSD("data.csv");
+  car.startSD();
 
   // SET UP CAN
   can2.begin();
@@ -29,11 +24,9 @@ void setup() {
 }
 
 void loop() {
-  car.checkButton();
-  car.checkKey();
-  car.checkSwitch();
   car.readSensors();
 
+  // TESTING Car w/o CAN -------------------------------------------
   // make a basic sensor data pointer
   if (millis() - startTime > 5000) {
     car.shutdown();
@@ -48,6 +41,7 @@ void loop() {
   SensorData dataObj = SensorData(0, data, 4, millis());
   dataObj.toString();
   car.logData(dataObj);
+  // END TESTING  Car w/o CAN ---------------------------------------
   
   if (can2.read(rmsg)) {
     SensorData msg = SensorData(rmsg);

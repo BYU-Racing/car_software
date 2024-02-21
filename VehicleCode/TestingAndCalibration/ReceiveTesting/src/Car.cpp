@@ -1,9 +1,11 @@
 #include "Car.h"
 #include <SD.h> 
+#include <string>
 
 #define KEY_PIN 24
-#define BUTTON_PIN 25
-#define LOG_PIN 25
+#define BUTTON_PIN 25 // not used rn
+#define SWITCH_PIN 25
+#define LOG_PIN 26
 #define ACCELERATOR_POT_1 3
 #define ID_ERROR 0
 #define SHUTDOWN 1
@@ -17,25 +19,12 @@
 Car::Car(){
     active = false;
     key = false;
-    pushToStart = false;
+    switchOn = false;
     throttlePosition = 0;
     timeZero = millis();
     buttonState = 0;
     speed = 0;
-}
-
-/**
- * @brief Constructor for Car class
- * 
- * @param logFileName (const char*) The name of the log file
-*/
-Car::Car(const char* logFileName) {
-    active = false;
-    key = false;
-    pushToStart = false;
-    fileName = logFileName;
-    throttlePosition = 0;
-    timeZero = millis();
+    fileName = "";
 }
 
 /**
@@ -47,7 +36,7 @@ Car::Car(const char* logFileName) {
 Car::Car(const char* logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
     active = false;
     key = false;
-    pushToStart = false;
+    switchOn = false;
     fileName = logFileName;
     throttlePosition = 0;
     timeZero = millis();
@@ -67,25 +56,24 @@ Car::~Car() {
  * 
  * @param logFileName (const char*) The name of the log file
 */
-void Car::startSD(const char* logFileName){
-    fileName = logFileName;
-    // dataFile = SD.open(fileName.c_str(), FILE_WRITE);
-
-    // Initialize SD card
-    if (!SD.begin(BUILTIN_SDCARD)) {  // Use the appropriate pin for your SD module
-        Serial.println("SD initialization failed!");
+void Car::startSD(){
+    // get fileName and check for errors
+    fileName = getFileName();
+    if (strlen(fileName) == 0) {
+        fileName = "data.csv";
+        Serial.println("Error: Latest file number not found.");
     }
-    Serial.println("SD initialization done.");
     
-    dataFile = SD.open(logFileName, FILE_WRITE);
     if (dataFile) {
         dataFile.println("ID, Time, Data");
     } else {
-        Serial.println("Error opening file: DNE");
+        Serial.println("Error: Can't open/start file.");
     } 
-    delay(1000);
 }
 
+
+
+// -------------------------- HELPER FUNCTIONS -------------------------------------------
 
 
 /**
@@ -94,25 +82,30 @@ void Car::startSD(const char* logFileName){
  * @param data (const SensorData&) The sensor data to be logged
 */
 void Car::logData(const SensorData& data) {
+    dataFile = SD.open(fileName, FILE_WRITE);
     if (dataFile) {
-        // Write data to the file in CSV format
-        dataFile.print(data.getId());
-        dataFile.print(",");
-        dataFile.print(data.getTimeStamp());
-        dataFile.print(",");
+        if (active && logState) {
+            // Write data to the file in CSV format
+            dataFile.print(data.getId());
+            dataFile.print(",");
+            dataFile.print(data.getTimeStamp());
+            dataFile.print(",");
 
-        sensorData = data.getData();
-        for (int i = 0; i < data.length(); i++) {
-            dataFile.print(sensorData[i]);
-            if (i < data.length() - 1) {
-                dataFile.print(",");
+            sensorData = data.getData();
+            for (int i = 0; i < data.length(); i++) {
+                dataFile.print(sensorData[i]);
+                if (i < data.length() - 1) {
+                    dataFile.print(",");
+                }
             }
+            dataFile.println();
+        } else {
+            Serial.println("Waiting to start logging.");
         }
-        dataFile.println();
-
     } else {
-        Serial.println("Error writing to file");
+        Serial.println("Error: File not open.");
     }
+    dataFile.close();
 }
 
 
@@ -120,18 +113,36 @@ void Car::logData(const SensorData& data) {
 // Car is active if key is turned and button is pushed
 void Car::updateState() {
     // Implement state update logic here
-    active = key && pushToStart;
-}
-
-// Method to push the button
-void Car::buttonPushed() {
-    pushToStart = !pushToStart;
-    updateState();
+    active = key && switchOn;
 }
 
 // Method to check if the key is turned
 void Car::checkKey() {
     key = digitalRead(KEY_PIN);
+    updateState();
+}
+
+void Car::checkSwitch() {
+    switchOn = digitalRead(SWITCH_PIN);
+    updateState();
+}
+
+void Car::checkToLog() {
+    logState = digitalRead(LOG_PIN);
+    updateState();
+}
+
+// Method to check if the car is active
+// not used rn
+bool Car::checkActive() {
+    return active;
+}
+
+
+// Method to push the button
+// Not used rn
+void Car::buttonPushed() {
+    switchOn = !switchOn;
     updateState();
 }
 
@@ -148,11 +159,6 @@ void Car::checkButton() {
 }
 
 
-void Car::checkSwitch() {
-    logState = digitalRead(LOG_PIN);
-    updateState();
-}
-
 
 /**
  * @brief Set the CAN bus
@@ -166,8 +172,9 @@ void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
 void Car::shutdown() {
     // Update the state
     key = false;
-    pushToStart = false;
+    switchOn = false;
     active = false;
+    logState = false;
 
     // Close the file
     if (dataFile) {
@@ -175,14 +182,14 @@ void Car::shutdown() {
     }
 }
 
-// Method to check if the car is active
-// CHECK: not used rn
-bool Car::checkActive() {
-    return active;
-}
-
 // Method to read sensors
 void Car::readSensors() {
+    // update states
+    checkKey();
+    checkSwitch();
+    checkToLog();
+
+    // read CAN
     if (active && can2.read(rmsg)) {
         SensorData msg = SensorData(rmsg);
 
@@ -207,4 +214,37 @@ int Car::deconstructSpeed(int* &data) {
         speed = 0;
     }
     return speed;
+}
+
+const char* Car::getFileName() {
+    // Initialize SD card
+    if (!SD.begin(BUILTIN_SDCARD)) {
+        Serial.println("SD initialization failed!");
+    }
+    Serial.println("SD initialization done.");
+    
+    // Open the SD card directory
+    File nameFile = SD.open("/fileNames.txt");
+    if (!nameFile) {
+        Serial.println("Failed to open root directory!");
+        return;
+    }
+    String line;
+    int maxNumber;
+    while (getline(nameFile, line)) {
+        int fileNumber = line.toInt();
+        if (fileNumber > maxNumber) {
+            maxNumber = fileNumber;
+        }
+    }
+    nameFile.close();
+    
+    // Increment the max file number by one
+    maxNumber++;
+    
+    // Convert the incremented file number to a string padded with zeros
+    String incrementedFileName = String(maxNumber, 6) + ".txt"; // Assuming maximum 6 digits
+    
+    // Convert the string to const char* and return
+    return incrementedFileName.c_str();
 }

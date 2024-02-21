@@ -8,14 +8,14 @@
 class Car {
 private:
     bool active;              // Indicates if the car is active
-    bool key;                 // Indicates if the car has a key
-    bool pushToStart;         // Indicates if the car uses push-to-start
+    bool key;                 // Indicates if the car has been turned on with the key
+    bool switchOn;            // Indicates if the car has been switched on
     bool logState;            // Indicates if the car is logging data
     const char* fileName;     // File name for logging data
     int throttlePosition;     // Throttle position
     int timeZero;             // Starting time
     File dataFile;            // File for logging data
-    int buttonState;          // State of the button
+    int buttonState;          // State of the button (not used rn)
     int speed;
     int* sensorData;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
@@ -28,13 +28,10 @@ private:
 public:
     // Constructor
     Car();
-    Car(const char* logFileName);
     Car(const char* logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
     // Destructor
     ~Car();
-
-    // Method to shut down the car
     void shutdown();
 
     // Getters
@@ -50,11 +47,13 @@ public:
     void checkKey();
     void checkButton();
     void checkSwitch();
+    void checkToLog();
 
     // Method to log sensor data
-    void startSD(const char* logFileName);
+    void startSD();
     void logData(const SensorData& data);
     int deconstructSpeed(int* &data);
+    const char* getFileName();
 
 };
 
