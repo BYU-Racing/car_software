@@ -44,7 +44,8 @@ void loop() {
   data[1] = 1;
   data[2] = 2;
   data[3] = 3;
-  SensorData dataObj = SensorData(0, data, 1, millis());
+  SensorData dataObj = SensorData(0, data, 4, millis());
+  dataObj.toString();
   car.logData(dataObj);
   
   if (can2.read(rmsg)) {
@@ -72,3 +73,84 @@ void loop() {
   }
   // delay(1000);
 }
+
+
+
+// // Include HX711 library and wire library (the latter for SD card module)
+// #include <Wire.h>
+
+// // Include libraries for SD card module
+// #include <SPI.h>
+// #include <SD.h>
+
+// // Define pins
+// #define LOAD_DT 2 // Wire to DT
+// #define LOAD_SCK 3 // Wire to SCK
+// #define BUTTON 7 // Wire to button
+
+// // Define variables for load cell reading & calibration factor
+// double reading; // load cell value
+// double A; // variable to track time
+// float calibration_factor = -504000;
+
+// // Objects for scale and card module
+// File myFile;
+
+// // Initial loop (run once)
+// void setup() {
+  
+//   // Open serial communications and wait for port to open
+//   Serial.begin(9600);
+//   while (!Serial) {
+//     ; // wait for serial port to connect. Needed for native USB port only
+//   }
+
+//   // Initialize communication with microSD card
+//   Serial.print("Initializing SD card...");
+//   if (!SD.begin(BUILTIN_SDCARD)) {
+//     Serial.println("initialization failed!");
+//     while (1);
+//   }
+//   Serial.println("initialization done.");
+
+
+//   // Apply calibration factor to scale and print to serial monitor
+//   Serial.print("Calibration factor: ");
+//   Serial.println(calibration_factor);
+
+//   // Set up digital pin connected to button
+//   pinMode(BUTTON, INPUT);
+// }
+
+// void loop() {
+
+//   // Check for button depress. If depressed, record data.
+
+//     // Set reference time
+//     A = micros()/1e6;
+    
+//     // Open file on microSD card
+//     myFile = SD.open("test.txt", FILE_WRITE);
+//     Serial.println(" Writing to test.txt...");
+
+//     // Print column headers
+//     myFile.println("Time(s) Force(mN)"); // mN = milliNewton
+  
+//     // Write data to file. If the file exists, the data will be
+//     // appended to the end of the file.
+//     for (int i = 0; i < 100; i++) {
+//       myFile.print(micros()/1e6 - A, 8);
+//       myFile.print(" ");
+//       // Multiply reading by 9.807 to convert to force (F = mg)
+//       myFile.println(-reading*1000*9.807, 5);
+//     }
+
+//     // Print blank line after last data point to make it easier
+//     // to find where new data sets begin
+//     myFile.println(" ");
+   
+//     // Close the file:
+//     myFile.close();
+//     Serial.println("Done.");
+//     delay(2000);
+//   }
