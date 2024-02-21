@@ -3,6 +3,7 @@
 
 #define KEY_PIN 24
 #define BUTTON_PIN 25
+#define LOG_PIN 25
 #define ACCELERATOR_POT_1 3
 #define ID_ERROR 0
 #define SHUTDOWN 1
@@ -93,9 +94,7 @@ void Car::startSD(const char* logFileName){
  * @param data (const SensorData&) The sensor data to be logged
 */
 void Car::logData(const SensorData& data) {
-    Serial.print("Logging? ");
-    // if (dataFile) {
-        Serial.println("Yes");
+    if (dataFile) {
         // Write data to the file in CSV format
         dataFile.print(data.getId());
         dataFile.print(",");
@@ -103,21 +102,17 @@ void Car::logData(const SensorData& data) {
         dataFile.print(",");
 
         sensorData = data.getData();
-        Serial.println("Data length: " + String(data.length()));
         for (int i = 0; i < data.length(); i++) {
             dataFile.print(sensorData[i]);
-            Serial.print(sensorData[i]);
-            Serial.print(", ");
             if (i < data.length() - 1) {
                 dataFile.print(",");
             }
         }
-        Serial.println();
         dataFile.println();
 
-    // } else {
-    //     Serial.println("Error opening file");
-    // }
+    } else {
+        Serial.println("Error writing to file");
+    }
 }
 
 
@@ -141,6 +136,7 @@ void Car::checkKey() {
 }
 
 // Method to check if the button is pushed
+// Not used rn
 void Car::checkButton() {
     buttonState = digitalRead(BUTTON_PIN);
     if (buttonState != prevButtonState) {
@@ -150,6 +146,13 @@ void Car::checkButton() {
         prevButtonState = buttonState;
     }
 }
+
+
+void Car::checkSwitch() {
+    logState = digitalRead(LOG_PIN);
+    updateState();
+}
+
 
 /**
  * @brief Set the CAN bus

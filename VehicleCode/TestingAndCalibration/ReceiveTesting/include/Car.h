@@ -10,6 +10,7 @@ private:
     bool active;              // Indicates if the car is active
     bool key;                 // Indicates if the car has a key
     bool pushToStart;         // Indicates if the car uses push-to-start
+    bool logState;            // Indicates if the car is logging data
     const char* fileName;     // File name for logging data
     int throttlePosition;     // Throttle position
     int timeZero;             // Starting time
@@ -48,6 +49,7 @@ public:
     void readSensors();
     void checkKey();
     void checkButton();
+    void checkSwitch();
 
     // Method to log sensor data
     void startSD(const char* logFileName);

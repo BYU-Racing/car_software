@@ -31,6 +31,7 @@ void setup() {
 void loop() {
   car.checkButton();
   car.checkKey();
+  car.checkSwitch();
   car.readSensors();
 
   // make a basic sensor data pointer
