@@ -1,6 +1,5 @@
 #include "Car.h"
 #include <SD.h> 
-#include <string>
 
 #define KEY_PIN 24
 #define BUTTON_PIN 25 // not used rn
@@ -227,23 +226,23 @@ const char* Car::getFileName() {
     File nameFile = SD.open("/fileNames.txt");
     if (!nameFile) {
         Serial.println("Failed to open root directory!");
-        return;
     }
     String line;
-    int maxNumber;
-    while (getline(nameFile, line)) {
+    int maxNumber = 000000;
+    while (nameFile.available()) {
+        line = nameFile.readStringUntil('\n');
         int fileNumber = line.toInt();
-        if (fileNumber > maxNumber) {
+        if(fileNumber > maxNumber) {
             maxNumber = fileNumber;
         }
     }
-    nameFile.close();
-    
     // Increment the max file number by one
     maxNumber++;
-    
+    dataFile = SD.open("/fileNames.txt", FILE_WRITE);
+    dataFile.print(maxNumber);
+    dataFile.close();
     // Convert the incremented file number to a string padded with zeros
-    String incrementedFileName = String(maxNumber, 6) + ".txt"; // Assuming maximum 6 digits
+    String incrementedFileName = String(maxNumber) + ".csv"; // Assuming maximum 6 digits
     
     // Convert the string to const char* and return
     return incrementedFileName.c_str();
