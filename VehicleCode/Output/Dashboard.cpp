@@ -23,13 +23,8 @@
 Dashboard::Dashboard(Actuator** display, unsigned long startTime) {
     // load parameters
     this->startTime = startTime;
-
-    Serial.println("AFTER STIME");
     this->display = display;
-    Serial.println("AFTER DISPLAY");
     numActuators = sizeof(display);
-
-    Serial.println("AFTER PARAMETER LOAD");
 }
 
 // TEST: define function
@@ -58,12 +53,7 @@ Dashboard::~Dashboard() {
 int Dashboard::getSensorIndex(int id) {
     switch (id) {
         case SEVEN_SEG_1: return 0;     //SEVEN_SEG_1
-        case SEVEN_SEG_2: return 1;     //SEVEN_SEG_2
-        case LED_ARRAY_1: return 2;     //LED_ARRAY_1
-        case LED_ARRAY_2: return 3;     //LED_ARRAY_2
-        case LED_ARRAY_3: return 4;     //LED_ARRAY_3
-        case SERVO:       return 5;     //SERVO
-        case HORN:        return 6;     //HORN
+        case LED_ARRAY_1: return 1;     //LED_ARRAY_1
         default: return -1;             //UNKNOWN
     }
 }
@@ -81,7 +71,6 @@ void Dashboard::updateDisplay() {
 
     CAN_message_t rmsg;
     if (this->can1.read(rmsg)) {
-        Serial.println("GOT CAN");
         // Determine which actuator to update based on the received CAN message and update it
         int actuatorIndex = getSensorIndex(rmsg.id); 
 
