@@ -1,0 +1,19 @@
+Output: Gerber X2 Files
+Type  : GerberX2
+From  : Variant [[No Variations]] of Project [team back ECU.PrjPcb]
+   Generated File[team back ECU_Copper_Signal_Top.gbr]
+   Generated File[team back ECU_Copper_Signal_Bot.gbr]
+   Generated File[team back ECU_Legend_Top.gbr]
+   Generated File[team back ECU_Legend_Bot.gbr]
+   Generated File[team back ECU_Keep-out.gbr]
+   Generated File[team back ECU_Profile.gbr]
+   Generated File[team back ECU_NPTH_Drill.gbr]
+   Generated File[team back ECU_PTH_Drill.gbr]
+   Generated File[team back ECU.EXTREP]
+   Generated File[team back ECU.REP]
+
+
+Files Generated   : 10
+Documents Printed : 0
+
+Finished Output Generation At 6:50:25 PM On 2/15/2024
