@@ -1,3 +1,10 @@
+/*
+ * BYU RACING
+ * Authors    David Reinhardt
+ * Goal: blink the onboard LED to verify that the
+ *       teensy is functioning
+ */
+
 #include <Arduino.h>
 
 #define LED 13 // built-in LED pin
@@ -17,11 +24,12 @@ void setup() {
 
   // setup serial monitor
   Serial.begin(BAUD);
-  delay(100);
+  delay(1000);
   Serial.println(state);
 }
 
 void loop() {
+  // every delay time switch the state of the LED
   if(millis() - prevTime > DELAY){
     state = !state;
     prevTime = millis();
