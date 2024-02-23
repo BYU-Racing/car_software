@@ -1,0 +1,19 @@
+Output: Gerber X2 Files
+Type  : GerberX2
+From  : Variant [[No Variations]] of Project [team throttle control.PrjPcb]
+   Generated File[team throttle control_Copper_Signal_Top.gbr]
+   Generated File[team throttle control_Copper_Signal_Bot.gbr]
+   Generated File[team throttle control_Legend_Top.gbr]
+   Generated File[team throttle control_Legend_Bot.gbr]
+   Generated File[team throttle control_Keep-out.gbr]
+   Generated File[team throttle control_Profile.gbr]
+   Generated File[team throttle control_NPTH_Drill.gbr]
+   Generated File[team throttle control_PTH_Drill.gbr]
+   Generated File[team throttle control.EXTREP]
+   Generated File[team throttle control.REP]
+
+
+Files Generated   : 10
+Documents Printed : 0
+
+Finished Output Generation At 7:02:02 PM On 2/15/2024

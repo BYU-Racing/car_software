@@ -1,0 +1,10 @@
+Removed Pin From Net: NetName=ACC_DATA_OUT_1 Pin=STEERING_ANGLE-PH_A
+Removed Pin From Net: NetName=ACC_DATA_OUT_2 Pin=STEERING_ANGLE-PH_B
+Removed Pin From Net: NetName=ACC_DATA_OUT_1 Pin=U$3-14-A0/TX3/SPDIF_OUT
+Removed Pin From Net: NetName=ACC_DATA_OUT_2 Pin=U$3-15-A1/RX3/SPDIF_IN
+Added Pin To Net: NetName=T2_DP_1 Pin=STEERING_ANGLE-PH_A
+Added Pin To Net: NetName=T2_DP_1 Pin=U$3-14-A0/TX3/SPDIF_OUT
+Added Net: Name=T2_DP_1
+Added Pin To Net: NetName=T2_DP_2 Pin=STEERING_ANGLE-PH_B
+Added Pin To Net: NetName=T2_DP_2 Pin=U$3-15-A1/RX3/SPDIF_IN
+Added Net: Name=T2_DP_2
