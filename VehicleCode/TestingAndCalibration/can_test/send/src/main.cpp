@@ -5,7 +5,6 @@
  *       the teensy and the wiring is correct
  */
 
-// TEST
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 
@@ -35,6 +34,7 @@ void loop() {
   msg.buf[0]=state;
   msg.id=2;
   can2.write(msg);
+  Serial.println("sent");
 
   delay(500);
 }

@@ -5,7 +5,6 @@
  *       that the teensy and the wiring is correct
  */
 
-// TEST
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 
@@ -32,5 +31,8 @@ void loop() {
     Serial.println(rmsg.buf[0]);
     // write the value to the LED
     digitalWrite(LED, rmsg.buf[0]);
-  }  
+  } else{
+    Serial.println("nothing");
+    delay(100);
+  }
 }
