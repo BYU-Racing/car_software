@@ -1,16 +1,26 @@
 #include "Actuator.h"
 #include "Screen.h"
 
+/**
+ * @brief Constructor for Screen class.
+ *
+ * Initializes a Screen object with pre defined paramters
+ */
+
 Screen::Screen() {
     this -> mode = 0; //mode 0 = time display // mode 1 = lap display
     this -> pauseTime = 10000; // ms that lap time will display at the end of the lap
-    this -> modeTimeStart = 0;
+    this -> modeTimeStart = 0; //Time of mode switch
     this -> timeStartTime = millis();
-
-    
 }
 
-
+/**
+ * @brief displays a passed in Lap Time on the screen
+ * 
+ * @param inSeconds (int) the number of seconds in the lap (LIMITED TO 2 DIGITS)
+ * @param milliseconds (int) number of milliseconds in the lap (LIMITED TO 2 DIGITS)
+ * 
+*/
 void Screen::displayLapTime(int inSeconds, int milliseconds) {
     this -> mode = 1;
 
@@ -40,6 +50,9 @@ void Screen::displayLapTime(int inSeconds, int milliseconds) {
 
 }
 
+/**
+ * @brief displays the current runTime of the car
+*/
 void Screen::displayTime() {
     if(mode != 1) {
         // Display the code for the time
@@ -79,6 +92,11 @@ void Screen::displayTime() {
     }
 }
 
+/**
+ * @brief Gets the laptime from the SensorData, converts into needed format
+ * Then displays it
+*/
+
 void Screen::updateValue(const SensorData& data) {
 
     //Pull the lap time from the sensorData object
@@ -89,6 +107,13 @@ void Screen::updateValue(const SensorData& data) {
 
     displayLapTime(seconds, milliseconds);
 }
+
+/**
+ * @brief displays a passed in Lap Time on the screen
+ * 
+ * @param myMatrix (Adafruit_7segment)
+ * Sets the matrix (screen) that we are writing to for the screen
+*/
 
 void Screen::setMatrix(Adafruit_7segment myMatrix) {
     this->matrix = myMatrix;

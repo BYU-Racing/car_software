@@ -10,12 +10,9 @@
 // Global variables
 #define BAUDRATE 250000
 
-
-// CHECK: define function
 /*!
  * @brief Constructor
- * Initializes the CAN bus and the actuators
- * 
+
  * @param display (Actuator**) An array of pointers to Actuator objects
  * @param startTime (unsigned long) The time the car started
  * @return None
@@ -27,7 +24,6 @@ Dashboard::Dashboard(Actuator** display, unsigned long startTime) {
     numActuators = sizeof(display);
 }
 
-// TEST: define function
 /*!
  * @brief Destructor
  * Deletes the actuators
@@ -79,7 +75,6 @@ void Dashboard::updateDisplay() {
             display[actuatorIndex]->updateValue(*sensorData);
             delete sensorData;
         }
-        delay(500);
     }
 }
 
