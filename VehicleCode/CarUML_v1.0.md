@@ -1,14 +1,8 @@
-# BYU Racing #
-### UML Diagram ###
-by David Reinhardt and Dallin Stewart
+# BYU Racing
 
-|Revision History|             |                      |              |
-|   :---   |       :---        |         :---         |     :---     |
-| Revision |    Revised By     |    Checked By        |     Date     |
-|    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
-|    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
-|    1.2   |  Dallin Stewart   |   TBD                | 02 OCT  2023 |
-|    1.3   |  Dallin Stewart   |   TBD                | 17 OCT  2023 |
+## UML Diagram
+
+by David Reinhardt and Dallin Stewart
 
 ```mermaid
 classDiagram
@@ -91,3 +85,11 @@ classDiagram
     Sensor *-- DataCollector : Has
     Actuator *-- Dashboard : Has
 ```
+
+|Revision History|             |                      |              |
+|   :---   |       :---        |         :---         |     :---     |
+| Revision |    Revised By     |    Checked By        |     Date     |
+|    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
+|    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
+|    1.2   |  Dallin Stewart   |   David Reinhardt    | 02 OCT  2023 |
+|    1.3   |  Dallin Stewart   |   David Reinhardt    | 17 OCT  2023 |
