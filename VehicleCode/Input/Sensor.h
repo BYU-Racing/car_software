@@ -4,12 +4,15 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+#include <Arduino.h>
 #include "SensorID.h"
+
+// CHECK moving this here should save a small amount of space
+#define ARRAY_SIZE 4
 
 class Sensor {
 protected:
     // Instantiate attributes
-    static const int ARRAY_SIZE = 4; // Size = pins
     int inputPins[ARRAY_SIZE];
     int waitTime;
     unsigned long previousUpdateTime = 0;
@@ -18,18 +21,17 @@ protected:
 
 public:
 
-    // Destructor
     //virtual ~Sensor();
     virtual int getId() = 0;
     virtual int getDataLength() = 0;
 
     // Declare a pure virtual function
-    // TODO output: array of ints that ends with -1 as an end of array marker
-        // ^^ This for the inputPins Array?
     virtual int readInputs() = 0;
 
     // Method to check if it's ready to read
-    virtual bool readyToCheck() = 0;
+    bool readyToCheck(){
+        return (waitTime <= int(millis() - previousUpdateTime));
+    }
 
     // Method to transform data
     virtual int rescale(int data) = 0;
