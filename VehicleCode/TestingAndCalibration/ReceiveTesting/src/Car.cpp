@@ -239,11 +239,12 @@ const char* Car::getFileName() {
     // Increment the max file number by one
     maxNumber++;
     dataFile = SD.open("/fileNames.txt", FILE_WRITE);
-    dataFile.print(maxNumber);
+    dataFile.println(maxNumber);
     dataFile.close();
     // Convert the incremented file number to a string padded with zeros
     String incrementedFileName = String(maxNumber) + ".csv"; // Assuming maximum 6 digits
-    
+    Serial.println(incrementedFileName);
+
     // Convert the string to const char* and return
     return incrementedFileName.c_str();
 }
