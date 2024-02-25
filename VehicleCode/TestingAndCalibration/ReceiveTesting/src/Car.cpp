@@ -23,7 +23,6 @@ Car::Car(){
     timeZero = millis();
     buttonState = 0;
     speed = 0;
-    fileName = "";
 }
 
 /**
@@ -32,14 +31,14 @@ Car::Car(){
  * @param logFileName (const char*) The name of the log file
  * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
-Car::Car(const char* logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
+Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
     active = false;
     key = false;
     switchOn = false;
     fileName = logFileName;
     throttlePosition = 0;
     timeZero = millis();
-    this->can2 = can2;
+    can2 = can2;
 }
 
 /**
@@ -57,17 +56,22 @@ Car::~Car() {
 */
 void Car::startSD(){
     // get fileName and check for errors
-    fileName = getFileName();
-    if (strlen(fileName) == 0) {
+    // fileName = updateFileName().c_str();
+    fileName = updateFileName();
+    if (strlen(fileName.c_str()) == 0) {
         fileName = "data.csv";
         Serial.println("Error: Latest file number not found.");
     }
-    
+
+    // Write the header
+    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     if (dataFile) {
         dataFile.println("ID, Time, Data");
     } else {
         Serial.println("Error: Can't open/start file.");
-    } 
+        delay(10000);
+    }
+    dataFile.close();
 }
 
 
@@ -81,7 +85,7 @@ void Car::startSD(){
  * @param data (const SensorData&) The sensor data to be logged
 */
 void Car::logData(const SensorData& data) {
-    dataFile = SD.open(fileName, FILE_WRITE);
+    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     if (dataFile) {
         if (active && logState) {
             // Write data to the file in CSV format
@@ -99,7 +103,7 @@ void Car::logData(const SensorData& data) {
             }
             dataFile.println();
         } else {
-            Serial.println("Waiting to start logging.");
+            Serial.println("Waiting for permission to start logging.");
         }
     } else {
         Serial.println("Error: File not open.");
@@ -107,79 +111,6 @@ void Car::logData(const SensorData& data) {
     dataFile.close();
 }
 
-
-
-// Car is active if key is turned and button is pushed
-void Car::updateState() {
-    // Implement state update logic here
-    active = key && switchOn;
-}
-
-// Method to check if the key is turned
-void Car::checkKey() {
-    key = digitalRead(KEY_PIN);
-    updateState();
-}
-
-void Car::checkSwitch() {
-    switchOn = digitalRead(SWITCH_PIN);
-    updateState();
-}
-
-void Car::checkToLog() {
-    logState = digitalRead(LOG_PIN);
-    updateState();
-}
-
-// Method to check if the car is active
-// not used rn
-bool Car::checkActive() {
-    return active;
-}
-
-
-// Method to push the button
-// Not used rn
-void Car::buttonPushed() {
-    switchOn = !switchOn;
-    updateState();
-}
-
-// Method to check if the button is pushed
-// Not used rn
-void Car::checkButton() {
-    buttonState = digitalRead(BUTTON_PIN);
-    if (buttonState != prevButtonState) {
-        if (buttonState == HIGH) {
-            buttonPushed();
-        }
-        prevButtonState = buttonState;
-    }
-}
-
-
-
-/**
- * @brief Set the CAN bus
- * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
-*/
-void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    this->can2 = can2;
-}
-
-// Method to shut down the car
-void Car::shutdown() {
-    // Update the state
-    key = false;
-    switchOn = false;
-    active = false;
-    logState = false;
-
-    // Close the file
-    if (dataFile) {
-        dataFile.close();
-    }
-}
 
 // Method to read sensors
 void Car::readSensors() {
@@ -215,7 +146,7 @@ int Car::deconstructSpeed(int* &data) {
     return speed;
 }
 
-const char* Car::getFileName() {
+String Car::updateFileName() {
     // Initialize SD card
     if (!SD.begin(BUILTIN_SDCARD)) {
         Serial.println("SD initialization failed!");
@@ -236,15 +167,90 @@ const char* Car::getFileName() {
             maxNumber = fileNumber;
         }
     }
+    nameFile.close();
+
     // Increment the max file number by one
     maxNumber++;
-    dataFile = SD.open("/fileNames.txt", FILE_WRITE);
-    dataFile.println(maxNumber);
-    dataFile.close();
+    nameFile = SD.open("/fileNames.txt", FILE_WRITE);
+    nameFile.println(maxNumber);
+    nameFile.close();
+
     // Convert the incremented file number to a string padded with zeros
     String incrementedFileName = String(maxNumber) + ".csv"; // Assuming maximum 6 digits
-    Serial.println(incrementedFileName);
+    return incrementedFileName;
+}
 
-    // Convert the string to const char* and return
-    return incrementedFileName.c_str();
+
+
+// -------------------------- GETTERS AND SETTERS -------------------------------------------
+
+
+/**
+ * @brief Set the CAN bus
+ * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+*/
+void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
+    can2 = can2;
+}
+
+// Method to shut down the car
+void Car::shutdown() {
+    // Update the state
+    key = false;
+    switchOn = false;
+    active = false;
+    logState = false;
+
+    // Close the file
+    if (dataFile) {
+        dataFile.close();
+    }
+}
+
+
+// Car is active if key is turned and button is pushed
+void Car::updateState() {
+    // Implement state update logic here
+    active = key && switchOn;
+}
+
+// Method to check if the key is turned
+void Car::checkKey() {
+    key = digitalRead(KEY_PIN);
+    updateState();
+}
+
+void Car::checkSwitch() {
+    switchOn = digitalRead(SWITCH_PIN);
+    updateState();
+}
+
+void Car::checkToLog() {
+    logState = digitalRead(LOG_PIN);
+}
+
+// Method to check if the car is active
+// not used rn
+bool Car::checkActive() {
+    return active;
+}
+
+
+// Method to push the button
+// Not used rn
+void Car::buttonPushed() {
+    switchOn = !switchOn;
+    updateState();
+}
+
+// Method to check if the button is pushed
+// Not used rn
+void Car::checkButton() {
+    buttonState = digitalRead(BUTTON_PIN);
+    if (buttonState != prevButtonState) {
+        if (buttonState == HIGH) {
+            buttonPushed();
+        }
+        prevButtonState = buttonState;
+    }
 }

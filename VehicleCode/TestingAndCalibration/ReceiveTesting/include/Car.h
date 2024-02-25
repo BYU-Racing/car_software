@@ -11,7 +11,7 @@ private:
     bool key;                 // Indicates if the car has been turned on with the key
     bool switchOn;            // Indicates if the car has been switched on
     bool logState;            // Indicates if the car is logging data
-    const char* fileName;     // File name for logging data
+    String fileName;     // File name for logging data
     int throttlePosition;     // Throttle position
     int timeZero;             // Starting time
     File dataFile;            // File for logging data
@@ -28,7 +28,7 @@ private:
 public:
     // Constructor
     Car();
-    Car(const char* logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
+    Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
     // Destructor
     ~Car();
@@ -53,7 +53,7 @@ public:
     void startSD();
     void logData(const SensorData& data);
     int deconstructSpeed(int* &data);
-    const char* getFileName();
+    String updateFileName();
 
 };
 

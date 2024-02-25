@@ -30,16 +30,17 @@ void loop() {
   // make a basic sensor data pointer
   if (millis() - startTime > 5000) {
     car.shutdown();
-    Serial.println("Shutting down");
+    Serial.println("Shutting down after 5 seconds of operation.");
     while(1);
   }
-  int* data = new int[4];
-  data[0] = 0;
-  data[1] = 1;
-  data[2] = 2;
-  data[3] = 3;
-  SensorData dataObj = SensorData(0, data, 4, millis());
+  int* fake_data = new int[4];
+  fake_data[0] = 0;
+  fake_data[1] = 1;
+  fake_data[2] = 2;
+  fake_data[3] = 3;
+  SensorData dataObj = SensorData(0, fake_data, 4, millis());
   dataObj.toString();
+  Serial.println("");
   car.logData(dataObj);
   // END TESTING  Car w/o CAN ---------------------------------------
   
@@ -63,7 +64,7 @@ void loop() {
     }
   }
   else {
-    Serial.println("error");
+    // Serial.println("error");
     delay(500);
   }
   // delay(1000);
