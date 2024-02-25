@@ -9,9 +9,7 @@ fi
 
 # Get the current branch name
 branch=$(git rev-parse --abbrev-ref HEAD)
-
 # Pull changes from the current branch
-echo
 echo "Pulling from: $branch"
 git pull origin "$branch"
 
@@ -22,7 +20,6 @@ git add .
 
 # Commit changes with provided message
 commit_message="$1"
-echo
 echo "Committing: '$commit_message'"
 git commit -m "$commit_message"
 
