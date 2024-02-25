@@ -7,7 +7,7 @@
 const int byteValue = 256;
 unsigned long startTime = 0;
 
-CAN_message_t rmsg;
+CAN_message_t rmsg1;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 Car car;
 
@@ -44,15 +44,15 @@ void loop() {
   car.logData(dataObj);
   // END TESTING  Car w/o CAN ---------------------------------------
   
-  if (can2.read(rmsg)) {
-    SensorData msg = SensorData(rmsg);
-    if (msg.getId() == 0) {
+  if (can2.read(rmsg1)) {
+    SensorData msg1 = SensorData(rmsg1);
+    if (msg1.getId() == 0) {
       Serial.println("Error message received");
     }
     else {
-      int* data = msg.getData();
+      int* data = msg1.getData();
       Serial.print("ID: ");
-      Serial.println(rmsg.id, HEX);
+      Serial.println(rmsg1.id, HEX);
       Serial.print("TORQUE: ");
       Serial.println(data[1] * byteValue + data[0]);
       Serial.print("SPEED: ");
