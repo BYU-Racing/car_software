@@ -59,42 +59,6 @@ Car::~Car() {
 
 
 /**
- * @brief Method to log sensor data
- * 
- * Opens the file and writes the sensor data in CSV format
- * Checks for errors in opening the file and the state of the car first
- * 
- * @param data (const SensorData&) The sensor data to be logged
-*/
-void Car::logData(const SensorData& data) {
-    if (logState) {
-        dataFile = SD.open(fileName.c_str(), FILE_WRITE);
-        if (dataFile) {
-            // Write data to the file in CSV format
-            dataFile.print(data.getId());
-            dataFile.print(",");
-            dataFile.print(data.getTimeStamp());
-            dataFile.print(",");
-
-            sensorData = data.getData();
-            for (i = 0; i < data.length(); i++) {
-                dataFile.print(sensorData[i]);
-                if (i < data.length() - 1) {
-                    dataFile.print(",");
-                }
-            }
-            dataFile.println();
-        } else {
-            Serial.println("Error: File not open. ");
-        }
-        dataFile.close();
-    } else {
-        Serial.println("Waiting for permission to start logging.");
-    }
-}
-
-
-/**
  * @brief Method to read sensors
  * 
  * Checks the key and switch to determine if the car is active
@@ -126,6 +90,42 @@ void Car::readSensors() {
         if (msg.getId() == ID_ERROR and msg.getData()[COMMAND_IDX] == SHUTDOWN) {
             shutdown();
         }
+    }
+}
+
+
+/**
+ * @brief Method to log sensor data
+ * 
+ * Opens the file and writes the sensor data in CSV format
+ * Checks for errors in opening the file and the state of the car first
+ * 
+ * @param data (const SensorData&) The sensor data to be logged
+*/
+void Car::logData(const SensorData& data) {
+    if (logState) {
+        dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+        if (dataFile) {
+            // Write data to the file in CSV format
+            dataFile.print(data.getId());
+            dataFile.print(",");
+            dataFile.print(data.getTimeStamp());
+            dataFile.print(",");
+
+            sensorData = data.getData();
+            for (i = 0; i < data.length(); i++) {
+                dataFile.print(sensorData[i]);
+                if (i < data.length() - 1) {
+                    dataFile.print(",");
+                }
+            }
+            dataFile.println();
+        } else {
+            Serial.println("Error: File not open. ");
+        }
+        dataFile.close();
+    } else {
+        Serial.println("Waiting for permission to start logging.");
     }
 }
 
