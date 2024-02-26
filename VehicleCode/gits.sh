@@ -14,12 +14,12 @@ echo "Pulling from: $branch"
 git pull origin "$branch"
 
 # Add all changes
-echo
 echo "Adding to the staging area"
 git add .
 
 # Commit changes with provided message
 commit_message="$1"
+echo
 echo "Committing: '$commit_message'"
 git commit -m "$commit_message"
 
