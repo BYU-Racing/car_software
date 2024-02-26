@@ -4,7 +4,6 @@ iterate_to_vehiclecode() {
     while [ "$PWD" != "/" ]; do
         # Check if the current directory is "VehicleCode"
         if [ "$(basename "$PWD")" = "VehicleCode" ]; then
-            echo "Reached 'VehicleCode' directory."
             return 0  # Reached "VehicleCode" directory, return success
         fi
         # Move up one directory
@@ -19,32 +18,51 @@ iterate_to_vehiclecode() {
 # Check if filename argument is provided
 if [ $# -eq 0 ]; then
     echo "Please include the file name you would like to sync:"
-    echo "Usage: $0 <filename>"
+    echo "Usage: $0 <file_path>"
     exit 1
 fi
 
 # Get the filename from command-line argument
-filename="$1"
+desired_path="$1"
+# echo "Desired Path: $desired_path"
+
+
+# Check if the path exists and is a file
+if [ ! -f "$desired_path" ]; then
+    echo "Error: The provided path is not valid."
+    exit 1
+fi
 
 
 
 # Check if the file exists in the current directory
-if [ -e "$filename" ]; then
-    iterate_to_vehiclecode
+filename=$(basename "$desired_path")
+echo
+echo "Desired File: $filename"
+iterate_to_vehiclecode
 
-    if [ $? -eq 0 ]; then
-        # Find and print full paths of all instances of the file
-        find . -type f -name "$filename" -exec readlink -f {} \;
+if [ $? -eq 0 ]; then
+    # Find and print full paths of all instances of the file
+    file_paths=$(find . -type f -name "$filename" -exec realpath --relative-to="$PWD" {} \;)
+    length=$(echo "$file_paths" | wc -l)
+    ((length--))
+    echo "-------------"
+    find . -type f -name "$filename" -exec realpath --relative-to="$PWD" {} \;
+    echo "-------------"
     
-        # Ask for confirmation
-        read -p "We will replace these files. Continue? (Y/N): " answer
-        if [ "$answer" != "Y" ] && [ "$answer" != "y" ]; then
-            echo "Exiting."
-            exit 0
+    # Ask for confirmation
+    echo "Replacing the $length file(s) in this list (excluding the original)."
+    read -p "This action cannot be undone. Continue? (y/n): " answer
+    if [ "$answer" != "Y" ] && [ "$answer" != "y" ]; then
+        echo "Canceled."
+        exit 0
     fi
-
-    # Replace instances of the file name in all subdirectories
-    find . -type f -exec sed -i "s/$filename/$(basename "$filename")/g" {} +
-else
-    echo "File '$filename' does not exist in the current directory."
+    echo
 fi
+
+# Iterate over each file path and replace the file
+echo "$file_paths" | while IFS= read -r file_path; do
+    echo "Replacing file: $file_path"
+    cp "$desired_path" "$file_path"
+done
+echo "Done."
