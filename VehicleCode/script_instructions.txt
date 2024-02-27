@@ -1,0 +1,33 @@
+GITS.SH
+
+Purpose: automatically pull, commit, and push new changes
+Usage:
+1. Open a terminal like Git Bash
+2. Change directories to Vehicle Code
+3. Double check to make sure you are on the correct branch
+4. Type './gits.sh "<commit message>"' while replacing <commit message> with your commit message and without single quotes
+	4.1 Example) ./gits.sh "sync"
+5. Hit Enter to run the script and automatically update your branch!
+
+
+
+UPDATES.SH
+
+Purpose: automatically update all versions of a file with the most recent file. For example, if you modify the Dashboard class in one of your PlatformIO projects while testing, you can update all other versions in other testing folders, as well as the source code in the Input or Output folders.
+Usage:
+1. Open a terminal like Git Bash
+2. Double check to make sure you are on the correct branch
+3. Change directories to the folder with the desired file
+4. Type "realpath <filename>" to get the address of your file, replacing <filename> with the name of the file and without quotes
+	4.1 Example) realpath Car.cpp
+5. Copy the output. You made need to use "Ctrl+Insert"
+6. Change directories to Vehicle Code using "cd .."
+7. Type "./updates.sh <filepath>" 
+	7.1 Replace <filepath> with the path you just copied
+	7.2 You made need to use "Shift+Insert" to paste
+	7.3 Do not use quotes in the command
+	7.4 Example) ./updates /c/Users/dalli/Documents/testing/VehicleCode/f1/test1.txt
+8. Hit enter to run the script
+9. Double check the output list of files that will be replaced
+10. Type "Y" or "y" without the quotes to confirm, or anything else to cancel
+11. Hit Enter to run the script and automatically update all the old versions of your file!

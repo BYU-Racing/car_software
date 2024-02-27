@@ -44,7 +44,7 @@
 
 // Array of sensor id names as strings
 
-std::string names[31] = {
+const char* names[31] = {
     "KEY_SWITCH",       // 0
     "BATTERY_TEMP",     // 1
     "COOLANT_TEMP",     // 2
