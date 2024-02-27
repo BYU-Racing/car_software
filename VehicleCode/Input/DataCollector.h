@@ -23,6 +23,8 @@ private:
     Sensor** sensors;
     unsigned long timeZero;
     int numSensors;
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+
     
     // Read signals from sensors
     void readData(Sensor* sensor);
@@ -36,6 +38,10 @@ public:
 
     // Check sensor data and send signals
     void checkSensors();
+
+    // Getters and Setters
+    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
+    void resetTimeZero(unsigned long startTime);
 };
 
 #endif // DATACOLLECTOR_H
