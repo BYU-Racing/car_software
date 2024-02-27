@@ -1,46 +1,71 @@
 #ifndef CAR_H
 #define CAR_H
 
-#include "Input/SensorData.h"  // Include the header for the SensorData class
+#include "SensorData.h"  // Include the header for the SensorData class
 #include <string>        // Include the header for string handling
+#include <SD.h> 
+
 
 class Car {
 private:
+    // Car states
     bool active;              // Indicates if the car is active
-    bool key;                 // Indicates if the car has a key
-    bool pushToStart;         // Indicates if the car uses push-to-start
-    char fileName[];     // File name for logging data
+    bool key;                 // Indicates if the car has been turned on with the key
+    bool switchOn;            // Indicates if the car has been switched on
+    bool logState;            // Indicates if the car is logging data
+    int buttonState;          // State of the button (not used rn)
+
+    // Other attributes
+    String fileName;          // File name for logging data
     int throttlePosition;     // Throttle position
     int timeZero;             // Starting time
     File dataFile;            // File for logging data
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+
+    // Global variables
+    int speed;
+    int i = 0;
+    int* sensorData;
+    SensorData msg;
+    CAN_message_t rmsg;
+    int prevButtonState = 0;
+    const int rescale = 100;
+    const int startThreshold = 10;
+    const int byteValue = 256;
+    const int maxNameLength = 6;
+
 
 public:
-    // Constructor
-    Car(const std::string& logFileName);
-
-    // Destructor
+    // Constructors and Destructors
+    Car();
+    Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
     ~Car();
-
-    // Method to log sensor data
-    void logData(const SensorData& data);
-
-    // Method to update the state of the car
-    void updateState();
-
-    // Method to shut down the car
     void shutdown();
 
-    // Method to update the motor
-    void updateMotor(CAN_message_t canMessage);
-
-    // Method to check if the car is active
+    // Getters and setters
     bool checkActive();
+    void updateState();
+    void buttonPushed();
+    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
-    // Method to turn the key
-    void turnKey();
+    // Method to read sensors
+    void readSensors();
+    void checkKey();
+    void checkButton();
+    void checkSwitch();
+    void checkToLog();
 
-    // Method to push to start
-    void pushStart();
+    // Method to log sensor data
+    void createNewCSV();
+    void writeHeader();
+    void logData(const SensorData& data);
+    int deconstructSpeed(int* data);
+    String updateFileName();
+    void startSD();
+    int getMaxNumber();
+    void writeNumber(int);
+    String assembleName(int);
+    int tempLength(int);
 };
 
 #endif // CAR_H
