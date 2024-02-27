@@ -15,9 +15,6 @@
 #define CRITICAL 2
 #define FATAL 3
 
-//**Global Variables
-int torque;
-
 /**
  * @brief Constructor for ThrottleSensor class.
  *
@@ -39,7 +36,6 @@ ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int
     this->bias = bias;
     this->max = max;
     this->dataLength = dataLength;
-    sendData = new int[LENGTH];
 };
 
 /**
@@ -53,8 +49,8 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[0]), bias, max, 0, MAXPERCENT);
-    throttle2 = map(-analogRead(inputPins[1]), -max, -bias, 0, MAXPERCENT);
+    throttle1 = rescale(analogRead(inputPins[0]));
+    throttle2 = rescale(analogRead(inputPins[1]));
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -103,15 +99,21 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
 */
 int* ThrottleSensor::buildData(int percent){
     // determine torque
-    torque = computeTorque(percent);
+    int torque = computeTorque(percent);
 
     // convert to motor controller format
+    int torqueLow = getLow(torque);
+    int torqueHigh = getHigh(torque);
+    int speedLow = getLow(percent);
+    int speedHigh = getHigh(percent);
 
     // construct formatted data
-    sendData[0] = getLow(torque); //torqueLow
-    sendData[1] = getHigh(torque); //torqueHigh
-    sendData[2] = getLow(percent); //speedLow
-    sendData[3] = getHigh(percent); //speedHigh
+    // CHECK: do we need to delete this?
+    int* sendData = new int[LENGTH];
+    sendData[0] = torqueLow;
+    sendData[1] = torqueHigh;
+    sendData[2] = speedLow;
+    sendData[3] = speedHigh;
     sendData[4] = 1;
     sendData[5] = 1;
     sendData[6] = 0;
@@ -134,6 +136,7 @@ int* ThrottleSensor::buildData(int percent){
  *                          3: Fatal
 */
 int* ThrottleSensor::buildError() {
+    int* sendData = new int[dataLength];
     sendData[0] = sensorID;
     sendData[1] = command;
     sendData[2] = errorType;
@@ -181,6 +184,7 @@ int ThrottleSensor::getLow(int percent) {
 int ThrottleSensor::getHigh(int percent) {
   return percent / BYTESIZE;
 }
+
 
 
 /**

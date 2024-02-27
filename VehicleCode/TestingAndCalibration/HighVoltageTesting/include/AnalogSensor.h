@@ -3,7 +3,6 @@
 
 #include "Sensor.h"
 #include <Arduino.h>
-
 class AnalogSensor : public Sensor {
 private:
     // Additional attributes specific to AnalogSensor
