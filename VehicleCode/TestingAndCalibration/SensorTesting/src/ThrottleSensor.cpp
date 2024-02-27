@@ -49,8 +49,8 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = rescale(analogRead(inputPins[0]));
-    throttle2 = rescale(analogRead(inputPins[1]));
+    throttle1 = map(analogRead(inputPins[0]), bias, max, 0, MAXPERCENT);
+    throttle2 = map(-analogRead(inputPins[1]), -max, -bias, 0, MAXPERCENT);
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -184,7 +184,6 @@ int ThrottleSensor::getLow(int percent) {
 int ThrottleSensor::getHigh(int percent) {
   return percent / BYTESIZE;
 }
-
 
 
 /**
