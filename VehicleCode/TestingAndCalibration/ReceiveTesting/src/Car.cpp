@@ -103,7 +103,7 @@ void Car::readSensors() {
  * @param data (const SensorData&) The sensor data to be logged
 */
 void Car::logData(const SensorData& data) {
-    if (logState) {
+    if (logState) { 
         dataFile = SD.open(fileName.c_str(), FILE_WRITE);
         if (dataFile) {
             // Write data to the file in CSV format
@@ -225,6 +225,7 @@ int Car::getMaxNumber() {
     }
 
     // Read the file and get the maximum number
+    // Only runs once so don't worry about memory or global variables
     String line;
     int maxNumber = 0;
     while (nameFile.available()) {
@@ -261,12 +262,17 @@ void Car::writeNumber(int maxNumber) {
  * 
  * @return (String) The assembled file name in the format "000000.csv"
 */
-String Car::assembleName(int maxNumber, int maxLength=6) {
+String Car::assembleName(int maxNumber) {
     String temp;
-    for (int j = 0; j < maxLength - (maxNumber % 10); j++) {
+    for (int j = 0; j < tempLength(maxNumber); j++) {
         temp = "0" + temp;
     }
     return temp + String(maxNumber) + ".csv"; 
+}
+
+
+int Car::tempLength(int maxNumber) {
+    return maxNameLength - 1 - (maxNumber / 10);
 }
 
 

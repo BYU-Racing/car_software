@@ -32,6 +32,7 @@ private:
     const int rescale = 100;
     const int startThreshold = 10;
     const int byteValue = 256;
+    const int maxNameLength = 6;
 
 
 public:
@@ -63,7 +64,8 @@ public:
     void startSD();
     int getMaxNumber();
     void writeNumber(int);
-    String assembleName(int, int);
+    String assembleName(int);
+    int tempLength(int);
 };
 
 #endif // CAR_H

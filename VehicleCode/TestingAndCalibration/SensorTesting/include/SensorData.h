@@ -16,9 +16,7 @@ protected:
 public:
     // Constructor
     SensorData();
-    // CHECK change timeStamp to unsigned long
     SensorData(int id, int* data, int dataLength, unsigned long timeStamp);
-    // CHECK change canMessage to CAN_message_t
     SensorData(CAN_message_t canMessage);
 
     // CHECK add destructor
