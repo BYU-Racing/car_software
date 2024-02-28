@@ -27,7 +27,7 @@
 
 // initialize can and throttle sensor
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
-int throttleFreq = 200;
+int throttleFreq = 20;
 int numSensors = 1;
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 // AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
@@ -52,7 +52,7 @@ void setup() {
     collector.resetTimeZero(millis());
     car.createNewCSV();
     car.setCAN(can1);
-    car.setActive(true);
+    delay(2000);
 }
 
 

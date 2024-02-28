@@ -72,9 +72,14 @@ void Car::readSensors() {
     checkKey();
     checkSwitch();
     checkToLog();
+    setActive(true); // TODO remove after testing
+    setLogState(true); // TODO remove after testing
 
     // read CAN
-    if (active && can2.read(rmsg)) {
+    Serial.print("Reading CAN: ");
+    bool canRead = can2.read(rmsg);
+    Serial.println(canRead);
+    if (active && canRead) {
         msg = SensorData(rmsg);
 
         // update the motor controller
@@ -162,6 +167,7 @@ int Car::deconstructSpeed(int* data) {
 void Car::createNewCSV() {
     // get fileName and check for errors
     fileName = updateFileName();
+    Serial.println("File name: " + fileName);
     if (strlen(fileName.c_str()) == 0) {
         fileName = "data.csv";
         Serial.println("Error: Latest file number not found.");
@@ -286,7 +292,7 @@ int Car::tempLength(int maxNumber) {
  * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
 void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    can2 = can2;
+    this->can2 = can2;
 }
 
 /**
@@ -309,6 +315,15 @@ void Car::shutdown() {
     // update error LED?
 }
 
+// Method to set the active state of the car for testing only
+void Car::setActive(bool state) { 
+    active = state;
+}
+
+// Method to set the log state of the car for testing only
+void Car::setLogState(bool state) {
+    logState = state;
+}
 
 // Car is active if key is turned and button is pushed
 void Car::updateState() {
