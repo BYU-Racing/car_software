@@ -1,14 +1,8 @@
-# BYU Racing #
-### UML Diagram ###
-by David Reinhardt and Dallin Stewart
+# BYU Racing
 
-|Revision History|             |                      |              |
-|   :---   |       :---        |         :---         |     :---     |
-| Revision |    Revised By     |    Checked By        |     Date     |
-|    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
-|    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
-|    1.2   |  Dallin Stewart   |   TBD                | 02 OCT  2023 |
-|    1.3   |  Dallin Stewart   |   TBD                | 17 OCT  2023 |
+## UML Diagram
+
+by David Reinhardt and Dallin Stewart
 
 ```mermaid
 classDiagram
@@ -27,6 +21,8 @@ classDiagram
     note for AnalogSensor "Damper Pots\nThrottle Position\nWheel Speed\nWheatstone Bridges\nBrake Pressure\nCoolant Temp"
     DigitalSensor --|> Sensor : Is
     note for DigitalSensor "Buttons\nSwitches\nKey"
+    ThrottleSensor --|> Sensor : Is
+    note for ThrottleSensor "Throttle Position"
 
     class Actuator
     Actuator : -int[] outputPins
@@ -36,7 +32,7 @@ classDiagram
     Screen --|> Actuator : Is
     note for Screen "Time\nLap number"
     LEDArray --|> Actuator : Is
-    note for LEDArray "Battery Temp\mBattery Draw\nBattery Life"
+    note for LEDArray "Battery Temp\nBattery Draw\nBattery Life"
     Horn --|> Actuator : Is
     note for Horn "Horn"
 
@@ -79,8 +75,8 @@ classDiagram
     Car : +bool checkActive()
     Car : +void readSensors()
 
-    DataCollector --> Car : CAN
-    DataCollector --> Dashboard : CAN
+    DataCollector <--> Car : CAN
+    DataCollector <--> Dashboard : CAN
 
     Car ..> SensorData : Uses
     DataCollector ..> SensorData : Uses
@@ -89,3 +85,11 @@ classDiagram
     Sensor *-- DataCollector : Has
     Actuator *-- Dashboard : Has
 ```
+
+|Revision History|             |                      |              |
+|   :---   |       :---        |         :---         |     :---     |
+| Revision |    Revised By     |    Checked By        |     Date     |
+|    1.0   |  David Reinhardt  |   Dallin Stewart     | 19 SEPT 2023 |
+|    1.1   |  Dallin Stewart   |   David Reinhardt    | 25 SEPT 2023 |
+|    1.2   |  Dallin Stewart   |   David Reinhardt    | 02 OCT  2023 |
+|    1.3   |  Dallin Stewart   |   David Reinhardt    | 17 OCT  2023 |

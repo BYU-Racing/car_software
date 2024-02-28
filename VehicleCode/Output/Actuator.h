@@ -9,11 +9,9 @@ private:
     int* outputPins;
 
 public:
-    // Constructor
-    Actuator(int* pins, int numPins);
 
     // Destructor
-    virtual ~Actuator();
+    // virtual ~Actuator(); TODO:DALLIN INPUT FOR DESTRUCTOR
 
     // Method to update the actuator value using sensor data
     virtual void updateValue(const SensorData& data) = 0;

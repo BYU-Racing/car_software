@@ -44,6 +44,24 @@ Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
     can2 = can2;
 }
 
+Car::Car(const std::string& logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
+    active = false;
+    key = false;
+    pushToStart = false;
+    fileName = logFileName;
+    throttlePosition = 0;
+    timeZero = millis();
+    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    this->can2 = can2;
+
+    // Initialize SD card
+    if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
+        Serial.println("SD initialization failed!");
+        return;
+    }
+    Serial.println("SD initialization done.");
+}
+
 
 /**
  * @brief Destructor for Car class
@@ -146,6 +164,34 @@ int Car::deconstructSpeed(int* data) {
     return speed;
 }
 
+// Car is active if key is turned and button is pushed
+void Car::updateState() {
+    // Implement state update logic here
+    active = key && pushToStart;
+}
+
+// Method to push the button
+void Car::buttonPushed() {
+    pushToStart = !pushToStart;
+    updateState();
+}
+
+// Method to check if the key is turned
+void Car::checkKey() {
+    key = digitalRead(KEY_PIN);
+    updateState();
+}
+
+// Method to check if the button is pushed
+void Car::checkButton() {
+    int buttonState = digitalRead(BUTTON_PIN);
+    if (buttonState != prevButtonState) {
+        if (buttonState == HIGH) {
+            buttonPushed();
+        }
+        prevButtonState = buttonState;
+    }
+}
 
 
 
