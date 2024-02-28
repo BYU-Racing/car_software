@@ -46,6 +46,7 @@ public:
     bool checkActive();
     void updateState();
     void buttonPushed();
+    void setActive(bool);
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
     // Method to read sensors

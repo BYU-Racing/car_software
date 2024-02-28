@@ -4,19 +4,23 @@
 #include "AnalogSensor.h"
 #include "Sensor.h"
 #include "SensorData.h"
+#include "Error.h"
 #include "DataCollector.h"
 #include "ThrottleSensor.h"
-#include "Car.h"
+#include "DigitalSensor.h"
 
 
 // throttle sensor variables
 #define POT1 24
 #define POT2 25
+#define POTB 29
 #define ID_ERROR 0
-#define THROTTLE_POT 192
+#define THROTTLE_POT 1
 #define WHEEL_SPEED_FL 5
+#define BUTTON 2
 #define BIAS1 0
 #define MAX1 1024
+
 
 // CAN message variables
 #define LENGTH 8
@@ -25,39 +29,39 @@
 #define DELAYBY 0
 
 
-// initialize can and throttle sensor
+
+// initialize throttle sensor
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 int throttleFreq = 200;
+int buttonFreq = 200;
 int numSensors = 1;
-ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
+// ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 // AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
-Sensor* sensors[] = {&throttle};
+DigitalSensor button = DigitalSensor(BUTTON, buttonFreq, POTB);
+Sensor* sensors[] = {&button};
 DataCollector collector = DataCollector(sensors, numSensors, millis());
-Car car;
 
 
 
 // MAIN -------------------------------------------------------------------------------------------
 
 void setup() {
-    Serial.begin(BEGIN);
-    Serial.println("Start");
+  Serial.begin(BEGIN);
+  Serial.println("Start");
 
-    // set up CAN
-    can1.begin();
-    can1.setBaudRate(BAUDRATE);
+  // set up CAN
+  can1.begin();
+  can1.setBaudRate(BAUDRATE);
 
-    // set up collector and car
-    collector.setCAN(can1);
-    collector.resetTimeZero(millis());
-    car.createNewCSV();
-    car.setCAN(can1);
-    car.setActive(true);
+  // TEST: I think this should be here but idk if it will cause a problem
+  collector.setCAN(can1);
+  collector.resetTimeZero(millis());
 }
 
 
 void loop() {
-    collector.checkSensors();
-    car.readSensors();
-    delay(DELAYBY);
+
+  collector.checkSensors();
+ 
+  delay(DELAYBY);
 }
