@@ -28,11 +28,11 @@ void loop() {
 
   // TESTING Car w/o CAN -------------------------------------------
   // make a basic sensor data pointer
-  if (millis() - startTime > 5000) {
-    car.shutdown();
-    Serial.println("Shutting down after 5 seconds of operation.");
-    while(1);
-  }
+  // if (millis() - startTime > 5000) {
+  //   car.shutdown();
+  //   Serial.println("Shutting down after 5 seconds of operation.");
+  //   while(1);
+  // }
   int* fake_data = new int[4];
   fake_data[0] = 0;
   fake_data[1] = 1;

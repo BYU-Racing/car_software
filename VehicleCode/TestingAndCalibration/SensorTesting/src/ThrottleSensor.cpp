@@ -1,7 +1,7 @@
 #include "ThrottleSensor.h"
 #include <Arduino.h>
 
-#define MAXPERCENT 10000
+#define MAXPERCENT 1000
 #define LENGTH 8
 #define BYTESIZE 256
 #define ERROR_TOL 1000
