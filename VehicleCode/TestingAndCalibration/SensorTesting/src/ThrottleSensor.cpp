@@ -106,8 +106,6 @@ int* ThrottleSensor::buildData(int percent){
     torque = computeTorque(percent);
 
     // convert to motor controller format
-
-    // construct formatted data
     sendData[0] = getLow(torque); //torqueLow
     sendData[1] = getHigh(torque); //torqueHigh
     sendData[2] = getLow(percent); //speedLow

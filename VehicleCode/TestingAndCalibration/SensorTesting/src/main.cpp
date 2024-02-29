@@ -13,7 +13,7 @@
 #define POT1 24
 #define POT2 25
 #define ID_ERROR 0
-#define THROTTLE_POT 192
+#define THROTTLE_POT 1
 #define WHEEL_SPEED_FL 5
 #define BIAS1 0
 #define BIAS2 0
