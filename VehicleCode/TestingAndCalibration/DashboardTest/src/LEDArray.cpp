@@ -5,15 +5,15 @@
 // Constructor
 
 LEDArray::LEDArray(int* ledPinIn) {
-    this -> currentState = 0;
+    this->currentState = 0;
 
-    this -> increment = 20; 
+    this->increment = 20; 
 
-    this -> ledPins =  ledPinIn; // Change these as time goes on
+    this->ledPins =  ledPinIn; // Change these as time goes on
 
-    this -> intervalTime = 50; // Blinking interval in ms for battery
+    this->intervalTime = 50; // Blinking interval in ms for battery
 
-    this -> lastUpdate = 0;
+    this->lastUpdate = 0;
 
 }
 
@@ -36,17 +36,17 @@ void LEDArray::updateValue(const SensorData& data) {
 void LEDArray::displayLEDs(int value) {
 
     // Logic to check if battery level 25%
-    if(value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { // Whatever value indicates that we need to blink
-        if(this -> currentState == 0) { // 0 = LED OFF
+    if (value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { // Whatever value indicates that we need to blink
+        if(this->currentState == 0) { // 0 = LED OFF
             // Turn on blink LED
             digitalWrite(ledPins[0], HIGH);
-            this -> currentState = 1;
-            this -> lastUpdate = millis();
+            this->currentState = 1;
+            this->lastUpdate = millis();
         }
         else {
             // Turn off blink LED
             digitalWrite(ledPins[0], LOW);
-            this -> currentState = 0;
+            this->currentState = 0;
         }
 
     }
