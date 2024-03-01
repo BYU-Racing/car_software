@@ -24,6 +24,7 @@ private:
 
     // Global variables
     int speed;
+    int count = 0;
     int i = 0;
     int* sensorData;
     SensorData msg;

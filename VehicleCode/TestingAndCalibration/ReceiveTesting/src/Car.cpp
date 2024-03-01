@@ -278,7 +278,20 @@ String Car::assembleName(int maxNumber) {
 
 
 int Car::tempLength(int maxNumber) {
-    return maxNameLength - 1 - (maxNumber / 10);
+    count = 0;
+    
+    // Handle the cases for <=0 separately
+    if (maxNumber == 0)
+        return 1;
+    if (maxNumber < 0)
+        return 0;
+
+    // Count the number of digits by repeatedly dividing by 10
+    while (maxNumber > 0) {
+        maxNumber /= 10;
+        count++;
+    }
+    return maxNameLength - 1 - count;
 }
 
 
