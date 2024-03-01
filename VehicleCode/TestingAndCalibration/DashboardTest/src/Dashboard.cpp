@@ -65,12 +65,11 @@ Dashboard::~Dashboard() {
 int Dashboard::getSensorIndex(int id) {
     switch (id) {
         case SEVEN_SEG_1: return 0;     //SEVEN_SEG_1
-        case SEVEN_SEG_2: return 1;     //SEVEN_SEG_2
-        case LED_ARRAY_1: return 2;     //LED_ARRAY_1
-        case LED_ARRAY_2: return 3;     //LED_ARRAY_2
-        case LED_ARRAY_3: return 4;     //LED_ARRAY_3
-        case SERVO:       return 5;     //SERVO
-        case HORN:        return 6;     //HORN
+        case LED_ARRAY_1: return 1;     //LED_ARRAY_1
+        case LED_ARRAY_2: return 2;     //LED_ARRAY_2
+        case LED_ARRAY_3: return 3;     //LED_ARRAY_3
+        case SERVO:       return 4;     //SERVO
+        case HORN:        return 5;     //HORN
         default: return -1;             //UNKNOWN
     }
 }
@@ -89,14 +88,14 @@ void Dashboard::updateDisplay() {
     //Serial.println("Ran Function");
     CAN_message_t rmsg;
     if (this->can1.read(rmsg)) {
-        Serial.println("GOT CAN");
+        // Serial.println("GOT CAN");
         // Determine which actuator to update based on the received CAN message and update it
         Serial.print("ID: ");
         Serial.println(rmsg.id);
         int actuatorIndex = getSensorIndex(rmsg.id); 
 
-        Serial.print("ACTUATOR INDEX: ");
-        Serial.println(actuatorIndex);
+        // Serial.print("ACTUATOR INDEX: ");
+        // Serial.println(actuatorIndex);
 
         //Serial.print("BAT%: ");
         //Serial.println(rmsg.buf[0]);
@@ -105,10 +104,24 @@ void Dashboard::updateDisplay() {
             display[actuatorIndex]->updateValue(*sensorData);
             delete sensorData;
         }
-        delay(500);
+        delay(10);
     }
 }
 
+
+/**
+ * @brief Set the CAN bus
+ * 
+ * @param canIN (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+*/
 void Dashboard::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN) {
     this->can1 = canIN;
+}
+
+/**
+ * @brief Reset the time zero
+ * @param startTime (unsigned long) The time the car started
+ */
+void Dashboard::resetTimeZero(unsigned long startTime) {
+    this->startTime = startTime;
 }

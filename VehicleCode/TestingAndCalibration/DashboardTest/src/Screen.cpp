@@ -44,7 +44,7 @@ void Screen::displayTime() {
     if(mode != 1) {
         // Display the code for the time
 
-        Serial.println("IN DISPLAY");
+        // Serial.println("IN DISPLAY");
 
 
         unsigned long currentTime = (millis() - this->timeStartTime) / 1000;
@@ -54,11 +54,11 @@ void Screen::displayTime() {
         unsigned int minutes = currentTime / 60;
 
 
-        Serial.print("SECONDS: ");
+        Serial.print("Time: ");
+        Serial.print(minutes);
+        Serial.print(":");
         Serial.println(seconds);
-
-        Serial.print("MINUTES: ");
-        Serial.println(minutes);
+        Serial.println("");
 
         //Displays it on the screen
 

@@ -35,6 +35,8 @@ public:
     void updateDisplay();
 
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN);
+
+    void resetTimeZero(unsigned long startTime);
 };
 
 #endif // DASHBOARD_H
