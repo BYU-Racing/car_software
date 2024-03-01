@@ -30,6 +30,7 @@ public:
     int readInputs() override;
     bool readyToCheck();
     int rescale(int data) override;
+    int rescale(int data, bool invert);
     int* buildData(int percent) override;
     int* buildError() override;
 

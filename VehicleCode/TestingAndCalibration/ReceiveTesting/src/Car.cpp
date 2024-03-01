@@ -253,7 +253,7 @@ int Car::getMaxNumber() {
  * 
  * @param maxNumber (int) The new maximum file number
 */
-void Car::writeNumber(int maxNumber) {
+void Car::writeNumber(const int &maxNumber) {
     File nameFile = SD.open("/fileNames.txt", FILE_WRITE);
     nameFile.println(maxNumber);
     nameFile.close();
@@ -268,7 +268,7 @@ void Car::writeNumber(int maxNumber) {
  * 
  * @return (String) The assembled file name in the format "000000.csv"
 */
-String Car::assembleName(int maxNumber) {
+String Car::assembleName(const int &maxNumber) {
     String temp;
     for (int j = 0; j < tempLength(maxNumber); j++) {
         temp = "0" + temp;
@@ -277,18 +277,17 @@ String Car::assembleName(int maxNumber) {
 }
 
 
-int Car::tempLength(int maxNumber) {
+int Car::tempLength(const int &maxNumber) {
     count = 0;
+    int temp = maxNumber; // definition is fine because function is only called once
     
     // Handle the cases for <=0 separately
-    if (maxNumber == 0)
-        return 1;
-    if (maxNumber < 0)
-        return 0;
+    if (temp == 0) return 1;
+    if (temp < 0) return 0;
 
     // Count the number of digits by repeatedly dividing by 10
-    while (maxNumber > 0) {
-        maxNumber /= 10;
+    while (temp > 0) {
+        temp /= 10;
         count++;
     }
     return maxNameLength - 1 - count;
