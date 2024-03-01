@@ -1,93 +1,74 @@
 #ifndef CAR_H
 #define CAR_H
-#include "State.h"
-#include <typeinfo>
-#include <SPI.h>
-#include <SD.h>
-#include "IdleState.h"
-#include "ActiveState.h"
-#include "SensorData.h"
+
+#include "SensorData.h"  // Include the header for the SensorData class
+#include <string>        // Include the header for string handling
+#include <SD.h> 
 
 
+class Car {
+private:
+    // Car states
+    bool active;              // Indicates if the car is active
+    bool key;                 // Indicates if the car has been turned on with the key
+    bool switchOn;            // Indicates if the car has been switched on
+    bool logState;            // Indicates if the car is logging data
+    int buttonState;          // State of the button (not used rn)
 
-#define ID_SIZE 4
-#define DATA_SIZE 4
-#define TIMESTAMP_SIZE 4 //32 bits or 4 bytes 
+    // Other attributes
+    String fileName;          // File name for logging data
+    int throttlePosition;     // Throttle position
+    int timeZero;             // Starting time
+    File dataFile;            // File for logging data
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+
+    // Global variables
+    int speed;
+    int count = 0;
+    int i = 0;
+    int* sensorData;
+    SensorData msg;
+    CAN_message_t rmsg;
+    int prevButtonState = 0;
+    const int rescale = 100;
+    const int startThreshold = 10;
+    const int byteValue = 256;
+    const int maxNameLength = 6;
 
 
+public:
+    // Constructors and Destructors
+    Car();
+    Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
+    ~Car();
+    void shutdown();
 
-struct Car {
-    private:
-        SensorData sensorData = SensorData();
-        State state;
-        //data for driving
-        bool inertiaShutdown;
-        bool keyPosition;
-        double acceleratorPedal;
-        double brakePosition;
+    // Getters and setters
+    bool checkActive();
+    void updateState();
+    void buttonPushed();
+    void setActive(bool);
+    void setLogState(bool);
+    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
-        int ledPin;
+    // Method to read sensors
+    void readSensors();
+    void checkKey();
+    void checkButton();
+    void checkSwitch();
+    void checkToLog();
 
-        File dataLog;
-    public:
-        Car() {};
-        Car(int _ledPin, File _dataLog) : state(IdleState(_ledPin)), ledPin(_ledPin), inertiaShutdown(true),
-                        keyPosition(false), acceleratorPedal(0), brakePosition(0), dataLog(_dataLog) {};
-        void updateState(SensorData sensorData);
-        void updateDriveSensor(SensorData sensorData);
-        void logData(SensorData sensorData);
-        bool getInertiaShutdown()  { return inertiaShutdown; }
-        bool getKeyPosition() { return keyPosition; }
+    // Method to log sensor data
+    void createNewCSV();
+    void writeHeader();
+    void logData(const SensorData&);
+    int deconstructSpeed(int*);
+    String updateFileName();
+    void startSD();
+    int getMaxNumber();
+    void writeNumber(const int&);
+    String assembleName(const int&);
+    int tempLength(const int&);
 };
 
-
-
-void Car::updateDriveSensor(SensorData sensorData) {
-    switch(sensorData.sensorid) {
-        case INERTIA_SWITCH:
-            inertiaShutdown = sensorData.data;
-            break;
-        case KEY_SWITCH:
-            keyPosition = sensorData.data;
-            break;
-        case ACCEL_PEDAL:
-            acceleratorPedal = sensorData.data;
-            break;
-        case BRAKE_PEDAL:
-            brakePosition = sensorData.data;
-            break;
-    }
-    int newState = state.checkState(inertiaShutdown, keyPosition, acceleratorPedal, brakePosition);
-    switch(newState) {
-        case ACTIVE:
-            if(typeid(state) != typeid(ActiveState())) {
-                state = ActiveState(0);
-            }
-            break;
-        case IDLE:
-            if(typeid(state) != typeid(IdleState())) {
-                state = IdleState(0);
-            }
-            break;
-    }
-}
-
-
-
-void Car::logData(SensorData sensorData) {
-    unsigned char buf[ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE];
-    memcpy(&buf[0], &sensorData.sensorid, ID_SIZE);
-    memcpy(&buf[ID_SIZE], &sensorData.data, DATA_SIZE);
-    memcpy(&buf[ID_SIZE + DATA_SIZE], &sensorData.timestamp, TIMESTAMP_SIZE);
-
-    //Serial.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
-
-    //push to sd card
-    dataLog = SD.open("data.csv", FILE_WRITE);
-
-    dataLog.write(buf, ID_SIZE + DATA_SIZE + TIMESTAMP_SIZE);
-    dataLog.println(""); //add a new line between data
-    dataLog.close();
-}
-
-#endif
+#endif // CAR_H

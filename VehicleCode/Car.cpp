@@ -44,24 +44,6 @@ Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
     can2 = can2;
 }
 
-Car::Car(const std::string& logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    active = false;
-    key = false;
-    pushToStart = false;
-    fileName = logFileName;
-    throttlePosition = 0;
-    timeZero = millis();
-    dataFile = SD.open(fileName.c_str(), FILE_WRITE);
-    this->can2 = can2;
-
-    // Initialize SD card
-    if (!SD.begin(10)) {  // Use the appropriate pin for your SD module
-        Serial.println("SD initialization failed!");
-        return;
-    }
-    Serial.println("SD initialization done.");
-}
-
 
 /**
  * @brief Destructor for Car class
@@ -90,9 +72,14 @@ void Car::readSensors() {
     checkKey();
     checkSwitch();
     checkToLog();
+    setActive(true); // TODO remove after testing
+    setLogState(true); // TODO remove after testing
 
     // read CAN
-    if (active && can2.read(rmsg)) {
+    Serial.print("Reading CAN: ");
+    bool canRead = can2.read(rmsg);
+    Serial.println(canRead);
+    if (active && canRead) {
         msg = SensorData(rmsg);
 
         // update the motor controller
@@ -164,34 +151,6 @@ int Car::deconstructSpeed(int* data) {
     return speed;
 }
 
-// Car is active if key is turned and button is pushed
-void Car::updateState() {
-    // Implement state update logic here
-    active = key && pushToStart;
-}
-
-// Method to push the button
-void Car::buttonPushed() {
-    pushToStart = !pushToStart;
-    updateState();
-}
-
-// Method to check if the key is turned
-void Car::checkKey() {
-    key = digitalRead(KEY_PIN);
-    updateState();
-}
-
-// Method to check if the button is pushed
-void Car::checkButton() {
-    int buttonState = digitalRead(BUTTON_PIN);
-    if (buttonState != prevButtonState) {
-        if (buttonState == HIGH) {
-            buttonPushed();
-        }
-        prevButtonState = buttonState;
-    }
-}
 
 
 
@@ -208,6 +167,7 @@ void Car::checkButton() {
 void Car::createNewCSV() {
     // get fileName and check for errors
     fileName = updateFileName();
+    Serial.println("File name: " + fileName);
     if (strlen(fileName.c_str()) == 0) {
         fileName = "data.csv";
         Serial.println("Error: Latest file number not found.");
@@ -293,7 +253,7 @@ int Car::getMaxNumber() {
  * 
  * @param maxNumber (int) The new maximum file number
 */
-void Car::writeNumber(int maxNumber) {
+void Car::writeNumber(const int &maxNumber) {
     File nameFile = SD.open("/fileNames.txt", FILE_WRITE);
     nameFile.println(maxNumber);
     nameFile.close();
@@ -308,7 +268,7 @@ void Car::writeNumber(int maxNumber) {
  * 
  * @return (String) The assembled file name in the format "000000.csv"
 */
-String Car::assembleName(int maxNumber) {
+String Car::assembleName(const int &maxNumber) {
     String temp;
     for (int j = 0; j < tempLength(maxNumber); j++) {
         temp = "0" + temp;
@@ -317,8 +277,20 @@ String Car::assembleName(int maxNumber) {
 }
 
 
-int Car::tempLength(int maxNumber) {
-    return maxNameLength - 1 - (maxNumber / 10);
+int Car::tempLength(const int &maxNumber) {
+    count = 0;
+    int temp = maxNumber; // definition is fine because function is only called once
+    
+    // Handle the cases for <=0 separately
+    if (temp == 0) return 1;
+    if (temp < 0) return 0;
+
+    // Count the number of digits by repeatedly dividing by 10
+    while (temp > 0) {
+        temp /= 10;
+        count++;
+    }
+    return maxNameLength - 1 - count;
 }
 
 
@@ -332,7 +304,7 @@ int Car::tempLength(int maxNumber) {
  * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
 void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    can2 = can2;
+    this->can2 = can2;
 }
 
 /**
@@ -355,6 +327,15 @@ void Car::shutdown() {
     // update error LED?
 }
 
+// Method to set the active state of the car for testing only
+void Car::setActive(bool state) { 
+    active = state;
+}
+
+// Method to set the log state of the car for testing only
+void Car::setLogState(bool state) {
+    logState = state;
+}
 
 // Car is active if key is turned and button is pushed
 void Car::updateState() {

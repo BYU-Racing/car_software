@@ -19,11 +19,18 @@
 
 class DataCollector {
 private:
-    // sensor objects, starting time, and number of sensors
+    // Attributes: sensor objects, starting time, and number of sensors
     Sensor** sensors;
     unsigned long timeZero;
     int numSensors;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+
+    // Global variables
+    int sendID = 0;
+    int sendLength = 0;
+    int i = 0;
+    int rawData = 0;
+    int* sendData;
 
     
     // Read signals from sensors

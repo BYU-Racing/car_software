@@ -5,9 +5,8 @@
 // Global variables
 #define BAUDRATE 250000
 #define TORQUE_DEFAULT 200
-int i = 0;
-int rawData = 0;
-int* sendData;
+#define ERROR_ID 0
+#define ERROR_LENGTH 6
 
 
 // TEST: define function
@@ -63,15 +62,16 @@ void DataCollector::readData(Sensor* sensor) {
     
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
+        sendID = sensor->getId();
+        sendLength = sensor->getDataLength();
     } else {
         sendData = sensor->buildError();
+        sendID = ERROR_ID;
+        sendLength = ERROR_LENGTH;
     }
 
     // Create a new sensor data object for each int in the array
-    SensorData sensorData = SensorData(sensor->getId(), 
-                                       sendData, 
-                                       sensor->getDataLength(), 
-                                       millis() - timeZero);
+    SensorData sensorData = SensorData(sendID, sendData, sendLength, millis() - timeZero);
     sendSignal(&sensorData);
 }
 

@@ -24,6 +24,7 @@ private:
 
     // Global variables
     int speed;
+    int count = 0;
     int i = 0;
     int* sensorData;
     SensorData msg;
@@ -46,6 +47,8 @@ public:
     bool checkActive();
     void updateState();
     void buttonPushed();
+    void setActive(bool);
+    void setLogState(bool);
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
     // Method to read sensors
@@ -58,14 +61,14 @@ public:
     // Method to log sensor data
     void createNewCSV();
     void writeHeader();
-    void logData(const SensorData& data);
-    int deconstructSpeed(int* data);
+    void logData(const SensorData&);
+    int deconstructSpeed(int*);
     String updateFileName();
     void startSD();
     int getMaxNumber();
-    void writeNumber(int);
-    String assembleName(int);
-    int tempLength(int);
+    void writeNumber(const int&);
+    String assembleName(const int&);
+    int tempLength(const int&);
 };
 
 #endif // CAR_H

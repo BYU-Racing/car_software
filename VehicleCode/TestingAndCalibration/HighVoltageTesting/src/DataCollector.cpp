@@ -5,6 +5,8 @@
 // Global variables
 #define BAUDRATE 250000
 #define TORQUE_DEFAULT 200
+#define ERROR_ID 0
+#define ERROR_LENGTH 6
 
 
 // TEST: define function
@@ -35,7 +37,7 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
  * @return None
  */ 
 void DataCollector::checkSensors() {
-    for (int i = 0; i < numSensors; i++) {
+    for (i = 0; i < numSensors; i++) {
         // Check if the sensor is ready to send more data
         if (sensors[i]->readyToCheck()) {
             readData(sensors[i]);
@@ -55,21 +57,21 @@ void DataCollector::checkSensors() {
  */
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
-    int sensorID = sensor->getId();
-    int rawData = sensor->readInputs();
+    rawData = sensor->readInputs();
     Serial.println(rawData);
-    int dataLength = sensor->getDataLength();
-    unsigned long timestamp = millis() - timeZero;
     
-    int* sendData;
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
+        sendID = sensor->getId();
+        sendLength = sensor->getDataLength();
     } else {
         sendData = sensor->buildError();
+        sendID = ERROR_ID;
+        sendLength = ERROR_LENGTH;
     }
 
     // Create a new sensor data object for each int in the array
-    SensorData sensorData = SensorData(sensorID, sendData, dataLength, timestamp);
+    SensorData sensorData = SensorData(sendID, sendData, sendLength, millis() - timeZero);
     sendSignal(&sensorData);
 }
 
