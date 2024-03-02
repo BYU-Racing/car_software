@@ -59,7 +59,7 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = rescale(analogRead(inputPins[0]), false);
+    throttle1 = rescale(analogRead(inputPins[0]));
     throttle2 = rescale(-analogRead(inputPins[1]), true);
 
     //Return a pointer to the private value
