@@ -19,7 +19,8 @@ Adafruit_7segment matrix = Adafruit_7segment();
 
 Screen myScreen = Screen();
 
-Actuator* testArray[] = {&myScreen, &ledTemp, &ledTemp, &ledTemp};
+// Actuator* testArray[] = {&myScreen, &ledTemp, &ledBat, &ledHealth};
+Actuator* testArray[] = {&myScreen};
 
 Dashboard myDash(testArray, 0);
 
@@ -48,13 +49,14 @@ void loop() {
 
   myDash.updateDisplay();
 
-  myScreen.displayTime();
+  // commented out for testing
+  // myScreen.displayTime();
 
   //matrix.print(100, DEC);
   //matrix.writeDisplay();
 
-  //Serial.println("-----LOOP OVER-----");
+  // Serial.println("-----LOOP OVER-----");
 
-  delay(10);
+  delay(60);
 
 }

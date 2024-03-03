@@ -1,51 +1,128 @@
-// #include "DigitalSensor.h"
-// #include <Arduino.h>
+#include "DigitalSensor.h"
+#include "SensorID.h"
 
-// DigitalSensor::DigitalSensor(int id, int freq, int prio, int inPins) {
-//     sensorID = id;
-//     waitTime = freq;
-//     previousUpdateTime = 0;
-//     inputPins[4] = -1;
-//     inputPins[0] = inPins;
-//     priority = prio;
 
-//     //Add code so that  -1 is added to the end of the input pins array
-// } 
+/*!
+ * @brief Constructor
+ * Initializes the sensor
+ * 
+ * @param id (int) The ID of the sensor
+ * @param freq (int) The frequency at which the sensor should be read
+ * @param pin (int) An array of ints representing the input pins
+ * @return None
+ */
+DigitalSensor::DigitalSensor(int id, int time, int pin) {
+    sensorID = id;
+    waitTime = time;
+    inputPins[0] = pin;
+    pinMode(inputPins[0], INPUT);
+    sensorValue = 0;
+    previousUpdateTime = millis();
+};
 
-// int DigitalSensor::readInputs() {
 
-//     previousUpdateTime = millis();
+/*! 
+ * @brief Read inputs
+ * Reads the digital sensor value and returns it
+ * 
+ * @param None
+ * @return sensorValue (int*) A pointer to an array of ints representing the sensor value
+ */
+int DigitalSensor::readInputs() {
+    //Update previous update time
+    previousUpdateTime = millis();
 
-//     sensorValue = digitalRead(inputPins[0]);
+    //Grab Sensor Value
+    sensorValue = digitalRead(inputPins[0]);
 
-//     return sensorValue;
-// }
+    //Return a pointer to the private value
+    return sensorValue;
+};
 
-// //destructor code ??
 
-// //bool Ready to check
+/*! 
+ * @brief Get ID
+ * Returns the ID of the sensor
+ * 
+ * @param None
+ * @return sensorID (int) The ID of the sensor
+ */
+int DigitalSensor::getId(){
+    return sensorID;
+};
 
-// bool DigitalSensor::readyToCheck() {
-//     return (waitTime <= int(millis() - previousUpdateTime));
-// }
 
-// int DigitalSensor::getPins() {
-//     return inputPins[0];
-// }
+/*! 
+ * @brief Get input pin
+ * Returns the pin that the sensor is connected to
+ * 
+ * @param None
+ * @return input pin (int) The pin of the sensor
+ */
+int DigitalSensor::getPins(){
+    return inputPins[0];
+};
 
-// int DigitalSensor::getWaitTime() {
-//     return waitTime;
-// }
 
-// void DigitalSensor::setPin(int pin) {
-//     inputPins[0] = pin;
-// }
+/*! 
+ * @brief Get wait time
+ * Returns the time that the sensor waits between
+ * reporting. In milliseconds
+ * 
+ * @param None
+ * @return waitTime (int) The wait time of the sensor
+ */
+int DigitalSensor::getWaitTime(){
+    return waitTime;
+};
 
-// void DigitalSensor::setWaitTime(int inWait) {
-//     waitTime = inWait;
-// }
 
-// void DigitalSensor::setId(int inId) {
-//     sensorID = inId;
-// }
+/*! 
+ * @brief Get data length
+ * Returns the length of the data array. For 
+ * digital sensors this will always be 1
+ * 
+ * @param None
+ * @return 1 (int) The length of the data
+ */
+int DigitalSensor::getDataLength(){
+    return 1;
+};
 
+
+/*!
+ * @brief Builds the data array for the CAN message.
+ * 
+ * @param torque (int) The torque value to be sent.
+ * @param percent (int) The percent value to be sent.
+ * 
+ * @return (int*) The data array for the CAN message.
+*/
+int* DigitalSensor::buildData(int value) {
+    return new int[1]{value};
+};
+
+/*!
+ * @brief Builds the error data array for the CAN message.
+ * 
+ * @param errorType (int) The type of error.
+ * @param errorData (int*) The data associated with the error.
+ * 
+ * @return (int*) The error data array for the CAN message.
+*/
+int* DigitalSensor::buildError() {
+    return new int[1]{0};
+}
+
+/*!
+ * @brief Transform the sensor data into new scale.
+ * @param data (int) The data to be rescaled.
+ * 
+ * Digital Sensors will not need to be rescaled
+ * 
+ * @return -1 because this should not be used
+ */
+int DigitalSensor::rescale(int data) {
+    //Transform data
+    return -1;
+};

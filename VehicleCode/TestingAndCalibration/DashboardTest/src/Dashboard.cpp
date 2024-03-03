@@ -101,6 +101,7 @@ void Dashboard::updateDisplay() {
         //Serial.println(rmsg.buf[0]);
         if (actuatorIndex >= 0 && actuatorIndex < numActuators) { // This will break cause num actuators is min 1 and the return can be 0
             SensorData* sensorData = new SensorData(rmsg);
+            sensorData->toString();
             display[actuatorIndex]->updateValue(*sensorData);
             delete sensorData;
         }

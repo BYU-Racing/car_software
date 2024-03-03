@@ -13,7 +13,7 @@
 #define POT1 24
 #define POT2 25
 #define ID_ERROR 0
-#define THROTTLE_POT 192
+#define THROTTLE_POT 1
 #define WHEEL_SPEED_FL 5
 #define BIAS1 0
 #define BIAS2 0
@@ -55,7 +55,7 @@ const int torque = 200;
 int countMismatch = 0;
 
 // initialize throttle sensor
-int throttleFreq = 1;
+int throttleFreq = 200;
 int numSensors = 1;
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);

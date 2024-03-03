@@ -86,7 +86,7 @@ void Screen::updateValue(const SensorData& data) {
 
     int seconds = gotData[1];
     int milliseconds = gotData[2];
-    Serial.println("PARSED LAP");
+    // Serial.println("PARSED LAP");
 
     displayLapTime(seconds, milliseconds);
 }
