@@ -1,71 +1,97 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
+#include <string>
+#include "AnalogSensor.h"
+#include "Sensor.h"
 #include "SensorData.h"
+#include "DataCollector.h"
+#include "ThrottleSensor.h"
 #include "Car.h"
 
-#define POT A0
-const int byteValue = 256;
-unsigned long startTime = 0;
 
-CAN_message_t rmsg1;
-FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+// throttle sensor variables
+#define POT1 24
+#define POT2 25
+#define ID_ERROR 0
+#define THROTTLE_POT 192
+#define WHEEL_SPEED_FL 5
+#define BIAS1 0
+#define MAX1 1024
+
+// CAN message variables
+#define LENGTH 8
+#define BEGIN 9600          // 9,600
+#define BAUDRATE 250000     // 250,000
+#define SAVE_DELAY 20000    // 20,000
+#define DELAYBY 10
+
+
+// initialize can and throttle sensor
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
+int throttleFreq = 20;
+int numSensors = 1;
+ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
+// AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
+Sensor* sensors[] = {&throttle};
+DataCollector collector = DataCollector(sensors, numSensors, millis());
 Car car;
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Start");
-  car.createNewCSV();
 
-  // SET UP CAN
-  can2.begin();
-  can2.setBaudRate(250000);
-  car.setCAN(can2);
-  startTime = millis();
+
+// MAIN -------------------------------------------------------------------------------------------
+
+void setup() {
+    Serial.begin(BEGIN);
+    Serial.println("Start");
+
+    // set up CAN
+    can1.begin();
+    can1.setBaudRate(BAUDRATE);
+
+    // set up car
+    car.createNewCSV();
+    car.setCAN(can1);
+    car.setSaveDelay(SAVE_DELAY);
+    car.resetTimeZero(millis());
+
+    // set up collector
+    collector.resetTimeZero(millis());
+    collector.setCAN(can1);
+
+    // visibility control
+    Serial.println("ALERT:");
+    Serial.print("SD card saves every ");
+    Serial.print(SAVE_DELAY / 1000);
+    Serial.println(" seconds.");
+    Serial.print("LOOP delay set to ");
+    Serial.print(DELAYBY);
+    Serial.println(" ms.");
+    Serial.println("Reading on CAN2.");
+    delay(2000); // so that you can read the file name at the start
 }
 
-void loop() {
-  car.readSensors();
 
-  // TESTING Car w/o CAN -------------------------------------------
-  // make a basic sensor data pointer
-  // if (millis() - startTime > 5000) {
-  //   car.shutdown();
-  //   Serial.println("Shutting down after 5 seconds of operation.");
-  //   while(1);
-  // }
-  int* fake_data = new int[4];
-  fake_data[0] = 0;
-  fake_data[1] = 1;
-  fake_data[2] = 2;
-  fake_data[3] = 3;
-  SensorData dataObj = SensorData(0, fake_data, 4, millis());
-  dataObj.toString();
-  Serial.println("");
-  car.logData(dataObj);
-  // END TESTING  Car w/o CAN ---------------------------------------
+void loop() {
+    collector.checkSensors();
+    car.readSensors();
+    delay(DELAYBY);
+
+//   // TESTING Car w/o CAN -------------------------------------------
+//   // make a basic sensor data pointer
+//   // if (millis() - startTime > 5000) {
+//   //   car.shutdown();
+//   //   Serial.println("Shutting down after 5 seconds of operation.");
+//   //   while(1);
+//   // }
+//   int* fake_data = new int[4];
+//   fake_data[0] = 0;
+//   fake_data[1] = 1;
+//   fake_data[2] = 2;
+//   fake_data[3] = 3;
+//   SensorData dataObj = SensorData(0, fake_data, 4, millis());
+//   dataObj.toString();
+//   Serial.println("");
+//   car.logData(dataObj);
+//   // END TESTING  Car w/o CAN ---------------------------------------
   
-  if (can2.read(rmsg1)) {
-    SensorData msg1 = SensorData(rmsg1);
-    if (msg1.getId() == 0) {
-      Serial.println("Error message received");
-    }
-    else {
-      int* data = msg1.getData();
-      Serial.print("ID: ");
-      Serial.println(rmsg1.id, HEX);
-      Serial.print("TORQUE: ");
-      Serial.println(data[1] * byteValue + data[0]);
-      Serial.print("SPEED: ");
-      
-      // Calculate speed and set it to zero if less than 10
-      int speed = car.deconstructSpeed(data);  
-      Serial.println(speed);
-      Serial.println("");
-    }
-  }
-  else {
-    // Serial.println("error");
-    delay(500);
-  }
-  // delay(1000);
 }

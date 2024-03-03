@@ -58,6 +58,8 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "array": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "*.tpp": "cpp",
+    "*.tcc": "cpp"
   }
 }

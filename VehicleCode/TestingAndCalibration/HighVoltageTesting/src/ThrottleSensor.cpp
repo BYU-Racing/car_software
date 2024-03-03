@@ -1,19 +1,28 @@
 #include "ThrottleSensor.h"
 #include <Arduino.h>
 
-#define MAXPERCENT 10000
+// Sensor and data constants
+#define MAX_OUTPUT 10000
+#define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
+
+// Error handling constants (not all used but kept for future use)
 #define ERROR_TOL 1000
 #define MAINTAIN_TOL 2
-#define SHUTDOWN_TOL 500
-#define ID_ERROR 0
-#define ERROR_LENGTH 6
+#define SHUTDOWN_TOL 50
 #define SHUTDOWN 1
 #define NO_SHUTDOWN 0
 #define WARNING 1
 #define CRITICAL 2
 #define FATAL 3
+
+// ECU formatting constants
+#define NO_DATA 0
+#define INVERTER_ACTIVE 1
+#define FORWARD 1
+
+
 
 /**
  * @brief Constructor for ThrottleSensor class.
@@ -36,6 +45,7 @@ ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int
     this->bias = bias;
     this->max = max;
     this->dataLength = dataLength;
+    sendData = new int[LENGTH];
 };
 
 /**
@@ -50,7 +60,7 @@ int ThrottleSensor::readInputs() {
 
     //Grab Sensor Value
     throttle1 = rescale(analogRead(inputPins[0]));
-    throttle2 = rescale(analogRead(inputPins[1]));
+    throttle2 = rescale(-analogRead(inputPins[1]), true);
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -61,6 +71,8 @@ int ThrottleSensor::readInputs() {
         errorType = FATAL;
         return -1;
     }
+    command = NO_SHUTDOWN;
+    errorType = WARNING;
     return 0;
 }
 
@@ -97,27 +109,17 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * 
  * @return (int*) The data array for the CAN message.
 */
-int* ThrottleSensor::buildData(int percent){
-    // determine torque
-    int torque = computeTorque(percent);
+int* ThrottleSensor::buildData(int torque){
 
     // convert to motor controller format
-    int torqueLow = getLow(torque);
-    int torqueHigh = getHigh(torque);
-    int speedLow = getLow(percent);
-    int speedHigh = getHigh(percent);
-
-    // construct formatted data
-    // CHECK: do we need to delete this?
-    int* sendData = new int[LENGTH];
-    sendData[0] = torqueLow;
-    sendData[1] = torqueHigh;
-    sendData[2] = speedLow;
-    sendData[3] = speedHigh;
-    sendData[4] = 1;
-    sendData[5] = 1;
-    sendData[6] = 0;
-    sendData[7] = 0;
+    sendData[0] = getLow(torque); //torqueLow
+    sendData[1] = getHigh(torque); //torqueHigh
+    sendData[2] = NO_DATA; //speedLow
+    sendData[3] = NO_DATA; //speedHigh
+    sendData[4] = FORWARD;
+    sendData[5] = INVERTER_ACTIVE;
+    sendData[6] = NO_DATA;
+    sendData[7] = NO_DATA;
 
     return sendData;
 }
@@ -125,18 +127,15 @@ int* ThrottleSensor::buildData(int percent){
 /**
  * @brief Sends an error message.
  * 
- * @param sendData (int*) The data array for the CAN message.
- * @param command (int) The command to be sent.
- *                          0: No shutdown
- *                          1: Shutdown
- * @param errorType (int) The type of error.
- *                          0: No Error
- *                          1: Warning
- *                          2: Critical
- *                          3: Fatal
+ * Message contains:
+ * - sensorID: The unique identifier for the sensor
+ * - command: SHUTDOWN (1) or NO_SHUTDOWN (0)
+ * - errorType: WARNING (1), CRITICAL (2), or FATAL (3)
+ * - countMismatch: The number of consecutive mismatches between the two throttle sensors
+ * - throttle1: The most recent percent value recorded by throttle 1
+ * - throttle2: The most recent percent value recorded by throttle 2
 */
 int* ThrottleSensor::buildError() {
-    int* sendData = new int[dataLength];
     sendData[0] = sensorID;
     sendData[1] = command;
     sendData[2] = errorType;
@@ -152,7 +151,7 @@ int* ThrottleSensor::buildError() {
  * @return (int) The torque value.
 */
 int ThrottleSensor::computeTorque(int percent) {
-  return torque; // 200
+  return torque; // default 200
 }
 
 
@@ -160,11 +159,29 @@ int ThrottleSensor::computeTorque(int percent) {
  * @brief Transform the sensor data into new scale.
  * @param data (int) The data to be rescaled.
  * @return (int) The rescaled data.
+ * 
+ * NOT USED
  */
 int ThrottleSensor::rescale(int data) {
-    //Transform data
-    return map(data, bias, max, 0, MAXPERCENT);
+    return rescale(data, false);
 };
+
+/**
+ * @brief Transform the sensor data into new scale.
+ * 
+ * @param data (int) The data to be rescaled.
+ * @param invert (bool) Whether the data has been inverted by the hardware and needs the sign flipped.
+ * 
+ * @return (int) The rescaled data.
+ */
+int ThrottleSensor::rescale(int data, bool invert) {
+    //Transform data
+    if (invert) {
+        return map(data, -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
+    }
+    return map(data, bias, max, MIN_OUTPUT, MAX_OUTPUT);
+};
+
 
 /**
  * @brief Gets the low byte of a percent value.
@@ -184,7 +201,6 @@ int ThrottleSensor::getLow(int percent) {
 int ThrottleSensor::getHigh(int percent) {
   return percent / BYTESIZE;
 }
-
 
 
 /**
