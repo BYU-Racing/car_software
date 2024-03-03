@@ -15,6 +15,7 @@ private:
     int countMismatch = 0;
     int command = 0;
     int errorType = 0;
+    int* sendData;
     
     bool checkError(int percent1, int percent2);
     int computeTorque(int percent);
@@ -27,8 +28,9 @@ public:
 
     // Implement the pure virtual functions from the base class
     int readInputs() override;
-    bool readyToCheck() override;
+    bool readyToCheck();
     int rescale(int data) override;
+    int rescale(int data, bool invert);
     int* buildData(int percent) override;
     int* buildError() override;
 

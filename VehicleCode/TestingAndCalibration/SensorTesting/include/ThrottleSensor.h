@@ -28,8 +28,9 @@ public:
 
     // Implement the pure virtual functions from the base class
     int readInputs() override;
-    bool readyToCheck() override;
+    bool readyToCheck();
     int rescale(int data) override;
+    int rescale(int data, bool invert);
     int* buildData(int percent) override;
     int* buildError() override;
 

@@ -59,7 +59,7 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = rescale(analogRead(inputPins[0]), false);
+    throttle1 = rescale(analogRead(inputPins[0]));
     throttle2 = rescale(-analogRead(inputPins[1]), true);
 
     //Return a pointer to the private value
@@ -109,15 +109,13 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * 
  * @return (int*) The data array for the CAN message.
 */
-int* ThrottleSensor::buildData(int percent){
-    // determine torque based on percent? tbd
-    torque = computeTorque(percent);
+int* ThrottleSensor::buildData(int torque){
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow
     sendData[1] = getHigh(torque); //torqueHigh
-    sendData[2] = getLow(percent); //speedLow
-    sendData[3] = getHigh(percent); //speedHigh
+    sendData[2] = NO_DATA; //speedLow
+    sendData[3] = NO_DATA; //speedHigh
     sendData[4] = FORWARD;
     sendData[5] = INVERTER_ACTIVE;
     sendData[6] = NO_DATA;
