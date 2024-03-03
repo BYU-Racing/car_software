@@ -75,4 +75,23 @@ void loop() {
     collector.checkSensors();
     car.readSensors();
     delay(DELAYBY);
+
+//   // TESTING Car w/o CAN -------------------------------------------
+//   // make a basic sensor data pointer
+//   // if (millis() - startTime > 5000) {
+//   //   car.shutdown();
+//   //   Serial.println("Shutting down after 5 seconds of operation.");
+//   //   while(1);
+//   // }
+//   int* fake_data = new int[4];
+//   fake_data[0] = 0;
+//   fake_data[1] = 1;
+//   fake_data[2] = 2;
+//   fake_data[3] = 3;
+//   SensorData dataObj = SensorData(0, fake_data, 4, millis());
+//   dataObj.toString();
+//   Serial.println("");
+//   car.logData(dataObj);
+//   // END TESTING  Car w/o CAN ---------------------------------------
+  
 }
