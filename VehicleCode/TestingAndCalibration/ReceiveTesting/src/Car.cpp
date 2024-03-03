@@ -21,8 +21,9 @@ Car::Car() {
     active = false;
     key = false;
     switchOn = false;
-    throttlePosition = 0;
+    logState = false;
     timeZero = millis();
+    lastSave = millis();
     buttonState = 0;
     speed = 0;
 }
@@ -38,9 +39,10 @@ Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
     active = false;
     key = false;
     switchOn = false;
+    logState = false;
     fileName = logFileName;
-    throttlePosition = 0;
     timeZero = millis();
+    lastSave = millis();
     can2 = can2;
 }
 
@@ -51,6 +53,16 @@ Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
 Car::~Car() {
     shutdown();
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -80,20 +92,20 @@ void Car::readSensors() {
     bool canRead = can2.read(rmsg);
     Serial.println(canRead);
     if (active && canRead) {
-        msg = SensorData(rmsg);
-
-        // update the motor controller
-        if (msg.getId() == ACCELERATOR_POT_1) {
-            throttlePosition = deconstructSpeed(msg.getData());
-            can2.write(msg.formatCAN());
-        }
+        SensorData* msg = new SensorData(rmsg);
 
         // log the data
         logData(msg);
 
+        // save the data on the SD card
+        saveSD();
+
         // check for shutdown command
-        if (msg.getId() == ID_ERROR and msg.getData()[COMMAND_IDX] == SHUTDOWN) {
+        if (msg->getId() == ID_ERROR && msg->getData()[COMMAND_IDX] == SHUTDOWN) {
+            delete msg;
             shutdown();
+        } else {
+            delete msg;
         }
     }
 }
@@ -107,30 +119,32 @@ void Car::readSensors() {
  * 
  * @param data (const SensorData&) The sensor data to be logged
 */
-void Car::logData(const SensorData& data) {
-    if (logState) { 
-        dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+void Car::logData(SensorData* data) {
+    if (logState) {
+        int start = millis();
         if (dataFile) {
             // Write data to the file in CSV format
-            dataFile.print(data.getId());
+            dataFile.print(data->getId());
             dataFile.print(",");
-            dataFile.print(data.getTimeStamp());
+            dataFile.print(millis() - timeZero);
             dataFile.print(",");
 
-            sensorData = data.getData();
-            for (i = 0; i < data.length(); i++) {
+            sensorData = data->getData();
+            for (i = 0; i < data->length(); i++) {
                 dataFile.print(sensorData[i]);
-                if (i < data.length() - 1) {
+                if (i < data->length() - 1) {
                     dataFile.print(",");
                 }
             }
             dataFile.println();
         } else {
-            Serial.println("Error: File not open. ");
+            Serial.println("Error: File not open.");
         }
-        dataFile.close();
+        Serial.print("Logging delay: ");
+        Serial.println(millis() - start);
     } else {
-        Serial.println("Waiting for permission to start logging.");
+        Serial.print("Waiting: Log state=");
+        Serial.println(logState);
     }
 }
 
@@ -142,7 +156,7 @@ void Car::logData(const SensorData& data) {
  * @param data (int*&) The data from the CAN message 
 */
 int Car::deconstructSpeed(int* data) {
-    speed = int(data[3] * byteValue + data[2]) / rescale;
+    speed = int(data[3] * byteValue + data[2]) / scale;
 
     // Set speed to zero if less than 10 (start threshold)
     if (speed < startThreshold) {
@@ -154,7 +168,32 @@ int Car::deconstructSpeed(int* data) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 // -------------------------- SD CARD FUNCTIONS -------------------------------------------
+
+
+/**
+ * @brief Method to save data to the SD card by closing then reopening the file
+*/
+void Car::saveSD() {
+    if (millis() - lastSave > saveDelay) {
+        lastSave = millis();
+        if (dataFile) {
+            dataFile.close();
+        }
+        dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    }
+};
 
 
 /**
@@ -170,9 +209,10 @@ void Car::createNewCSV() {
     Serial.println("File name: " + fileName);
     if (strlen(fileName.c_str()) == 0) {
         fileName = "data.csv";
-        Serial.println("Error: Latest file number not found.");
+        Serial.println("Error: Latest file number not found. Saving to 'data.csv' instead.");
     }
 
+    // create the file and write the header
     writeHeader();
 }
 
@@ -186,11 +226,12 @@ void Car::writeHeader() {
         dataFile.println("ID, Time, Data");
     } else {
         Serial.println("Error: Can't open/start file.");
-        delay(10000);
+        // Warning: infinite while loop if file can't be opened
+        while(1);
     }
-    dataFile.close();
+    // New approach leaves the file open and closes it every saveDelay milliseconds
+    // dataFile.close();
 }
-
 
 
 /**
@@ -251,13 +292,23 @@ int Car::getMaxNumber() {
 /**
  * @brief Method to write the maximum file number to the fileNames.txt file
  * 
+ * Opens the fileNames.txt file and writes the new maximum file number
+ * If the file does not exist, it is created
+ * 
  * @param maxNumber (int) The new maximum file number
 */
 void Car::writeNumber(const int &maxNumber) {
     File nameFile = SD.open("/fileNames.txt", FILE_WRITE);
-    nameFile.println(maxNumber);
-    nameFile.close();
+    
+    // Check if the file is open
+    if (nameFile) {
+        nameFile.println(maxNumber);
+        nameFile.close();
+    } else {
+        Serial.println("Error: Unable to create or open fileNames.txt");
+    }
 }
+
 
 
 /**
@@ -277,6 +328,11 @@ String Car::assembleName(const int &maxNumber) {
 }
 
 
+/**
+ * @brief Method to determine the number of zeros to prepend to the file number
+ * @param maxNumber (const int&) The maximum file number
+ * @return (int) The number of zeros to prepend to the file number
+*/
 int Car::tempLength(const int &maxNumber) {
     count = 0;
     int temp = maxNumber; // definition is fine because function is only called once
@@ -290,8 +346,20 @@ int Car::tempLength(const int &maxNumber) {
         temp /= 10;
         count++;
     }
-    return maxNameLength - 1 - count;
+    return maxNameLength - count;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -325,6 +393,21 @@ void Car::shutdown() {
     }
 
     // update error LED?
+}
+
+/**
+ * @brief Reset the time zero
+ * @param startTime (unsigned long) The time the car started
+ */
+void Car::resetTimeZero(unsigned long startTime) {
+    timeZero = startTime;
+}
+
+// Method to set the save delay
+void Car::setSaveDelay(int delay) {
+    if (delay >= 0) {
+        saveDelay = delay;
+    }
 }
 
 // Method to set the active state of the car for testing only
