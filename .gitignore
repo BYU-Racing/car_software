@@ -1,5 +1,5 @@
 # Folders to ignore
-*/.vscode
+*/.vscode/*
 
 # Files to ignore
 *.ds_store
