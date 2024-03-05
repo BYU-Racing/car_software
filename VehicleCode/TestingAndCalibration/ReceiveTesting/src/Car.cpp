@@ -416,6 +416,8 @@ void Car::setLogState(bool state) {
     logState = state;
     if (!logState && dataFile) {
         dataFile.close();
+    } else if (logState && !dataFile) {
+        dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     }
 }
 
