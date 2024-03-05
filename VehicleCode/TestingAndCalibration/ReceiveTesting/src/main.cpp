@@ -72,7 +72,7 @@ void setup() {
 
 
 void loop() {
-    collector.checkSensors();
+    // collector.checkSensors();
     car.readSensors();
     delay(DELAYBY);
 }
