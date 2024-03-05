@@ -55,7 +55,7 @@ const int torque = 200;
 int countMismatch = 0;
 
 // initialize throttle sensor
-int throttleFreq = 200;
+int throttleFreq = 1;
 int numSensors = 1;
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
