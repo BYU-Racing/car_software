@@ -22,8 +22,8 @@
 #define LENGTH 8
 #define BEGIN 9600          // 9,600
 #define BAUDRATE 250000     // 250,000
-#define SAVE_DELAY 20000    // 20,000
-#define DELAYBY 10
+#define SAVE_DELAY 20000    // 20,000 ms
+#define DELAYBY 0
 
 
 // initialize can and throttle sensor
@@ -67,7 +67,9 @@ void setup() {
     Serial.print(DELAYBY);
     Serial.println(" ms.");
     Serial.println("Reading on CAN2.");
-    delay(2000); // so that you can read the file name at the start
+    Serial.println("Waiting 5 seconds to start.");
+    delay(5000); // so that you can read the file name at the start
+    Serial.println("Starting.");
 }
 
 
