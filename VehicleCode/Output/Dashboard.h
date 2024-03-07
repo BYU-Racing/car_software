@@ -1,4 +1,3 @@
-// CHECK add docstring
 /*!
  * @brief Read CAN bus data and update the display
  * Whenever updateDisplay gets called, this class reads data from the CAN bus
@@ -21,7 +20,6 @@ private:
     unsigned long startTime;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
-    // CHECK: change to int
     int getSensorIndex(int id);
 
 public:
@@ -33,8 +31,8 @@ public:
 
     // Method to update the display based on sensor data
     void updateDisplay();
-
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN);
+    void resetTimeZero(unsigned long startTime);
 };
 
 #endif // DASHBOARD_H

@@ -1,15 +1,44 @@
 #ifndef SENSORDATA_H
 #define SENSORDATA_H
 
-enum sensorIDs { INERTIA_SWITCH, KEY_SWITCH, ACCEL_PEDAL, BRAKE_PEDAL };
+#include <iostream>
+#include <Arduino.h>
+#include <FlexCAN_T4.h>
 
 class SensorData {
-    public:
-        enum sensorIDs sensorid;
-        double data; //not sure about this data type
-        unsigned long timestamp;
+protected:
+    // Instantiate attributes
+    int id;
+    int* data;
+    unsigned long timeStamp;
+    int dataLength;
+
+public:
+    // Constructor
+    SensorData();
+    // CHECK change timeStamp to unsigned long
+    SensorData(int id, int* data, int dataLength, unsigned long timeStamp);
+    // CHECK change canMessage to CAN_message_t
+    SensorData(CAN_message_t canMessage);
+
+    // CHECK add destructor
+    // Destructor
+    ~SensorData();
+
+    int getTimeStamp() const;
+    int getId() const;
+    int getPriority() const;
+    int* getData() const;
+    int length() const;
+
+    void setId(int id);
+    void setData(int* data);
+    // CHECK allow for setting timestamp
+    void setTimeStamp(unsigned long timeStamp);
+
+    // CHECK change output to CAN_message_t
+    CAN_message_t formatCAN() const;
+    void toString() const;
 };
 
-
-
-#endif
+#endif // SENSORDATA_H

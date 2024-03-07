@@ -11,19 +11,13 @@
  */
 LEDArray::LEDArray(int* ledPinIn) {
     this -> currentState = 0;
-
     this -> increment = 20; 
-
     this -> ledPins =  ledPinIn; // Change these as time goes on
-
     this-> intervalTime = 50; // MAX Blinking interval in ms for battery
-
     this -> lastUpdate = 0;
-
 }
 
 
-// Methods 
 /**
  * @brief Updates the value for the LEDArray and Displays it.
  * @param data (const SensorData&)
@@ -37,13 +31,12 @@ void LEDArray::updateValue(const SensorData& data) {
     int* gotData = data.getData();
 
     // Parse it to the format we need
-
     int parsed = gotData[0]; 
+
     // update the LEDS
-
     displayLEDs(parsed);
-
 }
+
 
 /**
  * @brief displays battery percentage on LED array
@@ -52,8 +45,8 @@ void LEDArray::updateValue(const SensorData& data) {
  * on the led array. Blinks when value is below 10%
 */
 void LEDArray::displayLEDs(int value) {
-
-    if(value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { // Whatever value indicates that we need to blink
+    // Whatever value indicates that we need to blink
+    if(value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { 
         if(this -> currentState == 0) { // 0 = LED OFF
             // Turn on blink LED
             digitalWrite(ledPins[0], HIGH);
