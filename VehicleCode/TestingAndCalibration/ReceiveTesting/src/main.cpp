@@ -59,6 +59,8 @@ void setup() {
     collector.setCAN(can1);
 
     // visibility control
+    Serial.println("Waiting 5 seconds to start.");
+    delay(5000); // so that you can read the file name at the start
     Serial.println("ALERT:");
     Serial.print("SD card saves every ");
     Serial.print(SAVE_DELAY / 1000);
@@ -67,8 +69,6 @@ void setup() {
     Serial.print(DELAYBY);
     Serial.println(" ms.");
     Serial.println("Reading on CAN2.");
-    Serial.println("Waiting 5 seconds to start.");
-    delay(5000); // so that you can read the file name at the start
     Serial.println("Starting.");
 }
 

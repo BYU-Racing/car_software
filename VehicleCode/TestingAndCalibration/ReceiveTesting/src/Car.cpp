@@ -180,12 +180,6 @@ int Car::deconstructSpeed(int* data) {
  * @brief Method to save data to the SD card by closing then reopening the file
 */
 void Car::saveSD() {
-    Serial.print("Last save: ");
-    Serial.println(lastSave);
-    Serial.print("Current time: ");
-    Serial.println(millis());
-    Serial.print("Save delay: ");
-    Serial.println(millis() - lastSave);
     if (millis() - lastSave > saveDelay) {
         Serial.println("Saving to SD card.");
         lastSave = millis();
