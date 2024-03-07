@@ -363,7 +363,6 @@ void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
 
 /**
  * @brief Method to shutdown the car
- * 
  * Sets all states to false and closes the SD card file
 */
 void Car::shutdown() {
@@ -388,14 +387,22 @@ void Car::resetTimeZero(unsigned long startTime) {
     timeZero = startTime;
 }
 
-// Method to set the save delay
+/**
+ * @brief Set the delay for saving data
+*/
 void Car::setSaveDelay(int delay) {
     if (delay >= 0) {
         saveDelay = delay;
     }
 }
 
-// Car is active if key is turned and button is pushed
+/**
+ * @brief Set the log state of the car based on the log switch
+ * 
+ * Reads the log switch and sets the log state of the car
+ * Updates the most last log update time
+ * Sends a signal to the motor controller if necessary
+*/
 void Car::updateState() {
     if (millis() - lastGoUpdate > goUpdateSpeed) {
         goFast = digitalRead(GO_PIN);
@@ -405,7 +412,12 @@ void Car::updateState() {
     }
 }
 
-// Method to send a signal to the motor controller
+/**
+ * @brief Method to send a signal to the motor controller
+ * 
+ * Sends a signal to the motor controller to turn on or off
+ * based on the state of the go switch
+*/
 void Car::sendMotorSignal() {
     if (goFast && !prevGoState) {
         // TODO: send motor on signal
@@ -415,7 +427,13 @@ void Car::sendMotorSignal() {
     }
 }
 
-// Method to check if the log switch is flipped to the on position
+/**
+ * @brief Method to check the log switch and set the log state
+ * 
+ * Reads the log switch and sets the log state of the car
+ * Updates the most last log update time
+ * Opens or closes the file for logging data as necessary
+*/
 void Car::checkToLog() {
     if (millis() - lastLogUpdate > logUpdateSpeed) {
         logState = digitalRead(LOG_PIN);
@@ -425,8 +443,11 @@ void Car::checkToLog() {
     }
 }
 
-// Method to set the log state of the car for testing only
-// Closes the file when logging is turned off
+/**
+ * @brief Method to set the log state of the car
+
+ * Opens or closes the file for logging data as necessary
+*/
 void Car::setLogState(bool state) {
     if (!logState && prevLogState && dataFile) {
         dataFile.close();
