@@ -19,18 +19,15 @@ private:
     unsigned long lastLogUpdate;        // Time of the last update
     unsigned long logUpdateSpeed = 500; // Speed of the log switch update
     
+    // Logging attributes
     int timeZero;                       // Starting time
     unsigned long saveDelay = 10000;    // Delay for saving data
     unsigned long lastSave;             // Time of the last save
-
-    // Logging attributes
     String fileName;                    // File name for logging data
     File dataFile;                      // File for logging data
-    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan;
 
     // Other attributes
-    int buttonState;                    // State of the button (not used rn)
-    int prevButtonState = 0;
     const int scale = 100;
     const int startThreshold = 10;
     const int byteValue = 256;
@@ -42,6 +39,7 @@ private:
     int i = 0;
     int* sensorData;
     CAN_message_t rmsg;
+    CAN_message_t startMotor; 
 
     // Helper methods for logging data and SD card
     void logData(SensorData*);
@@ -65,14 +63,14 @@ private:
 public:
     // Constructors and Destructors
     Car();
-    Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
+    Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan);
     ~Car();
 
     // Setters
     void setLogState(bool);
     void setSaveDelay(int);
     void resetTimeZero(unsigned long);
-    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
+    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan);
 
     // Getters
     int deconstructSpeed(int*); // not used rn

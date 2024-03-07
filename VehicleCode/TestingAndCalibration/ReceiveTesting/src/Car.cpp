@@ -20,8 +20,18 @@ Car::Car() {
     logState = false;
     timeZero = millis();
     lastSave = millis();
-    buttonState = 0;
     speed = 0;
+
+    startMotor.len = 8;
+    startMotor.buf[0] = 0;
+    startMotor.buf[1] = 0;
+    startMotor.buf[2] = 0;
+    startMotor.buf[3] = 0;
+    startMotor.buf[4] = 0;
+    startMotor.buf[5] = 0;
+    startMotor.buf[6] = 0;
+    startMotor.buf[7] = 0;
+    startMotor.id = 192; 
 }
 
 
@@ -29,15 +39,13 @@ Car::Car() {
  * @brief Fancy constructor for Car class
  * 
  * @param logFileName (const char*) The name of the log file
- * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+ * @param myCan (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+ * 
+ * Calls the default constructor to initialize the rest of the attributes
 */
-Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    goFast = false;
-    logState = false;
+Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan) : Car() {
     fileName = logFileName;
-    timeZero = millis();
-    lastSave = millis();
-    can2 = can2;
+    this->myCan = myCan;
 }
 
 
@@ -79,7 +87,7 @@ void Car::readSensors() {
     updateState();
     setLogState(true); // TODO remove after testing
 
-    if (can2.read(rmsg)) {
+    if (myCan.read(rmsg)) {
         SensorData* msg = new SensorData(rmsg);
 
         // log the data
@@ -355,10 +363,10 @@ int Car::tempLength(const int &maxNumber) {
 
 /**
  * @brief Set the CAN bus
- * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+ * @param myCan (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
-void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    this->can2 = can2;
+void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan) {
+    this->myCan = myCan;
 }
 
 /**
@@ -420,7 +428,7 @@ void Car::updateState() {
 */
 void Car::sendMotorSignal() {
     if (goFast && !prevGoState) {
-        // TODO: send motor on signal
+        myCan.write(startMotor);
     }
     else if (!goFast) {
         // TODO send motor lock signal
