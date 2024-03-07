@@ -1,4 +1,0 @@
-plotly
-dash
-pandas
-bitstring
