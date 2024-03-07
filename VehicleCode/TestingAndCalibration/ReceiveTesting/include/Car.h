@@ -9,21 +9,27 @@
 class Car {
 private:
     // Car states
-    bool active;              // Indicates if the car is active
-    bool key;                 // Indicates if the car has been turned on with the key
-    bool switchOn;            // Indicates if the car has been switched on
-    bool logState;            // Indicates if the car is logging data
-    int timeZero;             // Starting time
+    bool goFast = false;                // Indicates if the motor should spin
+    bool prevGoState = false;           // Previous state of the go switch
+    unsigned long lastGoUpdate;         // Time of the last update
+    unsigned long goUpdateSpeed = 500;  // Speed of the go switch update
+
+    bool logState = false;              // Indicates if the car is logging data
+    bool prevLogState = false;          // Previous state of the log switch
+    unsigned long lastLogUpdate;        // Time of the last update
+    unsigned long logUpdateSpeed = 500; // Speed of the log switch update
+    
+    int timeZero;                       // Starting time
     unsigned long saveDelay = 10000;    // Delay for saving data
-    unsigned long lastSave;   // Time of the last save
+    unsigned long lastSave;             // Time of the last save
 
     // Logging attributes
-    String fileName;          // File name for logging data
-    File dataFile;            // File for logging data
+    String fileName;                    // File name for logging data
+    File dataFile;                      // File for logging data
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
     // Other attributes
-    int buttonState;          // State of the button (not used rn)
+    int buttonState;                    // State of the button (not used rn)
     int prevButtonState = 0;
     const int scale = 100;
     const int startThreshold = 10;
@@ -46,11 +52,8 @@ private:
 
     // Hardware checking
     void updateState();
-    void checkKey();
-    void checkButton();
-    void checkSwitch();
     void checkToLog();
-    void buttonPushed();
+    void sendMotorSignal();
 
     // Helper methods for setting up the SD card
     String updateFileName();
@@ -66,14 +69,12 @@ public:
     ~Car();
 
     // Setters
-    void setActive(bool);
     void setLogState(bool);
     void setSaveDelay(int);
     void resetTimeZero(unsigned long);
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
 
     // Getters
-    bool checkActive();
     int deconstructSpeed(int*); // not used rn
 
     // Method to save data

@@ -1,9 +1,7 @@
 #include "Car.h"
 #include <SD.h> 
 
-#define KEY_PIN 24
-#define BUTTON_PIN 25 // not used rn
-#define SWITCH_PIN 25
+#define GO_PIN 25
 #define LOG_PIN 26
 #define ACCELERATOR_POT_1 3
 #define ID_ERROR 0
@@ -18,9 +16,7 @@
  * @brief Default constructor for Car class
 */
 Car::Car() {
-    active = false;
-    key = false;
-    switchOn = false;
+    goFast = false;
     logState = false;
     timeZero = millis();
     lastSave = millis();
@@ -36,9 +32,7 @@ Car::Car() {
  * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
 Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    active = false;
-    key = false;
-    switchOn = false;
+    goFast = false;
     logState = false;
     fileName = logFileName;
     timeZero = millis();
@@ -81,14 +75,11 @@ Car::~Car() {
 */
 void Car::readSensors() {
     // update states
-    checkKey();
-    checkSwitch();
     checkToLog();
-    setActive(true); // TODO remove after testing
+    updateState();
     setLogState(true); // TODO remove after testing
 
-    bool canRead = can2.read(rmsg);
-    if (active && canRead) {
+    if (can2.read(rmsg)) {
         SensorData* msg = new SensorData(rmsg);
 
         // log the data
@@ -377,9 +368,7 @@ void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
 */
 void Car::shutdown() {
     // Update the state
-    key = false;
-    switchOn = false;
-    active = false;
+    goFast = false;
     logState = false;
 
     // Close the file
@@ -387,7 +376,8 @@ void Car::shutdown() {
         dataFile.close();
     }
 
-    // update error LED?
+    // TODO: update error LED
+    sendMotorSignal();
 }
 
 /**
@@ -405,60 +395,42 @@ void Car::setSaveDelay(int delay) {
     }
 }
 
-// Method to set the active state of the car for testing only
-void Car::setActive(bool state) { 
-    active = state;
+// Car is active if key is turned and button is pushed
+void Car::updateState() {
+    if (millis() - lastGoUpdate > goUpdateSpeed) {
+        goFast = digitalRead(GO_PIN);
+        lastGoUpdate = millis() + timeZero;
+        prevGoState = goFast;
+        sendMotorSignal();
+    }
+}
+
+// Method to send a signal to the motor controller
+void Car::sendMotorSignal() {
+    if (goFast && !prevGoState) {
+        // TODO: send motor on signal
+    }
+    else if (!goFast) {
+        // TODO send motor lock signal
+    }
+}
+
+// Method to check if the log switch is flipped to the on position
+void Car::checkToLog() {
+    if (millis() - lastLogUpdate > logUpdateSpeed) {
+        logState = digitalRead(LOG_PIN);
+        lastLogUpdate = millis() + timeZero;
+        prevLogState = logState;
+        setLogState(logState);
+    }
 }
 
 // Method to set the log state of the car for testing only
 // Closes the file when logging is turned off
 void Car::setLogState(bool state) {
-    logState = state;
-    if (!logState && dataFile) {
+    if (!logState && prevLogState && dataFile) {
         dataFile.close();
-    } else if (logState && !dataFile) {
+    } else if (logState && !prevLogState && !dataFile) {
         dataFile = SD.open(fileName.c_str(), FILE_WRITE);
-    }
-}
-
-// Car is active if key is turned and button is pushed
-void Car::updateState() {
-    active = key && switchOn;
-}
-// Method to check if the key is turned
-void Car::checkKey() {
-    key = digitalRead(KEY_PIN);
-    updateState();
-}
-// Method to check if the power switch is flipped to the on position
-void Car::checkSwitch() {
-    switchOn = digitalRead(SWITCH_PIN);
-    updateState();
-}
-// Method to check if the log switch is flipped to the on position
-void Car::checkToLog() {
-    logState = digitalRead(LOG_PIN);
-}
-// Method to check if the car is active
-// not used rn
-bool Car::checkActive() {
-    return active;
-}
-
-// Method to push the button
-// Not used rn
-void Car::buttonPushed() {
-    buttonState = !buttonState;
-    updateState();
-}
-// Method to check if the button is pushed
-// Not used rn
-void Car::checkButton() {
-    buttonState = digitalRead(BUTTON_PIN);
-    if (buttonState != prevButtonState) {
-        if (buttonState == HIGH) {
-            buttonPushed();
-        }
-        prevButtonState = buttonState;
     }
 }
