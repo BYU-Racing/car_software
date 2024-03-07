@@ -24,13 +24,10 @@
 #define BRAKE_ID 6
 #define BUTTON_PIN 28
 #define BUTTON_ID 7
-<<<<<<< HEAD
-=======
 #define BUTTON 2
 #define BIAS1 0
 #define MAX1 1024
 #define testPOT 27
->>>>>>> 4de5be7cae14bbe60467440a09c55cd1fcf1b361
 
 
 // CAN message variables
@@ -45,21 +42,14 @@
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 int brakeFreq = 100;
 int buttonFreq = 100;
-<<<<<<< HEAD
 int potFreq = 100;
-=======
->>>>>>> 4de5be7cae14bbe60467440a09c55cd1fcf1b361
 int numSensors = 3;
 // ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor brakePressure = AnalogSensor(BRAKE_ID, brakeFreq, BRAKE_PIN, 0, 1024, 1);
 AnalogSensor testPOT1 = AnalogSensor(13,100,testPOT, 0, 1024, 1);
 DigitalSensor button = DigitalSensor(BUTTON_ID, buttonFreq, BUTTON_PIN);
-<<<<<<< HEAD
 AnalogSensor potentiometer = AnalogSensor(POT_ID, potFreq, POT_PIN, 0, 1024, 1);
 Sensor* sensors[] = {&button, &brakePressure, &potentiometer};
-=======
-Sensor* sensors[] = {&button, &brakePressure, &testPOT1};
->>>>>>> 4de5be7cae14bbe60467440a09c55cd1fcf1b361
 DataCollector collector = DataCollector(sensors, numSensors, millis());
 
 
@@ -74,7 +64,6 @@ void setup() {
   can1.begin();
   can1.setBaudRate(BAUDRATE);
 
-  // TEST: I think this should be here but idk if it will cause a problem
   collector.setCAN(can1);
   collector.resetTimeZero(millis());
 }
