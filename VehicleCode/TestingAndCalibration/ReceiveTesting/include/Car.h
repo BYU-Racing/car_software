@@ -40,6 +40,7 @@ private:
     int* sensorData;
     CAN_message_t rmsg;
     CAN_message_t startMotor; 
+    CAN_message_t stopMotor;
 
     // Helper methods for logging data and SD card
     void logData(SensorData*);

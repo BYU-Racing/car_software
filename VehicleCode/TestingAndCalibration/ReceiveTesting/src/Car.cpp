@@ -32,6 +32,9 @@ Car::Car() {
     startMotor.buf[6] = 0;
     startMotor.buf[7] = 0;
     startMotor.id = 192; 
+
+    stopMotor = startMotor;
+    stopMotor.buf[4] = 1;
 }
 
 
@@ -415,8 +418,8 @@ void Car::updateState() {
     if (millis() - lastGoUpdate > goUpdateSpeed) {
         goFast = digitalRead(GO_PIN);
         lastGoUpdate = millis() + timeZero;
-        prevGoState = goFast;
         sendMotorSignal();
+        prevGoState = goFast;
     }
 }
 
@@ -431,7 +434,7 @@ void Car::sendMotorSignal() {
         myCan.write(startMotor);
     }
     else if (!goFast) {
-        // TODO send motor lock signal
+        myCan.write(stopMotor);
     }
 }
 
@@ -446,8 +449,8 @@ void Car::checkToLog() {
     if (millis() - lastLogUpdate > logUpdateSpeed) {
         logState = digitalRead(LOG_PIN);
         lastLogUpdate = millis() + timeZero;
-        prevLogState = logState;
         setLogState(logState);
+        prevLogState = logState;
     }
 }
 
