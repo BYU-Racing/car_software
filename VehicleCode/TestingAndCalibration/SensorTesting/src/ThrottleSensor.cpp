@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 300
+#define MAX_OUTPUT 300 //TODO: CHANGED THIS TO 900 TO ACCOUNT FOR 40 degree pedal range
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
@@ -110,6 +110,13 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
+
+    if(torque >= 150) { // TORQUE CAP!
+        torque = 150;
+    }
+
+    Serial.print("TORQUE: ");
+    Serial.println(torque);
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow
