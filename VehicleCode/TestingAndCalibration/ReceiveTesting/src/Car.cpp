@@ -87,10 +87,7 @@ void Car::readSensors() {
     setActive(true); // TODO remove after testing
     setLogState(true); // TODO remove after testing
 
-    // read CAN
-    Serial.print("Reading CAN: ");
     bool canRead = can2.read(rmsg);
-    Serial.println(canRead);
     if (active && canRead) {
         SensorData* msg = new SensorData(rmsg);
 
@@ -121,7 +118,6 @@ void Car::readSensors() {
 */
 void Car::logData(SensorData* data) {
     if (logState) {
-        int start = millis();
         if (dataFile) {
             // Write data to the file in CSV format
             dataFile.print(data->getId());
@@ -140,8 +136,6 @@ void Car::logData(SensorData* data) {
         } else {
             Serial.println("Error: File not open.");
         }
-        Serial.print("Logging delay: ");
-        Serial.println(millis() - start);
     } else {
         Serial.print("Waiting: Log state=");
         Serial.println(logState);
@@ -187,6 +181,7 @@ int Car::deconstructSpeed(int* data) {
 */
 void Car::saveSD() {
     if (millis() - lastSave > saveDelay) {
+        Serial.println("Saving to SD card.");
         lastSave = millis();
         if (dataFile) {
             dataFile.close();
@@ -416,8 +411,14 @@ void Car::setActive(bool state) {
 }
 
 // Method to set the log state of the car for testing only
+// Closes the file when logging is turned off
 void Car::setLogState(bool state) {
     logState = state;
+    if (!logState && dataFile) {
+        dataFile.close();
+    } else if (logState && !dataFile) {
+        dataFile = SD.open(fileName.c_str(), FILE_WRITE);
+    }
 }
 
 // Car is active if key is turned and button is pushed

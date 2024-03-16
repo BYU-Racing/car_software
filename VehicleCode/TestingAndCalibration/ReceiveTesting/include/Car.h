@@ -14,7 +14,7 @@ private:
     bool switchOn;            // Indicates if the car has been switched on
     bool logState;            // Indicates if the car is logging data
     int timeZero;             // Starting time
-    int saveDelay = 10000;    // Delay for saving data
+    unsigned long saveDelay = 10000;    // Delay for saving data
     unsigned long lastSave;   // Time of the last save
 
     // Logging attributes
