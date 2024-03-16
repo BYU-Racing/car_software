@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 300 //TODO: CHANGED THIS TO 900 TO ACCOUNT FOR 40 degree pedal range
+#define MAX_OUTPUT 150 
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
@@ -20,7 +20,7 @@
 // ECU formatting constants
 #define NO_DATA 0
 #define INVERTER_ACTIVE 1
-#define FORWARD 1
+#define FORWARD 0
 
 
 
@@ -59,7 +59,7 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[0]), bias, max, 0, MAX_OUTPUT);
+    throttle1 = map(analogRead(inputPins[0]), 0, bias, 0, MAX_OUTPUT);
     throttle2 = map(-analogRead(inputPins[1]), -max, -bias, 0, MAX_OUTPUT);
 
     //Return a pointer to the private value
@@ -110,10 +110,6 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
-
-    if(torque >= 150) { // TORQUE CAP!
-        torque = 150;
-    }
 
     Serial.print("TORQUE: ");
     Serial.println(torque);
