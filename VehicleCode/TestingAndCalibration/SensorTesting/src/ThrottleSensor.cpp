@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 300
+#define MAX_OUTPUT 1000
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
@@ -20,7 +20,7 @@
 // ECU formatting constants
 #define NO_DATA 0
 #define INVERTER_ACTIVE 1
-#define FORWARD 1
+#define FORWARD 0
 
 
 
@@ -59,8 +59,10 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
-    throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
+    throttle1 = map(analogRead(inputPins[0]), 0, bias, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-analogRead(inputPins[1]), -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
+    # throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
+    # throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -110,6 +112,9 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
+
+    Serial.print("TORQUE: ");
+    Serial.println(torque);
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow
@@ -179,7 +184,7 @@ int ThrottleSensor::rescale(int data, bool invert) {
     if (invert) {
         return map(data, -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
     }
-    return map(data, bias, max, MIN_OUTPUT, MAX_OUTPUT);
+    return map(data, 0, bias, MIN_OUTPUT, MAX_OUTPUT);
 };
 
 
