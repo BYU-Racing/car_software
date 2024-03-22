@@ -1,16 +1,4 @@
 #include "Car.h"
-#include <SD.h> 
-
-#define GO_PIN 25
-#define LOG_PIN 26
-#define ACCELERATOR_POT_1 3
-#define ID_ERROR 0
-#define SHUTDOWN 1
-#define NO_SHUTDOWN 0
-#define COMMAND_IDX 1
-
-
-
 
 /**
  * @brief Default constructor for Car class
@@ -152,10 +140,10 @@ void Car::logData(SensorData* data) {
  * @param data (int*&) The data from the CAN message 
 */
 int Car::deconstructSpeed(int* data) {
-    speed = int(data[3] * byteValue + data[2]) / scale;
+    speed = int(data[3] * BYTE_VALUE + data[2]) / SCALE;
 
     // Set speed to zero if less than 10 (start threshold)
-    if (speed < startThreshold) {
+    if (speed < START_THRESHOLD) {
         speed = 0;
     }
     return speed;
@@ -343,7 +331,7 @@ int Car::tempLength(const int &maxNumber) {
         temp /= 10;
         count++;
     }
-    return maxNameLength - count;
+    return MAX_NAME_LENGTH - count;
 }
 
 
@@ -387,7 +375,7 @@ void Car::shutdown() {
     }
 
     // TODO: update error LED
-    sendMotorSignal();
+    sendMotorSignal(100, NO_COMMAND);
 }
 
 /**
@@ -418,7 +406,7 @@ void Car::updateState() {
     if (millis() - lastGoUpdate > goUpdateSpeed) {
         goFast = digitalRead(GO_PIN);
         lastGoUpdate = millis() + timeZero;
-        sendMotorSignal();
+        sendMotorSignal(0, NO_COMMAND);
         prevGoState = goFast;
     }
 }
@@ -426,15 +414,31 @@ void Car::updateState() {
 /**
  * @brief Method to send a signal to the motor controller
  * 
+ * @param duration (int) The number of times to send the signal
+ * @param command (int) The command to send to the motor controller
+ *    - NO_COMMAND: Send the signal based on the go switch
+ *    - NO_SHUTDOWN: Send the signal to start the motor
+ *    - SHUTDOWN: Send the signal to stop the motor
+ * 
  * Sends a signal to the motor controller to turn on or off
  * based on the state of the go switch
 */
-void Car::sendMotorSignal() {
-    if (goFast && !prevGoState) {
-        myCan.write(startMotor);
-    }
-    else if (!goFast) {
-        myCan.write(stopMotor);
+void Car::sendMotorSignal(int duration, int command) {
+    for (i = 0; i < duration; i++) {
+
+        // choose appropriate signal
+        if (command == NO_SHUTDOWN || (goFast && !prevGoState)) {
+            myCan.write(startMotor);
+        }
+        else if (command == SHUTDOWN || !goFast) {
+            myCan.write(stopMotor);
+        }
+
+        // add a delay if sending multiple signals
+        if (duration == 0) {
+            break;
+        }
+        delay(MOTOR_SIGNAL_DELAY);
     }
 }
 

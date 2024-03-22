@@ -1,9 +1,29 @@
 #ifndef CAR_H
 #define CAR_H
 
-#include "SensorData.h"  // Include the header for the SensorData class
-#include <string>        // Include the header for string handling
+#include "SensorData.h"
+#include <string>
 #include <SD.h> 
+
+// teensy hardware info
+#define GO_PIN 25
+#define LOG_PIN 26
+#define ACCELERATOR_POT_1 3
+
+// commands and logging integers
+#define ID_ERROR 0
+#define SHUTDOWN 1
+#define NO_SHUTDOWN 0
+#define NO_COMMAND 2
+#define COMMAND_IDX 1
+
+// global unchanging magic numbers
+#define SCALE 100
+#define START_THRESHOLD 10
+#define BYTE_VALUE 256
+#define MAX_NAME_LENGTH 6
+#define MOTOR_SIGNAL_DELAY 50
+
 
 
 class Car {
@@ -27,12 +47,6 @@ private:
     File dataFile;                      // File for logging data
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan;
 
-    // Other attributes
-    const int scale = 100;
-    const int startThreshold = 10;
-    const int byteValue = 256;
-    const int maxNameLength = 6;
-
     // Global variables
     int speed;
     int count = 0;
@@ -52,7 +66,6 @@ private:
     // Hardware checking
     void updateState();
     void checkToLog();
-    void sendMotorSignal();
 
     // Helper methods for setting up the SD card
     String updateFileName();
@@ -73,7 +86,7 @@ public:
     void resetTimeZero(unsigned long);
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan);
 
-    // Getters
+    void sendMotorSignal(int, int);
     int deconstructSpeed(int*); // not used rn
 
     // Method to save data
