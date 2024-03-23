@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 150 
+#define MAX_OUTPUT 1000
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
