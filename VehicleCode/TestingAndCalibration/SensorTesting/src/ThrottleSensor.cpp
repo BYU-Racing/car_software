@@ -59,8 +59,10 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[0]), 0, bias, 0, MAX_OUTPUT);
-    throttle2 = map(-analogRead(inputPins[1]), -max, -bias, 0, MAX_OUTPUT);
+    throttle1 = map(analogRead(inputPins[0]), 0, bias, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-analogRead(inputPins[1]), -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
+    # throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
+    # throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -182,7 +184,7 @@ int ThrottleSensor::rescale(int data, bool invert) {
     if (invert) {
         return map(data, -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
     }
-    return map(data, bias, max, MIN_OUTPUT, MAX_OUTPUT);
+    return map(data, 0, bias, MIN_OUTPUT, MAX_OUTPUT);
 };
 
 

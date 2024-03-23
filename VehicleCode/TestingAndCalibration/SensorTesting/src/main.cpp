@@ -7,6 +7,7 @@
 #include "Error.h"
 #include "DataCollector.h"
 #include "ThrottleSensor.h"
+#include "Car.h"
 
 
 // throttle sensor variables
@@ -32,17 +33,11 @@
 
 // CAN message variables
 #define LENGTH 8
-#define DELAYBY 100
+#define DELAYBY 0
 #define BEGIN 9600      // 9,600
 #define BAUDRATE 250000 // 250,000
+#define SAVE_DELAY 20000    // 20,000 ms
 
-
-// HELPER FUNCTIONS
-// int percentCalc(double, double, double);
-int* buildData(int, int);
-int getLow(int);
-int getHigh(int);
-void sendError(int*, int, int);
 
 
 // initialize data processing variables
@@ -55,13 +50,13 @@ const int torque = 200;
 int countMismatch = 0;
 
 // initialize throttle sensor
-int throttleFreq = 1;
+int throttleFreq = 20;
 int numSensors = 1;
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
 Sensor* sensors[] = {&throttle};
 DataCollector collector = DataCollector(sensors, numSensors, millis());
-
+Car car;
 
 
 // MAIN -------------------------------------------------------------------------------------------
@@ -74,7 +69,13 @@ void setup() {
   can1.begin();
   can1.setBaudRate(BAUDRATE);
 
-  // TEST: I think this should be here but idk if it will cause a problem
+  // set up car
+  car.createNewCSV();
+  car.setCAN(can1);
+  car.setSaveDelay(SAVE_DELAY);
+  car.resetTimeZero(millis());
+
+  // set up collector
   collector.setCAN(can1);
   collector.resetTimeZero(millis());
   for(int i = 0; i <100; ++i){
@@ -98,6 +99,7 @@ void setup() {
 void loop() {
 
   collector.checkSensors();
+  car.readSensors();
  
   delay(DELAYBY);
 }

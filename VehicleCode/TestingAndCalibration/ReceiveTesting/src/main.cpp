@@ -22,8 +22,8 @@
 #define LENGTH 8
 #define BEGIN 9600          // 9,600
 #define BAUDRATE 250000     // 250,000
-#define SAVE_DELAY 20000    // 20,000
-#define DELAYBY 10
+#define SAVE_DELAY 20000    // 20,000 ms
+#define DELAYBY 0
 
 
 // initialize can and throttle sensor
@@ -59,6 +59,8 @@ void setup() {
     collector.setCAN(can1);
 
     // visibility control
+    Serial.println("Waiting 5 seconds to start.");
+    delay(5000); // so that you can read the file name at the start
     Serial.println("ALERT:");
     Serial.print("SD card saves every ");
     Serial.print(SAVE_DELAY / 1000);
@@ -67,12 +69,12 @@ void setup() {
     Serial.print(DELAYBY);
     Serial.println(" ms.");
     Serial.println("Reading on CAN2.");
-    delay(2000); // so that you can read the file name at the start
+    Serial.println("Starting.");
 }
 
 
 void loop() {
-    collector.checkSensors();
+    // collector.checkSensors();
     car.readSensors();
     delay(DELAYBY);
 
