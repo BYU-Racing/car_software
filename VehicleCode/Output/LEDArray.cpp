@@ -29,14 +29,25 @@ void LEDArray::updateValue(const SensorData& data) {
     // Get data from the object
     int* gotData = data.getData();
 
-    // Parse it to the format we need val between 0-100
-    int parsed = gotData[0]; 
+    //IF BATTERY STATE OF CHARGE IT SHOULD BE 0-100
+    int value = gotData[0]; 
+    int flag = gotData[1];
 
     //Possibly check an identifer in the message to send it to
     //the correct display function
 
+    if(flag == 0) { // Flag 0 is for Battery Percentage
+        displayLEDsPerc(value);
+    }
+    else if(flag == 1) {
+        displayLEDsHealth(value); //Flag 1 is for Battery Health
+    }
+    else if(flag == 2) {
+        displayLEDsTemp(value); //Flag 2 is for Battery Temp
+    }
+
     // update the LEDS
-    displayLEDsPerc(parsed);
+    
 }
 
 /**
@@ -98,13 +109,61 @@ void LEDArray::displayLEDsPerc(int value) {
 
     }
     else {
-        // NEW CODE FOR MAPPING THE VALUE
-        // IF NOT BLINKING
         RGBColor color = mapValueToRGB(value);
 
         digitalWrite(ledPins[0], color.R); //WRITE RED
         digitalWrite(ledPins[1], color.G); //WRITE GREEN
         digitalWrite(ledPins[2], color.B); //WRITE BLUE
     }
+}
+
+/**
+ * @brief displays battery health on LED array
+ * @param value (int)
+ * uses the passed in battery health value expected and displays it on a color gradient on the LED
+*/
+void LEDArray::displayLEDsHealth(int value) {
+    // Create new mapping
+
+
+    //Write to LED
+}
+
+/**
+ * @brief displays battery temp on LED array
+ * @param value (int)
+ * uses the passed in battery health value expected and displays it in colors on the LED.
+ *  Blue = Below expected operating temp
+ *  Green = Within expected operating temp
+ *  Yellow = Approaching too high
+ *  Red = Exceeding expected operating temperatures
+*/
+void LEDArray::displayLEDsTemp(int value) {
+    //Create a new mapping
+
+    int bottomRange = 10;
+    int upperBound = 30;
+
+    if(value <= bottomRange) { //Write BLUE
+        digitalWrite(ledPins[0], 0); //RED
+        digitalWrite(ledPins[1], 0); //GREEN
+        digitalWrite(ledPins[2], 255);  //BLUE
+    }
+    else if((value > bottomRange) && (value < upperBound - 5)) { //Write Green
+        digitalWrite(ledPins[0], 0); //RED
+        digitalWrite(ledPins[1], 255); //GREEN
+        digitalWrite(ledPins[2], 0); //BLUE
+    }
+    else if((value >= upperBound - 5) && (value < upperBound)) { //Write Yellow
+        digitalWrite(ledPins[0], 255); //RED
+        digitalWrite(ledPins[1], 255); //GREEN
+        digitalWrite(ledPins[2], 0); //BLUE
+    }
+    else {
+        digitalWrite(ledPins[0], 255); //RED
+        digitalWrite(ledPins[1], 0); //GREEN
+        digitalWrite(ledPins[2], 0); //BLUE 
+    }
+    
 }
 

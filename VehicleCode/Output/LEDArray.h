@@ -26,6 +26,8 @@ public:
     void updateValue(const SensorData& data);
 
     void displayLEDsPerc(int value);
+    void displayLEDsHealth(int value);
+    void displayLEDsTemp(int value);
 
     // Additional methods for LEDArray
 };
