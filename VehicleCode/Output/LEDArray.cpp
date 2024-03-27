@@ -6,8 +6,7 @@
  *
  * Initializes an AnalogSensor object with specified parameters.
  * @param ledPinIn (int*) Array holding the input pins
- * Pins should be in an array from lowest to highest battery indicator 
- * ex: [0] in the array is the pin for the bottom led that blinks when battery is low
+ * Pins should be in an array in the format {RED, GREEN, BLUE}
  */
 LEDArray::LEDArray(int* ledPinIn) {
     this -> currentState = 0;
@@ -30,13 +29,41 @@ void LEDArray::updateValue(const SensorData& data) {
     // Get data from the object
     int* gotData = data.getData();
 
-    // Parse it to the format we need
+    // Parse it to the format we need val between 0-100
     int parsed = gotData[0]; 
 
     // update the LEDS
     displayLEDs(parsed);
 }
 
+/**
+ * @brief creates a helper struct for the battery percentage
+ * @param value (int)
+ * integer bewteen 10-100 (Will also work with any value but is intended for 10-100)
+ * converts that to RGB for gradient from G to R based on the passed in battery percentage
+*/
+struct RGBColor {
+    int R;
+    int G;
+    int B;
+};
+
+RGBColor mapValueToRGB(int value) {
+    RGBColor color;
+    
+    // Ensure the value is within the valid range
+    value = std::min(100, std::max(10, value));
+    
+    // Calculate the interpolation factor
+    double factor = (value - 10) / 90.0;
+    
+    // Interpolate between red and yellow
+    color.R = 255;
+    color.G = static_cast<int>(255 * factor);
+    color.B = 0;
+    
+    return color;
+}
 
 /**
  * @brief displays battery percentage on LED array
@@ -49,25 +76,28 @@ void LEDArray::displayLEDs(int value) {
     if(value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { 
         if(this -> currentState == 0) { // 0 = LED OFF
             // Turn on blink LED
-            digitalWrite(ledPins[0], HIGH);
+            digitalWrite(ledPins[0], 255); //IS 254 right for the max?
+            digitalWrite(ledPins[1], 0);
+            digitalWrite(ledPins[2], 0);
             this -> currentState = 1;
             this->lastUpdate = millis();
         }
         else {
             // Turn off blink LED
-            digitalWrite(ledPins[0], LOW);
+            digitalWrite(ledPins[0], 0);
+            digitalWrite(ledPins[1], 0);
+            digitalWrite(ledPins[2], 0);
             this -> currentState = 0;
         }
 
     }
     else {
-        for (int i = 0; i < 5; i++) {
-            if (i <= value / this->increment) {
-                digitalWrite(this->ledPins[i], HIGH);
-            }
-            else {
-                digitalWrite(this->ledPins[i], LOW);
-            }
-        }
+        // NEW CODE FOR MAPPING THE VALUE
+        // IF NOT BLINKING
+        RGBColor color = mapValueToRGB(value);
+
+        digitalWrite(ledPins[0], color.R); //WRITE RED
+        digitalWrite(ledPins[1], color.G); //WRITE GREEN
+        digitalWrite(ledPins[2], color.B); //WRITE BLUE
     }
 }
