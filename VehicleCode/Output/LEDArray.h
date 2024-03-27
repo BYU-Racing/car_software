@@ -25,7 +25,7 @@ public:
     // Override the writeToDisplay method
     void updateValue(const SensorData& data);
 
-    void displayLEDs(int value);
+    void displayLEDsPerc(int value);
 
     // Additional methods for LEDArray
 };

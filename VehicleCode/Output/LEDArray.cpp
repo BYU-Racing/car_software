@@ -32,15 +32,15 @@ void LEDArray::updateValue(const SensorData& data) {
     // Parse it to the format we need val between 0-100
     int parsed = gotData[0]; 
 
+    //Possibly check an identifer in the message to send it to
+    //the correct display function
+
     // update the LEDS
-    displayLEDs(parsed);
+    displayLEDsPerc(parsed);
 }
 
 /**
  * @brief creates a helper struct for the battery percentage
- * @param value (int)
- * integer bewteen 10-100 (Will also work with any value but is intended for 10-100)
- * converts that to RGB for gradient from G to R based on the passed in battery percentage
 */
 struct RGBColor {
     int R;
@@ -48,6 +48,12 @@ struct RGBColor {
     int B;
 };
 
+/**
+ * @brief creates a helper struct for the battery percentage
+ * @param value (int)
+ * integer bewteen 10-100 (Will also work with any value but is intended for 10-100)
+ * converts that to RGB for gradient from G to R based on the passed in battery percentage
+*/
 RGBColor mapValueToRGB(int value) {
     RGBColor color;
     
@@ -71,7 +77,7 @@ RGBColor mapValueToRGB(int value) {
  * uses the passed in battery value expected (0-100) and displays it
  * on the led array. Blinks when value is below 10%
 */
-void LEDArray::displayLEDs(int value) {
+void LEDArray::displayLEDsPerc(int value) {
     // Whatever value indicates that we need to blink
     if(value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { 
         if(this -> currentState == 0) { // 0 = LED OFF
@@ -101,3 +107,4 @@ void LEDArray::displayLEDs(int value) {
         digitalWrite(ledPins[2], color.B); //WRITE BLUE
     }
 }
+
