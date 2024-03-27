@@ -69,10 +69,10 @@ RGBColor mapValueToRGB(int value) {
     RGBColor color;
     
     // Ensure the value is within the valid range
-    value = std::min(100, std::max(10, value));
+    value = std::min(200, std::max(20, value));
     
     // Calculate the interpolation factor
-    double factor = (value - 10) / 90.0;
+    double factor = (value - 20) / 180.0;
     
     // Interpolate between red and yellow
     color.R = 255;
@@ -85,12 +85,12 @@ RGBColor mapValueToRGB(int value) {
 /**
  * @brief displays battery percentage on LED array
  * @param value (int)
- * uses the passed in battery value expected (0-100) and displays it
- * on the led array. Blinks when value is below 10%
+ * uses the passed in battery value expected (0-200) and displays it
+ * on the led array. Blinks when value is below 10% (20)
 */
 void LEDArray::displayLEDsPerc(int value) {
     // Whatever value indicates that we need to blink
-    if(value < 10 && (millis() - this->lastUpdate) >= this->intervalTime) { 
+    if(value < 20 && (millis() - this->lastUpdate) >= this->intervalTime) { 
         if(this -> currentState == 0) { // 0 = LED OFF
             // Turn on blink LED
             digitalWrite(ledPins[0], 255); //IS 254 right for the max?
@@ -140,7 +140,6 @@ void LEDArray::displayLEDsHealth(int value) {
 */
 void LEDArray::displayLEDsTemp(int value) {
     //Create a new mapping
-
     int bottomRange = 10;
     int upperBound = 30;
 
@@ -163,7 +162,6 @@ void LEDArray::displayLEDsTemp(int value) {
         digitalWrite(ledPins[0], 255); //RED
         digitalWrite(ledPins[1], 0); //GREEN
         digitalWrite(ledPins[2], 0); //BLUE 
-    }
-    
+    } 
 }
 
