@@ -29,18 +29,17 @@ void LEDArray::updateValue(const SensorData& data) {
     // Get data from the object
     int* gotData = data.getData();
 
-    //IF BATTERY STATE OF CHARGE IT SHOULD BE 0-100
     int value = gotData[0]; 
-    int flag = gotData[1];
+    int flag = data.getId();
 
     //Possibly check an identifer in the message to send it to
     //the correct display function
 
-    if(flag == 1) { // Flag 0 is for Battery Percentage
+    if(flag == 0x37) { // Flag 0x37 is for Battery Percentage
         displayLEDsPerc(value);
     }
-    else if(flag == 2) {
-        displayLEDsTemp(value); //Flag 2 is for Battery Temp
+    else if(flag == 0x38) {
+        displayLEDsTemp(value); //Flag 0x38 is for Battery Temp
     }
     
 }
