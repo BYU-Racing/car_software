@@ -88,7 +88,7 @@ void LEDArray::displayLEDsPerc(int value) {
     if(value < 20 && (millis() - this->lastUpdate) >= this->intervalTime) { 
         if(this -> currentState == 0) { // 0 = LED OFF
             // Turn on blink LED
-            digitalWrite(ledPins[0], 255); //IS 254 right for the max?
+            digitalWrite(ledPins[0], 255);
             digitalWrite(ledPins[1], 0);
             digitalWrite(ledPins[2], 0);
             this -> currentState = 1;
