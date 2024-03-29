@@ -36,17 +36,12 @@ void LEDArray::updateValue(const SensorData& data) {
     //Possibly check an identifer in the message to send it to
     //the correct display function
 
-    if(flag == 0) { // Flag 0 is for Battery Percentage
+    if(flag == 1) { // Flag 0 is for Battery Percentage
         displayLEDsPerc(value);
-    }
-    else if(flag == 1) {
-        displayLEDsHealth(value); //Flag 1 is for Battery Health
     }
     else if(flag == 2) {
         displayLEDsTemp(value); //Flag 2 is for Battery Temp
     }
-
-    // update the LEDS
     
 }
 
@@ -69,10 +64,10 @@ RGBColor mapValueToRGB(int value) {
     RGBColor color;
     
     // Ensure the value is within the valid range
-    value = std::min(200, std::max(20, value));
+    value = std::min(160, std::max(40, value));
     
     // Calculate the interpolation factor
-    double factor = (value - 20) / 180.0;
+    double factor = (value - 40) / 120.0;
     
     // Interpolate between red and yellow
     color.R = 255;
@@ -118,18 +113,6 @@ void LEDArray::displayLEDsPerc(int value) {
 }
 
 /**
- * @brief displays battery health on LED array
- * @param value (int)
- * uses the passed in battery health value expected and displays it on a color gradient on the LED
-*/
-void LEDArray::displayLEDsHealth(int value) {
-    // Create new mapping
-
-
-    //Write to LED
-}
-
-/**
  * @brief displays battery temp on LED array
  * @param value (int)
  * uses the passed in battery health value expected and displays it in colors on the LED.
@@ -140,8 +123,8 @@ void LEDArray::displayLEDsHealth(int value) {
 */
 void LEDArray::displayLEDsTemp(int value) {
     //Create a new mapping
-    int bottomRange = 10;
-    int upperBound = 30;
+    int bottomRange = 25;
+    int upperBound = 55;
 
     if(value <= bottomRange) { //Write BLUE
         digitalWrite(ledPins[0], 0); //RED
