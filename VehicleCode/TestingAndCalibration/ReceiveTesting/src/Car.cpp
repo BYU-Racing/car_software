@@ -48,6 +48,27 @@ Car::~Car() {
 }
 
 
+/**
+ * @brief Initializes the Car object in one command
+ * 
+ * @param myCan (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus object
+ * @param saveDelay (int) The delay interval for saving data
+ * 
+ * Creates a new CSV file for logging
+ * Initializes the CAN bus object
+ * Sets the save delay interval
+ * Sets the logging state to true
+ * Resets the time zero for logging purposes.
+ */
+void Car::initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan, int saveDelay) {
+    createNewCSV();
+    setCAN(myCan);
+    setSaveDelay(saveDelay);
+    setLogState(true);
+    resetTimeZero(millis());
+}
+
+
 
 
 
@@ -74,9 +95,7 @@ Car::~Car() {
 */
 void Car::readSensors() {
     // update states
-    checkToLog();
     updateState();
-    setLogState(true); // TODO remove after testing
 
     if (myCan.read(rmsg)) {
         SensorData* msg = new SensorData(rmsg);

@@ -22,7 +22,7 @@
 #define START_THRESHOLD 10
 #define BYTE_VALUE 256
 #define MAX_NAME_LENGTH 6
-#define MOTOR_SIGNAL_DELAY 50
+#define MOTOR_SIGNAL_DELAY 1500
 
 
 
@@ -79,6 +79,7 @@ public:
     Car();
     Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan);
     ~Car();
+    void initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>, int);
 
     // Setters
     void setLogState(bool);
