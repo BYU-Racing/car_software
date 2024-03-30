@@ -14,6 +14,12 @@ private:
 
     unsigned long lastUpdate;
 
+
+    //Additional Methods for the updateValue
+    void displayLEDsPerc(int value);
+    void displayLEDsTemp(int value);
+
+
 public:
     // Constructor
     LEDArray();
@@ -24,12 +30,6 @@ public:
 
     // Override the writeToDisplay method
     void updateValue(const SensorData& data);
-
-    void displayLEDsPerc(int value);
-    void displayLEDsHealth(int value);
-    void displayLEDsTemp(int value);
-
-    // Additional methods for LEDArray
 };
 
 #endif // LEDARRAY_H
