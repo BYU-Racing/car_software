@@ -61,18 +61,25 @@ struct RGBColor {
 */
 RGBColor mapValueToRGB(int value) {
     RGBColor color;
-    
+
     // Ensure the value is within the valid range
-    value = std::min(160, std::max(40, value));
-    
+    value = std::min(160, std::max(60, value));
+
     // Calculate the interpolation factor
-    double factor = (value - 40) / 120.0;
-    
-    // Interpolate between red and yellow
-    color.R = 255;
-    color.G = static_cast<int>(255 * factor);
-    color.B = 0;
-    
+    double factor = (value - 60) / 100.0;
+
+    if (factor < 0.5) {
+        // Interpolate between red and yellow
+        color.R = 255;
+        color.G = static_cast<int>(255 * factor * 2);
+        color.B = 0;
+    } else {
+        // Interpolate between yellow and green
+        color.R = static_cast<int>(255 * (1 - (factor - 0.5) * 2));
+        color.G = 255;
+        color.B = 0;
+    }
+
     return color;
 }
 
@@ -108,6 +115,12 @@ void LEDArray::displayLEDsPerc(int value) {
         digitalWrite(ledPins[0], color.R); //WRITE RED
         digitalWrite(ledPins[1], color.G); //WRITE GREEN
         digitalWrite(ledPins[2], color.B); //WRITE BLUE
+
+        Serial.print("R: ");
+        Serial.print(color.R);
+        Serial.print(" G: ");
+        Serial.println(color.G);
+
     }
 }
 
