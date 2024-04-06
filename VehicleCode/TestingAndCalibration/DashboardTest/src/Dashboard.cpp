@@ -53,8 +53,8 @@ Dashboard::~Dashboard() {
  */
 int Dashboard::getSensorIndex(int id) {
     switch (id) {
-        case SEVEN_SEG_1: return 0;     //SEVEN_SEG_1
-        case LED_ARRAY_1: return 1;     //LED_ARRAY_1
+        case 1000: return 0;     //SEVEN_SEG_1
+        case 0x38: return 0;     //LED_ARRAY_1
         case LED_ARRAY_2: return 2;     //LED_ARRAY_2
         case LED_ARRAY_3: return 3;     //LED_ARRAY_3
         case SERVO:       return 4;     //SERVO
