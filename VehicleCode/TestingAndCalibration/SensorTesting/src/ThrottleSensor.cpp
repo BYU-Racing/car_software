@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 1000
+#define MAX_OUTPUT 1500
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
@@ -59,10 +59,10 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[0]), 0, bias, MIN_OUTPUT, MAX_OUTPUT);
-    throttle2 = map(-analogRead(inputPins[1]), -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
-    # throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
-    # throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
+    throttle1 = map(analogRead(inputPins[0]), 0, 175, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-analogRead(inputPins[1]), -max, -810, MIN_OUTPUT, MAX_OUTPUT);
+    // throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
+    // throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {

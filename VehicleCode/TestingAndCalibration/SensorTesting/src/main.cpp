@@ -15,7 +15,7 @@
 #define ID_ERROR 0
 #define THROTTLE_POT 192
 #define WHEEL_SPEED_FL 5
-#define BIAS1 509
+#define BIAS1 512
 #define BIAS2 0
 #define MAX1 1024
 #define MAX2 1000
