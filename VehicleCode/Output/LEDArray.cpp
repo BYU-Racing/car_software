@@ -32,8 +32,8 @@ void LEDArray::updateValue(const SensorData& data) {
     int value = gotData[0]; 
     int flag = data.getId();
 
-    //Possibly check an identifer in the message to send it to
-    //the correct display function
+    //The IDs are supposed to be input in hexidecimal but this has not been verified with
+    //the BMS. Sniff the CAN messages and confirm IDs if this doesn't work
 
     if(flag == 0x37) { // Flag 0x37 is for Battery Percentage
         displayLEDsPerc(value);
