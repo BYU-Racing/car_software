@@ -135,7 +135,7 @@ void LEDArray::displayLEDsPerc(int value) {
 */
 void LEDArray::displayLEDsTemp(int value) {
     //Create a new mapping
-    int bottomRange = 25;
+    int bottomRange = 20;
     int upperBound = 55;
 
     if(value <= bottomRange) { //Write BLUE
