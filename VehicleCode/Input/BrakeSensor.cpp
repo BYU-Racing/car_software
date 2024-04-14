@@ -122,7 +122,6 @@ bool BrakeSensor::readyToCheck() {
     return (waitTime <= int(millis() - previousUpdateTime));
 }
 
-
 int BrakeSensor::getId() {
     return sensorID;
 }
