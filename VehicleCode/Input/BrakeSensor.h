@@ -7,16 +7,33 @@
 
 class BrakeSensor : public Sensor {
     private:
-    int baseline = 0;
-    int errorMargin = 0;
-    bool pressState = false;
-    bool prevPressState = false;
+    int baseline;
+    int errorMargin;
+    bool pressState;
+    bool prevPressState;
+    bool driveState;
+    int brakeP;
+    int* sendData
+    
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     
     void sendMotorCommand(bool pressState);
 
 
 
+    public:
+    BrakeSensor(int id, int waitTime, int inPin, int dataLength, int baseline, int errorMargin)
+    //GetID
+
+    int readInputs() override;
+    bool readyToCheck();
+    int rescale(int data) override;
+
+    int* buildData(int value) override;
+
+    int* buildError() override;
+
+    void setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn);
 
     
 }
