@@ -2,13 +2,13 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 1500
+#define MAX_OUTPUT 1000
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
 
 // Error handling constants (not all used but kept for future use)
-#define ERROR_TOL 1000
+#define ERROR_TOL 1600
 #define MAINTAIN_TOL 2
 #define SHUTDOWN_TOL 50
 #define SHUTDOWN 1
@@ -59,10 +59,15 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[0]), 0, 175, MIN_OUTPUT, MAX_OUTPUT);
-    throttle2 = map(-analogRead(inputPins[1]), -max, -810, MIN_OUTPUT, MAX_OUTPUT);
+    throttle1 = map(analogRead(inputPins[1]), 0, 175, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-analogRead(inputPins[0]), -max, -810, MIN_OUTPUT, MAX_OUTPUT);
     // throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
     // throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
+
+    Serial.print("T1: ");
+    Serial.print(throttle1);
+    Serial.print(" T2: ");
+    Serial.println(throttle2);
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -89,6 +94,9 @@ int ThrottleSensor::readInputs() {
  *                  False otherwise.
 */
 bool ThrottleSensor::checkError(int percent1, int percent2) {
+
+    Serial.print("abs: ");
+    Serial.println(abs(percent1 - percent2));
     
     // update countMismatch
     if (abs(percent1 - percent2) < ERROR_TOL) {
@@ -113,7 +121,13 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
 */
 int* ThrottleSensor::buildData(int torque){
 
-    Serial.print("TORQUE: ");
+    
+
+    if(torque <= 90) {
+        torque = 0;
+    }
+
+    Serial.print("SENT TORQUE: ");
     Serial.println(torque);
 
     // convert to motor controller format

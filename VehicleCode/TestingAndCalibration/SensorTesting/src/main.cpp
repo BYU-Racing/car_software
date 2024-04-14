@@ -32,7 +32,7 @@
 
 // CAN message variables
 #define LENGTH 8
-#define DELAYBY 100
+#define DELAYBY 30
 #define BEGIN 9600      // 9,600
 #define BAUDRATE 250000 // 250,000
 
