@@ -14,6 +14,7 @@ class BrakeSensor : public Sensor {
     bool driveState;
     int brakeP;
     int* sendData
+    int dataLength;
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     
@@ -34,6 +35,8 @@ class BrakeSensor : public Sensor {
     int* buildError() override;
 
     void setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn);
+
+    void setDriveState();
 
     
 }

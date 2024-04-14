@@ -15,12 +15,13 @@ BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int ba
     driveState = false;
     brakeP = 0;
     sendData = new int[8];
+    this->dataLength = dataLength;
     
 }
 
 void BrakeSensor::setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn) {
     can2 = canIn;
- }
+}
 
 void BrakeSensor::sendMotorCommand() {
     // ADD SOME CHECK IF THE MOTOR SHOULD BE IN A RUNNING STATE
@@ -122,5 +123,14 @@ bool BrakeSensor::readyToCheck() {
 }
 
 
+int BrakeSensor::getId() {
+    return sensorID;
+}
 
+int BrakeSensor::getDataLength() {
+    return dataLength;
+}
 
+void BrakeSensor::setDriveState() {
+    driveState = !driveState; // Switched on or off :)
+}
