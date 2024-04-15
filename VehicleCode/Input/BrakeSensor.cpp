@@ -42,7 +42,7 @@ void BrakeSensor::sendMotorCommand() {
         msg.buf[6]=0;
         msg.buf[7]=0;
         msg.id=192;
-        can1.write(msg);
+        can2.write(msg);
         prevPressState = pressState;
     }
     else if (pressState == false && prevPressState == true && driveState = true)
@@ -70,7 +70,14 @@ int BrakeSensor::readInputs() {
 
     brakeP = analogRead(inputPins[0]);
 
-    //Send motor command here??
+    //Send motor command here?
+
+    if(brakeP > baseline) {
+        pressState = true;
+    }
+    else {
+        pressState = false;
+    }
 
     sendMotorCommand();
 
