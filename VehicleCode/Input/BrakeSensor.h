@@ -18,7 +18,7 @@ class BrakeSensor : public Sensor {
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     
-    void sendMotorCommand(bool pressState);
+    void sendMotorCommand();
 
 
 
