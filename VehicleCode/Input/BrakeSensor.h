@@ -13,7 +13,7 @@ class BrakeSensor : public Sensor {
     bool prevPressState;
     bool driveState;
     int brakeP;
-    int* sendData
+    int* sendData;
     int dataLength;
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
