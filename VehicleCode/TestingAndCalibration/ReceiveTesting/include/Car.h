@@ -6,8 +6,7 @@
 #include <SD.h> 
 
 // teensy hardware info
-#define GO_PIN 25
-#define LOG_PIN 26
+#define GO_PIN 23
 #define ACCELERATOR_POT_1 3
 
 // commands and logging integers
@@ -87,7 +86,7 @@ public:
     void resetTimeZero(unsigned long);
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan);
 
-    void sendMotorSignal(int, int);
+    void sendMotorSignal(int, int, int);
     int deconstructSpeed(int*); // not used rn
 
     // Method to save data

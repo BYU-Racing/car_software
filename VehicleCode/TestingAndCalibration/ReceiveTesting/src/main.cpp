@@ -28,7 +28,7 @@
 #define BEGIN 9600          // 9,600
 #define BAUDRATE 250000     // 250,000
 #define SAVE_DELAY 20000    // 20,000 ms
-#define DELAYBY 0
+#define DELAYBY 100
 
 #define TESTING 1
 
@@ -64,7 +64,8 @@ void setup() {
     collector.setCAN(can1);
 
     // unlock motor
-    car.sendMotorSignal(1, NO_SHUTDOWN);
+    // send 1 message every 300 milliseconds for 3 seconds
+    car.sendMotorSignal(10, 300, NO_SHUTDOWN);
 
     // TODO: honk
 
@@ -81,6 +82,7 @@ void setup() {
         Serial.println(" ms.");
         Serial.println("Reading on CAN2.");
         Serial.println("Starting.");
+        car.setLogState(true);
     }
 }
 
