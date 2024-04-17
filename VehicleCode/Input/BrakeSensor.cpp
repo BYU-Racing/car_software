@@ -114,7 +114,6 @@ int* BrakeSensor::buildError() {
 
     sendData[0] = 0;
     sendData[1] = 0;
-
     sendData[2] = driveState;
     sendData[3] = pressState;
     sendData[4] = prevPressState;
