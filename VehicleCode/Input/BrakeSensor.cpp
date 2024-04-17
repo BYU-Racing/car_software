@@ -126,7 +126,6 @@ void BrakeSensor::setDriveState() {
 
 bool BrakeSensor::checkError(int value) { //This function seems like it could have some bugs
     //If an abnormal or no reading is read for more than 100 msec, the motor power must be deactivated
-
     if(!driveState) { // IF we are not in a driving state this error checking is irrelevant
         return true;
     }
@@ -157,7 +156,6 @@ bool BrakeSensor::checkError(int value) { //This function seems like it could ha
         return false;
     }
 }
-
 
 void BrakeSensor::sendStartCommand() {
     CAN_message_t msg;
