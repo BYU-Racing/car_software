@@ -12,9 +12,12 @@ class BrakeSensor : public Sensor {
     bool pressState;
     bool prevPressState;
     bool driveState;
+    bool inError;
+    bool inCriticalError;
     int brakeP;
     int* sendData;
     int dataLength;
+    int timeErrorStart;
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     
@@ -37,6 +40,12 @@ class BrakeSensor : public Sensor {
     void setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn);
 
     void setDriveState();
+
+    bool checkError(int value);
+
+    void sendStopCommand();
+
+    void sendStartCommand();
 
     
 }
