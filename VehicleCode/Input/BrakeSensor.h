@@ -18,6 +18,7 @@ class BrakeSensor : public Sensor {
     int* sendData;
     int dataLength;
     int timeErrorStart;
+    int errorBaseline;
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     

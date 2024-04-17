@@ -19,6 +19,8 @@ BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int ba
     timeErrorStart = 0;
     inError = false;
     inCriticalError = false;
+    errorBaseline = baseline; // THIS SHOULD CHANGE
+    
 }
 
 void BrakeSensor::setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn) {
@@ -128,7 +130,7 @@ bool BrakeSensor::checkError(int value) { //This function seems like it could ha
     if(!driveState) { // IF we are not in a driving state this error checking is irrelevant
         return true;
     }
-    if(value == 0 || value < baseline) { //If we currently have an in error reading
+    if(value == 0 || value < errorBaseline) { //If we currently have an in error reading
         if(inError && (millis() - timeErrorStart) > 100) { // If we have been in error for 100msec ENTER CRITICAL ERROR STATE
             sendStopCommand();
             inCriticalError = true
