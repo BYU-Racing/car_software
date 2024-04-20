@@ -77,21 +77,6 @@ void setup() {
   // TEST: I think this should be here but idk if it will cause a problem
   collector.setCAN(can1);
   collector.resetTimeZero(millis());
-  for(int i = 0; i <100; ++i){
-    CAN_message_t msg;
-    msg.len=8;
-    msg.buf[0]=0;
-    msg.buf[1]=0;
-    msg.buf[2]=0;
-    msg.buf[3]=0;
-    msg.buf[4]=0;
-    msg.buf[5]=0;
-    msg.buf[6]=0;
-    msg.buf[7]=0;
-    msg.id=192;
-    can1.write(msg);
-    delay(50);
-  }
 }
 
 
