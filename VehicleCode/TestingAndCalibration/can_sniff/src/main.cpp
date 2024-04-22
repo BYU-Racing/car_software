@@ -30,40 +30,13 @@ void setup() {
   // SET UP LED
   pinMode(LED, OUTPUT);
 
-  for(int i = 0; i <= 0b11111111111111111111111111111; ++i){
-    msg.id = i;
-    msg.flags.extended = 1;
-    msg.buf[0] = 0b00110100;
-    can2.write(msg);
-    if(can2.read(rmsg)) {
-      Serial.println(rmsg.id, HEX);
-      settyBoi.insert(rmsg.id);
-    }
-    delay(.1);
-  }
 }
 
 void loop() {
-  // if(can2.read(rmsg)) {
-  //   last_print = millis();
-  //   Serial.println(rmsg.id, HEX);
-  //   for ( uint8_t i = 0; i < rmsg.len; i++ ) {
-  //     Serial.print(rmsg.buf[i], HEX); Serial.print(" ");
-  //   } Serial.println();
-
-  //   if(rmsg.id == 0x1CECFFF4){
-  //     delay(500);
-  //   }
-  // }
-
-  // msg.id = 0x18EF00F4;
-  // msg.flags.extended = 1;
-  // msg.buf[0] = 0b00110100;
-  // can2.write(msg);
-  // Serial.println("Sent!");
-  // delay(300);
-
-  for(int id: settyBoi){
-    Serial.println(id);
+  if(can2.read(rmsg)) {
+    Serial.println(rmsg.id);
+    for ( uint8_t i = 0; i < rmsg.len; i++ ) {
+      Serial.print(rmsg.buf[i], HEX); Serial.print(" ");
+    } Serial.println();
   }
 }
