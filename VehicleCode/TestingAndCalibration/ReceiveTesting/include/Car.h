@@ -12,7 +12,7 @@
 // commands and logging integers
 #define ID_ERROR 0
 #define SHUTDOWN 1
-#define NO_SHUTDOWN 0
+#define CAR_ON 0
 #define NO_COMMAND 2
 #define COMMAND_IDX 1
 
@@ -37,10 +37,12 @@ private:
     bool prevLogState = false;          // Previous state of the log switch
     unsigned long lastLogUpdate;        // Time of the last update
     unsigned long logUpdateSpeed = 500; // Speed of the log switch update
+    unsigned long lastOffSignal;
+    unsigned long repeatOffDelay = 500;// Delay for repeating the off command
     
     // Logging attributes
     int timeZero;                       // Starting time
-    unsigned long saveDelay = 10000;    // Delay for saving data
+    unsigned long saveDelay = 20000;    // Delay for saving data
     unsigned long lastSave;             // Time of the last save
     String fileName;                    // File name for logging data
     File dataFile;                      // File for logging data
@@ -50,7 +52,9 @@ private:
     int speed;
     int count = 0;
     int i = 0;
+    int j = 0;
     int* sensorData;
+    int fileCount = 0;
     CAN_message_t rmsg;
     CAN_message_t startMotor; 
     CAN_message_t stopMotor;
@@ -65,6 +69,7 @@ private:
     // Hardware checking
     void updateState();
     void checkToLog();
+    void countFiles();
 
     // Helper methods for setting up the SD card
     String updateFileName();
@@ -81,8 +86,9 @@ public:
     void initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>, int);
 
     // Setters
-    void setLogState(bool);
+    void refreshLog();
     void setSaveDelay(int);
+    void setLogState(bool);
     void resetTimeZero(unsigned long);
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan);
 

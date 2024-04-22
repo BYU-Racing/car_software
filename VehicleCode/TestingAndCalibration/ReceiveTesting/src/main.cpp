@@ -63,10 +63,6 @@ void setup() {
     collector.resetTimeZero(millis());
     collector.setCAN(can1);
 
-    // unlock motor
-    // send 1 message every 300 milliseconds for 3 seconds
-    car.sendMotorSignal(10, 300, NO_SHUTDOWN);
-
     // TODO: honk
 
     // visibility control
@@ -88,7 +84,7 @@ void setup() {
 
 
 void loop() {
-    collector.checkSensors();
+    // collector.checkSensors();
     car.readSensors();
     delay(DELAYBY);  
 }
