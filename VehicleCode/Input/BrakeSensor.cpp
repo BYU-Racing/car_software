@@ -28,9 +28,6 @@ void BrakeSensor::setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn) {
 }
 
 void BrakeSensor::sendMotorCommand() {
-    // ADD SOME CHECK IF THE MOTOR SHOULD BE IN A RUNNING STATE
-    // MAYBE HAVE THE DATACOLLECTOR LOOK FOR THE INITIAL START COMMAND AND
-    // SEND THAT INTO HERE TO SET CAR STATE TO ACTIVE???
 
     if(!inCriticalError) { //if we are not in critical error
         if(pressState == true && prevPressState == false && driveState = true) {
@@ -43,7 +40,6 @@ void BrakeSensor::sendMotorCommand() {
             sendStartCommand();
             prevPressState = pressState;
         }
-    //If press state hasn't changed no command gets sent
     }
 
 }
@@ -63,7 +59,11 @@ int BrakeSensor::readInputs() {
     }
 
     checkError(brakeP);
-    sendMotorCommand();
+
+    if(driveState) {
+        sendMotorCommand();
+    }
+
 
     return brakeP;
 }

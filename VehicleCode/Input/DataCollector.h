@@ -16,6 +16,7 @@
 
 #include "Sensor.h"
 #include "SensorData.h"
+#include "BrakeSensor.h"
 
 class DataCollector {
 private:
@@ -24,6 +25,7 @@ private:
     unsigned long timeZero;
     int numSensors;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+    BrakeSensor* brakeSensor;
 
     // Global variables
     int sendID = 0;
@@ -31,6 +33,7 @@ private:
     int i = 0;
     int rawData = 0;
     int* sendData;
+
 
     
     // Read signals from sensors
@@ -49,6 +52,8 @@ public:
     // Getters and Setters
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
     void resetTimeZero(unsigned long startTime);
+
+    void setBrakeSensor(BrakeSensor* brakeSensorIn);
 };
 
 #endif // DATACOLLECTOR_H
