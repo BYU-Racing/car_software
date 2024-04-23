@@ -1,7 +1,6 @@
 #include "BrakeSensor.h"
 #include "Sensor.h"
 
-//TODO: THIS MAY POTENTIALLY THROW ERRORS BY TURNING THE MOTOR ON BEFORE IT SHOULD BE!!!!
 
 BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int baseline, int errorMargin) {
     sensorID = id;
