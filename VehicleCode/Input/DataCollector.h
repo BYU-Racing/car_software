@@ -29,6 +29,7 @@ private:
     bool driveState;
     bool brakeActive;
     bool switchActive;
+    bool front;
 
     // Global variables
     int sendID = 0;
@@ -50,7 +51,7 @@ private:
 
 public:
     // Constructor
-    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime);
+    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front);
 
     // Check sensor data and send signals
     void checkSensors();

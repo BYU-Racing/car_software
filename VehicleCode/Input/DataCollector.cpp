@@ -22,13 +22,14 @@
  * @param startTime (unsigned long) The time the car started
  * @return None
  */
-DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime) {
+DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front) {
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
     this->driveState = false;
     this->brakeActive = false;
     this->switchActive = false;
+    this->front = front;
 }
 
 
@@ -54,13 +55,13 @@ void DataCollector::checkSensors() {
 
 void DataCollector::checkDriveState() {
     //HARD CODE WHERE THEY ARE IN THE ARRAY
-    if(!driveState && brakeActive && switchActive) {
+    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr)) {
         driveState = !driveState;
         sendLog(driveState);
         brakeSensor.setDriveState();   
     }
 
-    if(driveState && !switchActive) {
+    if(driveState && !switchActive && (brakeSensor != nullptr)) {
         driveState = !driveState;
         sendLog(driveState);
         brakeSensor.setDriveState();
@@ -97,12 +98,12 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
     Serial.println(rawData);
 
-    if(sensor.getId == SWITCH_ID) {
+    if(sensor.getId == SWITCH_ID && front) {
         switchActive == rawData;
         checkDriveState();
     }
 
-    if(sensor.getId == BRAKE_ID) {
+    if(sensor.getId == BRAKE_ID && front) {
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
         checkDriveState();
     }
