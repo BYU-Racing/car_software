@@ -67,6 +67,10 @@ void DataCollector::checkDriveState() {
         brakeSensor.setDriveState();
         brakeSensor.sendStopCommand();
     }
+
+    if(!driveState && !switchActive && (brakeSensor != nullptr)) { // Allows for the timeout to not trip
+        brakeSensor.sendStopCommand();
+    }
 }
 
 void DataCollector::sendLog(bool driveState) {
