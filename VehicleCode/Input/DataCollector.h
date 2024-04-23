@@ -26,6 +26,9 @@ private:
     int numSensors;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     BrakeSensor* brakeSensor;
+    bool driveState;
+    bool brakeActive;
+    bool switchActive;
 
     // Global variables
     int sendID = 0;
@@ -42,6 +45,9 @@ private:
     // Send a signal to Car and Dashboard objects
     void sendSignal(SensorData* sensorData);
 
+    // Send the start log command to the Car Object
+    void sendLog(bool driveState);
+
 public:
     // Constructor
     DataCollector(Sensor** sensors, int numSensors, unsigned long startTime);
@@ -54,6 +60,8 @@ public:
     void resetTimeZero(unsigned long startTime);
 
     void setBrakeSensor(BrakeSensor* brakeSensorIn);
+
+    void checkDriveState();
 };
 
 #endif // DATACOLLECTOR_H

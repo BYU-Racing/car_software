@@ -7,6 +7,9 @@
 #define TORQUE_DEFAULT 200
 #define ERROR_ID 0
 #define ERROR_LENGTH 6
+#define BRAKE_ID 0
+#define SWITCH_ID 1
+#define BRAKE_LOWER_LIMIT2 45
 
 
 // TEST: define function
@@ -23,6 +26,9 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
+    this->driveState = false;
+    this->brakeActive = false;
+    this->switchActive = false;
 }
 
 
@@ -46,6 +52,37 @@ void DataCollector::checkSensors() {
 }
 
 
+void DataCollector::checkDriveState() {
+    //HARD CODE WHERE THEY ARE IN THE ARRAY
+    if(!driveState && brakeActive && switchActive) {
+        driveState = !driveState;
+        sendLog(driveState);
+        brakeSensor.setDriveState();   
+    }
+
+    if(driveState && !switchActive) {
+        driveState = !driveState;
+        sendLog(driveState);
+        brakeSensor.setDriveState();
+        brakeSensor.sendStopCommand();
+    }
+}
+
+void DataCollector::sendLog(bool driveState) {
+    CAN_message_t msg;
+    msg.len=8;
+    msg.buf[0]=driveState;
+    msg.buf[1]=0;
+    msg.buf[2]=0;
+    msg.buf[3]=0;
+    msg.buf[4]=0;
+    msg.buf[5]=0;
+    msg.buf[6]=0;
+    msg.buf[7]=0;
+    msg.id=222;
+    can2.write(msg);
+}
+
 // TEST define function
 /*!
  * @brief Read data from sensors
@@ -59,6 +96,16 @@ void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
     Serial.println(rawData);
+
+    if(sensor.getId == SWITCH_ID) {
+        switchActive == rawData;
+        checkDriveState();
+    }
+
+    if(sensor.getId == BRAKE_ID) {
+        brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
+        checkDriveState();
+    }
     
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
