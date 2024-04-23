@@ -129,7 +129,7 @@ bool BrakeSensor::checkError(int value) { //This function seems like it could ha
     if(!driveState) { // IF we are not in a driving state this error checking is irrelevant
         return true;
     }
-    if(value == 0 || value < errorBaseline) { //If we currently have an in error reading
+    if(value == 0 || value < errorBaseline) { //If we currently have an in error reading (techincally just need lower??)
         if(inError && (millis() - timeErrorStart) > 100) { // If we have been in error for 100msec ENTER CRITICAL ERROR STATE
             sendStopCommand();
             inCriticalError = true
@@ -141,7 +141,7 @@ bool BrakeSensor::checkError(int value) { //This function seems like it could ha
         }
         return false;
     }
-    else if( inCriticalError) { //Moving out of critical error state
+    else if(inCriticalError) { //Moving out of critical error state
         //Remove in error
         timeErrorStart = 0;
         sendStartCommand();
