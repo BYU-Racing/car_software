@@ -38,6 +38,7 @@ int AnalogSensor::readInputs() {
 
     //Grab Sensor Value
     sensorValue = rescale(analogRead(inputPins[0]));
+    
 
     //Return a pointer to the private value
     return sensorValue;

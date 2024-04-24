@@ -15,6 +15,7 @@
 #define ID_ERROR 0
 #define THROTTLE_POT 192
 #define WHEEL_SPEED_FL 5
+#define DAMPER_POT_1 12
 #define BIAS1 512
 #define BIAS2 0
 #define MAX1 1024
@@ -56,10 +57,11 @@ int countMismatch = 0;
 
 // initialize throttle sensor
 int throttleFreq = 1;
-int numSensors = 1;
+int numSensors = 2;
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
-Sensor* sensors[] = {&throttle};
+AnalogSensor damperPot1 = AnalogSensor(DAMPER_POT_1, 100, 17, 200, 1023, 1);
+Sensor* sensors[] = {&throttle, &damperPot1};
 DataCollector collector = DataCollector(sensors, numSensors, millis());
 
 

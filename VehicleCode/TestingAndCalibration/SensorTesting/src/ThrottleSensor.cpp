@@ -64,10 +64,10 @@ int ThrottleSensor::readInputs() {
     // throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
     // throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
 
-    Serial.print("T1: ");
-    Serial.print(throttle1);
-    Serial.print(" T2: ");
-    Serial.println(throttle2);
+    // Serial.print("T1: ");
+    // Serial.print(throttle1);
+    // Serial.print(" T2: ");
+    // Serial.println(throttle2);
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -95,8 +95,8 @@ int ThrottleSensor::readInputs() {
 */
 bool ThrottleSensor::checkError(int percent1, int percent2) {
 
-    Serial.print("abs: ");
-    Serial.println(abs(percent1 - percent2));
+    // Serial.print("abs: ");
+    // Serial.println(abs(percent1 - percent2));
     
     // update countMismatch
     if (abs(percent1 - percent2) < ERROR_TOL) {
@@ -127,8 +127,8 @@ int* ThrottleSensor::buildData(int torque){
         torque = 0;
     }
 
-    Serial.print("SENT TORQUE: ");
-    Serial.println(torque);
+    // Serial.print("SENT TORQUE: ");
+    // Serial.println(torque);
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow
