@@ -58,7 +58,6 @@ void DataCollector::checkSensors() {
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
-    Serial.println(rawData);
     
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
@@ -68,6 +67,14 @@ void DataCollector::readData(Sensor* sensor) {
         sendData = sensor->buildError();
         sendID = ERROR_ID;
         sendLength = ERROR_LENGTH;
+    }
+
+    if(sensor->getId() != 0) { // PRINTS THE DATA TO MONITOR WHAT IS BEING SENT
+        Serial.print(sensor->getId());
+        Serial.print(": [1] = ");
+        Serial.print(sendData[0]);
+        Serial.print(" [2] = ");
+        Serial.println(sendData[1]);
     }
 
     // Create a new sensor data object for each int in the array
