@@ -2,6 +2,19 @@
 #include "Sensor.h"
 
 
+
+/*!
+ * @brief Constructor
+ * Initializes the variables needed for the brake sensor to operate
+ * 
+ * @param id the ID that is associated with the brake sensor
+ * @param waitTime how often the sensor gets read
+ * @param inPin What pin on the teensy the brake sensor is connected to
+ * @param dataLength TBH cannot remmber where that one is used LMAO
+ * @param baseline the static reading of the preassure of the brakeline
+ * @param errorMargin How large we want an error to register as
+ * @return None
+ */
 BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int baseline, int errorMargin) {
     sensorID = id;
     this->waitTime = waitTime;
@@ -22,9 +35,23 @@ BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int ba
     
 }
 
+/*!
+ * @brief sets the can bus in the brakeSensor object so that it can communicate with
+ * the motor
+ * 
+ * @param canIN The can object
+ * @return None
+ */ 
 void BrakeSensor::setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn) {
     can2 = canIn;
 }
+
+/*!
+ * @brief sends a command to the motor depending on error state and if the pedal is pressed
+ * 
+ * @param None
+ * @return None
+ */ 
 
 void BrakeSensor::sendMotorCommand() {
 
@@ -42,6 +69,14 @@ void BrakeSensor::sendMotorCommand() {
     }
 
 }
+
+
+/*!
+ * @brief reads the value of the brake preassure sensor and does some other commands depending on error and drive state
+ * 
+ * @param None
+ * @return INT the reading from the sensor
+ */ 
 
 int BrakeSensor::readInputs() {
     previousUpdateTime = millis();
@@ -66,11 +101,23 @@ int BrakeSensor::readInputs() {
 
     return brakeP;
 }
-
+/*!
+ * @brief rescales data and is UNUSED
+ * 
+ * @param data the data that is to be rescaled
+ * @return None
+ */ 
 int BrakeSensor::rescale(int data) {
     return data;
     // Don't know why we would need this for brake p rn
 }
+
+/*!
+ * @brief builds the data from the analog sensor reading. Formats it for CAN transmission
+ * 
+ * @param value the value that was read from the sensor
+ * @return the int array of values to send over the canLine
+ */ 
 
 int* BrakeSensor::buildData(int value) {
     // Transform value to be able to be sent in a format we can read

@@ -102,12 +102,12 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
     Serial.println(rawData);
 
-    if(sensor.getId == SWITCH_ID && front) {
+    if(sensor->getId() == SWITCH_ID && front) {
         switchActive == rawData;
         checkDriveState();
     }
 
-    if(sensor.getId == BRAKE_ID && front) {
+    if(sensor->getId() == BRAKE_ID && front) {
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
         checkDriveState();
     }
