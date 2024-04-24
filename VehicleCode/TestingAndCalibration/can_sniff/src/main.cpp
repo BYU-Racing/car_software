@@ -34,9 +34,11 @@ void setup() {
 
 void loop() {
   if(can2.read(rmsg)) {
-    Serial.println(rmsg.id);
-    for ( uint8_t i = 0; i < rmsg.len; i++ ) {
-      Serial.print(rmsg.buf[i], HEX); Serial.print(" ");
-    } Serial.println();
+    if(rmsg.buf[0] == 0){
+      Serial.println(rmsg.id);
+      for ( uint8_t i = 0; i < rmsg.len; i++ ) {
+        Serial.print(rmsg.buf[i], HEX); Serial.print(" ");
+      } Serial.println();
+    }
   }
 }
