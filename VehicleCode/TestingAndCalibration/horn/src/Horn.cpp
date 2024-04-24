@@ -2,10 +2,19 @@
 
 
 /**
- * @brief Constructor for Horn object
+ * @brief Default constructor for Horn class
 */
 Horn::Horn() {
   hornState = false;
+}
+
+/**
+ * @brief Constructor for Horn class
+ * @param outPin (const int) The pin used for sending sound signal to horn mosfet.
+*/
+Horn::Horn(const int outPin) {
+  hornState = false;
+  SOUNDPIN = outPin;
 }
 
 /**

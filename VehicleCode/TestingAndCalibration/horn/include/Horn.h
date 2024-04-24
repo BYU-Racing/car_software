@@ -3,16 +3,16 @@
 
 #include "Actuator.h"
 
-#define SOUNDPIN 10
-
 class Horn : public Actuator {
 private:
     // Additional attributes specific to Horn
     bool hornState;
+    int SOUNDPIN;
 
 public:
 // Constructor
     Horn();
+    Horn(int);
 
 // Destructor
     ~Horn();
