@@ -21,8 +21,6 @@ AnalogSensor::AnalogSensor(int id, int waitTime, int inPin) {
     previousUpdateTime = millis();
     inputPins[0] = inPin;
     sensorValue = 0;
-    // this->bias = bias;
-    // this->max = max;
     this->dataLength = 2;
 };
 
