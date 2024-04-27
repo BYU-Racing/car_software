@@ -33,12 +33,10 @@ last_print = millis();
 
 void loop() {
   if(can2.read(rmsg)) {
-    if(millis() - last_print > 1000){
-      last_print = millis();
-      Serial.println(rmsg.id);
-      for ( uint8_t i = 0; i < rmsg.len; i++ ) {
-        Serial.print(rmsg.buf[i]); Serial.print(" ");
-      } Serial.println();
-    }
+    last_print = millis();
+    Serial.println(rmsg.id);
+    for ( uint8_t i = 0; i < rmsg.len; i++ ) {
+      Serial.print(rmsg.buf[i]); Serial.print(" ");
+    } Serial.println();
   }
 }
