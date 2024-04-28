@@ -38,7 +38,7 @@ int AnalogSensor::readInputs() {
     sensorValue = analogRead(inputPins[0]);
 
     //Returns sensorValue but limits it to 1023
-    return (sensorValue < 1023) ? : 1023;
+    return (sensorValue < 1023) ? sensorValue : 1023;
     
 };
 
