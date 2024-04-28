@@ -37,30 +37,24 @@ int AnalogSensor::readInputs() {
     //Grab Sensor Value
     sensorValue = analogRead(inputPins[0]);
 
-    //Return a pointer to the private value
-    return sensorValue;
+    //Returns sensorValue but limits it to 1023
+    return (sensorValue < 1023) ? : 1023;
     
 };
 
 
 /**
- * @brief Builds the data array for the CAN message.
+ * @brief Builds the data array for the CAN message. Expected input is the analog sensor raw value that is read
+ * Expected output is a 2 item array that contains [1000s place 100s place, 10s place 1s place]
+ * EX: 1023 -> [10, 23] and 921 -> [9, 21] 
  * 
- * @param value value that was read from the sensor allows for it to be converted to CAN format
+ * @param int value value that was read from the sensor allows for it to be converted to CAN format
  * 
  * @return (int*) The data array for the CAN message.
 */
 int* AnalogSensor::buildData(int value) {
 
-    int first = value / 100;
-    int second;
-
-    second = value - (first * 100);
-
-
-
-
-    return new int[2]{first, second};
+    return new int[2]{(value / 100), (value - ((value / 100) * 100))};
 }
 
 /**

@@ -7,7 +7,9 @@
 class AnalogSensor : public Sensor {
 private:
     // Additional attributes specific to AnalogSensor
-    // Currently None are needed
+    int sensorValue = 0;
+    // int bias = 0;
+    // int max = 1023;
 
 public:
     // Constructor

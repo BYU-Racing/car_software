@@ -61,15 +61,8 @@ int ThrottleSensor::readInputs() {
     //Grab Sensor Value
     throttle1 = map(analogRead(inputPins[1]), 0, 175, MIN_OUTPUT, MAX_OUTPUT);
     throttle2 = map(-analogRead(inputPins[0]), -max, -810, MIN_OUTPUT, MAX_OUTPUT);
-    // Serial.print("RAW");
-    // Serial.println(analogRead(inputPins[1]));
-    // throttle1 = rescale(analogRead(inputPins[0]));          // calls map function
-    // throttle2 = rescale(-analogRead(inputPins[1]), true);   // calls inverted map function
 
-    // Serial.print("T1: ");
-    // Serial.print(throttle1);
-    // Serial.print(" T2: ");
-    // Serial.println(throttle2);
+    //Insert Debug Print statements here if sensors disagree
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -125,7 +118,7 @@ int* ThrottleSensor::buildData(int torque){
 
     
 
-    if(torque <= 90) {
+    if(torque <= 90) { // Buffer for the 
         torque = 0;
     }
 
