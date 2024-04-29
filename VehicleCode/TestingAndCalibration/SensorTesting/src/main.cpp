@@ -55,11 +55,14 @@ const int torque = 200;
 int countMismatch = 0;
 
 // initialize throttle sensor
-int throttleFreq = 1;
-int numSensors = 1;
+int throttleFreq = 30;
+int numSensors = 2;
+int damperID = 12;
+int damperFreq = 75;
+int damperPin = 17;
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
-AnalogSensor tireSpeed1 = AnalogSensor(WHEEL_SPEED_FL, 1, 26, 0, 100, 1);
-Sensor* sensors[] = {&throttle};
+AnalogSensor damperPot1 = AnalogSensor(damperID, damperFreq, damperPin);
+Sensor* sensors[] = {&throttle, &damperPot1};
 DataCollector collector = DataCollector(sensors, numSensors, millis());
 
 
@@ -83,6 +86,5 @@ void setup() {
 void loop() {
 
   collector.checkSensors();
- 
-  delay(DELAYBY);
+
 }

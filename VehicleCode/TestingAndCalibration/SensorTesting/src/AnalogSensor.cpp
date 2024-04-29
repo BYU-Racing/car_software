@@ -15,15 +15,13 @@
  * @param freq (int) The update delay of the sensor in milliseconds.
  * @param inPins (int) The input pin id for the analog sensor.
  */
-AnalogSensor::AnalogSensor(int id, int waitTime, int inPin, int bias, int max, int dataLength) {
+AnalogSensor::AnalogSensor(int id, int waitTime, int inPin) {
     sensorID = id;
     this->waitTime = waitTime;
     previousUpdateTime = millis();
     inputPins[0] = inPin;
     sensorValue = 0;
-    this->bias = bias;
-    this->max = max;
-    this->dataLength = dataLength;
+    this->dataLength = 2;
 };
 
 /**
@@ -37,7 +35,7 @@ int AnalogSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    sensorValue = rescale(analogRead(inputPins[0]));
+    sensorValue = analogRead(inputPins[0]);
 
     //Return a pointer to the private value
     return sensorValue;
@@ -54,7 +52,16 @@ int AnalogSensor::readInputs() {
  * @return (int*) The data array for the CAN message.
 */
 int* AnalogSensor::buildData(int value) {
-    return new int[1]{value};
+
+    int first = value / 100;
+    int second;
+
+    second = value - (first * 100);
+
+
+
+
+    return new int[2]{first, second};
 }
 
 /**
