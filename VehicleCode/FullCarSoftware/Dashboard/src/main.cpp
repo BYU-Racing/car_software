@@ -1,33 +1,48 @@
 #include <Arduino.h>
+#include <Dashboard.h>
+#include <LEDArray.h>
+#include <FlexCAN_T4.h>
+#include <Screen.h>
 
-// put function declarations here:
-int myFunction(int, int);
+CAN_message_t rmsg;
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan;
+int pinsTemp[] = {14, 15, 16}; // Change these to be the pins we need
+const byte buttonPin = 35; //ARBITUARY
+LEDArray ledTemp = LEDArray(pinsTemp);
+
+Adafruit_7segment matrix = Adafruit_7segment();
+
+Screen myScreen = Screen();
+
+// Actuator* testArray[] = {&myScreen, &ledTemp, &ledBat, &ledHealth};
+//Actuator* testArray[] = {&myScreen};
+Actuator* testArray[] = {&ledTemp};
+
+Dashboard myDash(testArray, 0);
+
+int prevState = 0;
+
 
 void setup() {
   // put your setup code here, to run once:
-  int result = myFunction(2, 3);
-  
-  // TODO include pin information
-  // Declare and initialize the display array of pointers
-  Actuator* display[] = {
-                        new Screen(), new Screen(), 
-                        new LEDArray(), new LEDArray(), new LEDArray(), 
-                        new Servo(), 
-                        new Horn()
-                        };
+  //Setup Serial Port
+  Serial.begin(9600);
+  Serial.println("STARTED");
 
-  // Get the starting time
-  unsigned long startTime = millis();
+  myCan.begin();
+  myCan.setBaudRate(250000);
 
-  // Instantiate the dashboard
-  Dashboard* dashboard = new Dashboard(display, startTime);
+  matrix.begin(0x70);
+  myScreen.setMatrix(matrix);
+
+  myDash.setCAN(myCan);
+  myDash.resetTimeZero(millis());
+
+  //attachInterrupt(digitalPinToInterrupt(buttonPin), sendCommand, CHANGE); This is a better solution but is bugging out
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  myDash.updateDisplay();
+
 }
