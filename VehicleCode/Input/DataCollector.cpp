@@ -7,6 +7,9 @@
 #define TORQUE_DEFAULT 200
 #define ERROR_ID 0
 #define ERROR_LENGTH 6
+#define BRAKE_ID 11
+#define SWITCH_ID 15
+#define BRAKE_LOWER_LIMIT2 45
 
 
 // TEST: define function
@@ -19,15 +22,19 @@
  * @param startTime (unsigned long) The time the car started
  * @return None
  */
-DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime) {
+DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front) {
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
+    this->driveState = false;
+    this->brakeActive = false;
+    this->switchActive = false;
+    this->startFault = false;
+    this->front = front;
 }
 
 
 
-// TEST: define function
 /*!
  * @brief Check each sensor for new data
  * Determines whether each sensor is ready to send data. If so, it calls the
@@ -46,7 +53,65 @@ void DataCollector::checkSensors() {
 }
 
 
-// TEST define function
+/*!
+ * @brief checks the drive state and commands if the motor should be active or not
+ * 
+ * @param None
+ * @return None
+ */ 
+void DataCollector::checkDriveState() {
+
+    //INITIAL START
+    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
+        driveState = !driveState;
+        sendLog(driveState);
+        brakeSensor->setDriveState();
+        Serial.println("INITIAL START");
+        return;
+    }
+
+    //FINAL STOP
+    if(driveState && !switchActive && (brakeSensor != nullptr)) {
+        driveState = !driveState;
+        sendLog(driveState);
+        brakeSensor->setDriveState();
+        brakeSensor->sendStopCommand();
+        Serial.println("FINAL STOP");
+        return;
+    }
+
+
+    //RUNNING STOP
+    if(!driveState && !switchActive && (brakeSensor != nullptr)) { // Allows for the timeout to not trip
+        brakeSensor->sendStopCommand();
+        return;
+    }
+}
+
+/*!
+ * @brief Sends the currentDrive State to the ECU (Car Class) Teensy so that it can 
+ * start logging
+ * 
+ * @param bool driveState (the current drive state being communicated)
+ * @return None
+ */ 
+
+void DataCollector::sendLog(bool driveState) {
+    CAN_message_t msg;
+    msg.len=8;
+    msg.buf[0]=driveState;
+    msg.buf[1]=0;
+    msg.buf[2]=0;
+    msg.buf[3]=0;
+    msg.buf[4]=0;
+    msg.buf[5]=0;
+    msg.buf[6]=0;
+    msg.buf[7]=0;
+    msg.id=222;
+    can2.write(msg);
+}
+
+
 /*!
  * @brief Read data from sensors
  * Reads data from a sensor, then builds a SensorData object for each piece of
@@ -58,8 +123,26 @@ void DataCollector::checkSensors() {
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
-    Serial.println(rawData);
-    
+
+    if(sensor->getId() == SWITCH_ID && front) {
+        if(rawData == 1) {
+
+            switchActive = true;
+            if(!brakeActive) {
+                startFault = true;
+            }
+        }
+        else {
+            switchActive = false;
+            startFault = false;
+        }
+        checkDriveState();
+    }
+
+    if(sensor->getId() == BRAKE_ID && front) {
+        brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
+    }
+
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
         sendID = sensor->getId();
@@ -105,4 +188,13 @@ void DataCollector::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
  */
 void DataCollector::resetTimeZero(unsigned long startTime) {
     timeZero = startTime;
+}
+
+
+/**
+ * @brief Sets the brake sensor for direct access in dataCollector
+ * @param BrakeSensor* pointer to the brakeSensor object
+ */
+void DataCollector::setBrakeSensor(BrakeSensor* brakeSensorIn) {
+    brakeSensor = brakeSensorIn;
 }

@@ -35,7 +35,6 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
 
 
 
-// TEST: define function
 /*!
  * @brief Check each sensor for new data
  * Determines whether each sensor is ready to send data. If so, it calls the
@@ -54,8 +53,13 @@ void DataCollector::checkSensors() {
 }
 
 
+/*!
+ * @brief checks the drive state and commands if the motor should be active or not
+ * 
+ * @param None
+ * @return None
+ */ 
 void DataCollector::checkDriveState() {
-    //HARD CODE WHERE THEY ARE IN THE ARRAY
 
     //INITIAL START
     if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
@@ -84,6 +88,14 @@ void DataCollector::checkDriveState() {
     }
 }
 
+/*!
+ * @brief Sends the currentDrive State to the ECU (Car Class) Teensy so that it can 
+ * start logging
+ * 
+ * @param bool driveState (the current drive state being communicated)
+ * @return None
+ */ 
+
 void DataCollector::sendLog(bool driveState) {
     CAN_message_t msg;
     msg.len=8;
@@ -99,7 +111,7 @@ void DataCollector::sendLog(bool driveState) {
     can2.write(msg);
 }
 
-// TEST define function
+
 /*!
  * @brief Read data from sensors
  * Reads data from a sensor, then builds a SensorData object for each piece of
@@ -129,18 +141,7 @@ void DataCollector::readData(Sensor* sensor) {
 
     if(sensor->getId() == BRAKE_ID && front) {
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
-        //checkDriveState(); This may cause issues if uncommented!!!
     }
-    
-    // Serial.print("BRAKE STATE: ");
-    // Serial.print(brakeActive);
-    // Serial.print(" SWITCH STATE: ");
-    // Serial.print(switchActive);
-
-    // Serial.print(" DRIVE STATE: ");
-    // Serial.println(driveState);
-    // Serial.println("");
-    // Serial.println("------------------");
 
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
@@ -189,6 +190,11 @@ void DataCollector::resetTimeZero(unsigned long startTime) {
     timeZero = startTime;
 }
 
+
+/**
+ * @brief Sets the brake sensor for direct access in dataCollector
+ * @param BrakeSensor* pointer to the brakeSensor object
+ */
 void DataCollector::setBrakeSensor(BrakeSensor* brakeSensorIn) {
     brakeSensor = brakeSensorIn;
 }

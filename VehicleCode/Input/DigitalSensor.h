@@ -16,6 +16,7 @@ public:
 
     // Implement the pure virtual functions from the base class
     int readInputs() override;
+    bool readyToCheck() override;
 
     // Additional methods for DigitalSensor
     int getPins();
