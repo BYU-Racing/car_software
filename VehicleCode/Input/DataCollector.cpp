@@ -109,7 +109,7 @@ void DataCollector::readData(Sensor* sensor) {
 
     if(sensor->getId() == BRAKE_ID && front) {
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
-        checkDriveState();
+        //checkDriveState(); This may cause issues if uncommented!!!
     }
     
     if (rawData != -1) {
