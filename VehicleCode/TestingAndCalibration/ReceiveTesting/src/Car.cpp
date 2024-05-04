@@ -94,21 +94,19 @@ void Car::initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan, int saveDe
  * Checks for a shutdown command in case of an error
 */
 void Car::readSensors() {
-    // keep the motor off if the car is not active (HANDLED BY THE FRONT DATA COLLECTOR)
-    // if (!goFast) {
-    //     if (millis() - lastOffSignal > repeatOffDelay) {
-    //         Serial.println("Car is not active.");
-    //         sendMotorSignal(1, 0, SHUTDOWN);
-    //         lastOffSignal = millis();
-    //     }
-    // }
 
     if (myCan.read(rmsg)) {
 
+
         //Checks if it is a start stop message!
-        if(rmsg.id == 22) {
-            updateState(rmsg.buf[0]);
-            return
+        if(rmsg.id == 222) {
+            if(rmsg.buf[0] == 1) {
+                updateState(true);
+            }
+            else {
+                updateState(false);
+            }
+            return;
         }
 
         SensorData* msg = new SensorData(rmsg);
@@ -360,19 +358,6 @@ int Car::tempLength(const int &maxNumber) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // -------------------------- GETTERS AND SETTERS -------------------------------------------
 
 
@@ -398,10 +383,6 @@ void Car::shutdown() {
     if (dataFile) {
         dataFile.close();
     }
-
-    // send the shutdown signal to the motor controller 20 times with a delay of 50 ms
-    // total of 1 second
-    sendMotorSignal(20, 50, SHUTDOWN);
 }
 
 /**
@@ -454,49 +435,6 @@ void Car::updateState(bool newState) {
     }
 }
 
-/**
- * @brief Method to send a signal to the motor controller
- * 
- * @param duration (int) The number of times to send the signal
- * @param signal_delay (int) The delay between signals in milliseconds
- * @param command (int) The command to send to the motor controller
- *    - NO_COMMAND: Send the signal based on the go switch
- *    - CAR_ON: Send the signal to start the motor
- *    - SHUTDOWN: Send the signal to stop the motor
- * 
- * Sends a signal to the motor controller to turn on or off
- * based on the state of the go switch
-*/
-void Car::sendMotorSignal(int duration, int signal_delay, int command) {
-    for (i = 0; i < duration; i++) {
-
-        // choose appropriate signal
-        if (command == CAR_ON || (goFast && !prevGoState)) {
-            // Serial.println(stopMotor.id);
-            // Serial.println(stopMotor.len);
-            // for (j = 0; j < stopMotor.len; j++) {
-            //     Serial.print(stopMotor.buf[j]);
-            // }
-            // Serial.println();
-            myCan.write(startMotor);
-        }
-        else if (command == SHUTDOWN || !goFast) {
-            // Serial.println(stopMotor.id);
-            // Serial.println(stopMotor.len);
-            // for (int j = 0; j < stopMotor.len; j++) {
-            //     Serial.print(stopMotor.buf[j]);
-            // }
-            // Serial.println();
-            myCan.write(stopMotor);
-        }
-
-        // add a delay if sending multiple signals
-        if (duration == 0) {
-            break;
-        }
-        delay(signal_delay);
-    }
-}
 
 
 /**

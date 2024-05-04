@@ -34,10 +34,10 @@
 
 
 // sensors and datacollector
-ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, THROTTLE_RATE, POT1, POT2, 
-                                         BIAS1, THROTTLE_MAX, LENGTH);
-Sensor* sensors[] = {&throttle};
-DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis());
+// ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, THROTTLE_RATE, POT1, POT2, 
+//                                          BIAS1, THROTTLE_MAX, LENGTH);
+// Sensor* sensors[] = {&throttle};
+// DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis());
 
 // initialize can, car, and horn
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
@@ -63,7 +63,7 @@ void setup() {
     // TODO: honk
 
     // visibility control
-    if (TESTING) {
+    if (TESTING == 1) {
         Serial.println("Waiting 5 seconds to start.");
         delay(5000); // so that you can read the file name at the start
         Serial.println("ALERT:");
@@ -75,12 +75,11 @@ void setup() {
         Serial.println(" ms.");
         Serial.println("Reading on CAN2.");
         Serial.println("Starting.");
-        car.setLogState(true);
+        //car.setLogState(true);
     }
 }
 
 
 void loop() {
     car.readSensors();
-    delay(DELAYBY);  
 }
