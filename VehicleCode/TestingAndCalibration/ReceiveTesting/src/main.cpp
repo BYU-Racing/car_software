@@ -59,9 +59,6 @@ void setup() {
     // set up car
     car.initialize(can1, SAVE_DELAY);
 
-    // set up collector
-    collector.resetTimeZero(millis());
-    collector.setCAN(can1);
 
     // TODO: honk
 
@@ -84,7 +81,6 @@ void setup() {
 
 
 void loop() {
-    // collector.checkSensors();
     car.readSensors();
     delay(DELAYBY);  
 }

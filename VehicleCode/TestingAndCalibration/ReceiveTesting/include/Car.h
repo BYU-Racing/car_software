@@ -15,6 +15,7 @@
 #define CAR_ON 0
 #define NO_COMMAND 2
 #define COMMAND_IDX 1
+#define START_STOP_ID 22
 
 // global unchanging magic numbers
 #define SCALE 100
@@ -67,7 +68,7 @@ private:
     void shutdown();
 
     // Hardware checking
-    void updateState();
+    void updateState(bool newState);
     void checkToLog();
     void countFiles();
 

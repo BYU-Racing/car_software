@@ -94,19 +94,23 @@ void Car::initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan, int saveDe
  * Checks for a shutdown command in case of an error
 */
 void Car::readSensors() {
-    // update go state and log state
-    updateState();
-
-    // keep the motor off if the car is not active
-    if (!goFast) {
-        if (millis() - lastOffSignal > repeatOffDelay) {
-            Serial.println("Car is not active.");
-            sendMotorSignal(1, 0, SHUTDOWN);
-            lastOffSignal = millis();
-        }
-    }
+    // keep the motor off if the car is not active (HANDLED BY THE FRONT DATA COLLECTOR)
+    // if (!goFast) {
+    //     if (millis() - lastOffSignal > repeatOffDelay) {
+    //         Serial.println("Car is not active.");
+    //         sendMotorSignal(1, 0, SHUTDOWN);
+    //         lastOffSignal = millis();
+    //     }
+    // }
 
     if (myCan.read(rmsg)) {
+
+        //Checks if it is a start stop message!
+        if(rmsg.id == 22) {
+            updateState(rmsg.buf[0]);
+            return
+        }
+
         SensorData* msg = new SensorData(rmsg);
 
         if (logState) {
@@ -425,19 +429,16 @@ void Car::setSaveDelay(int delay) {
  * Updates the most last log update time
  * Sends a signal to the motor controller if necessary
 */
-void Car::updateState() {
+void Car::updateState(bool newState) {
     if (millis() - lastGoUpdate > goUpdateSpeed) {
         // update states
-        goFast = digitalRead(GO_PIN);
+        goFast = newState;
         logState = goFast;
         lastGoUpdate = millis() + timeZero;
         lastLogUpdate = lastGoUpdate;
 
         // send a signal to the motor controller if the go switch changes
         if (goFast != prevGoState) {
-            Serial.println("Switched!");
-            sendMotorSignal(1, 0, NO_COMMAND);
-            Serial.println("Sent signal.");
             if (!goFast) {
                 Serial.println("Closing file.");
                 if (dataFile) {
