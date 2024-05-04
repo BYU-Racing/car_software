@@ -7,6 +7,9 @@
 #define TORQUE_DEFAULT 200
 #define ERROR_ID 0
 #define ERROR_LENGTH 6
+#define BRAKE_ID 11
+#define SWITCH_ID 15
+#define BRAKE_LOWER_LIMIT2 45
 
 
 // TEST: define function
@@ -19,10 +22,15 @@
  * @param startTime (unsigned long) The time the car started
  * @return None
  */
-DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime) {
+DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front) {
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
+    this->driveState = false;
+    this->brakeActive = false;
+    this->switchActive = false;
+    this->startFault = false;
+    this->front = front;
 }
 
 
@@ -46,6 +54,51 @@ void DataCollector::checkSensors() {
 }
 
 
+void DataCollector::checkDriveState() {
+    //HARD CODE WHERE THEY ARE IN THE ARRAY
+
+    //INITIAL START
+    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
+        driveState = !driveState;
+        sendLog(driveState);
+        brakeSensor->setDriveState();
+        Serial.println("INITIAL START");
+        return;
+    }
+
+    //FINAL STOP
+    if(driveState && !switchActive && (brakeSensor != nullptr)) {
+        driveState = !driveState;
+        sendLog(driveState);
+        brakeSensor->setDriveState();
+        brakeSensor->sendStopCommand();
+        Serial.println("FINAL STOP");
+        return;
+    }
+
+
+    //RUNNING STOP
+    if(!driveState && !switchActive && (brakeSensor != nullptr)) { // Allows for the timeout to not trip
+        brakeSensor->sendStopCommand();
+        return;
+    }
+}
+
+void DataCollector::sendLog(bool driveState) {
+    CAN_message_t msg;
+    msg.len=8;
+    msg.buf[0]=driveState;
+    msg.buf[1]=0;
+    msg.buf[2]=0;
+    msg.buf[3]=0;
+    msg.buf[4]=0;
+    msg.buf[5]=0;
+    msg.buf[6]=0;
+    msg.buf[7]=0;
+    msg.id=222;
+    can2.write(msg);
+}
+
 // TEST define function
 /*!
  * @brief Read data from sensors
@@ -58,7 +111,37 @@ void DataCollector::checkSensors() {
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
+
+    if(sensor->getId() == SWITCH_ID && front) {
+        if(rawData == 1) {
+
+            switchActive = true;
+            if(!brakeActive) {
+                startFault = true;
+            }
+        }
+        else {
+            switchActive = false;
+            startFault = false;
+        }
+        checkDriveState();
+    }
+
+    if(sensor->getId() == BRAKE_ID && front) {
+        brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
+        //checkDriveState(); This may cause issues if uncommented!!!
+    }
     
+    // Serial.print("BRAKE STATE: ");
+    // Serial.print(brakeActive);
+    // Serial.print(" SWITCH STATE: ");
+    // Serial.print(switchActive);
+
+    // Serial.print(" DRIVE STATE: ");
+    // Serial.println(driveState);
+    // Serial.println("");
+    // Serial.println("------------------");
+
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
         sendID = sensor->getId();
@@ -67,14 +150,6 @@ void DataCollector::readData(Sensor* sensor) {
         sendData = sensor->buildError();
         sendID = ERROR_ID;
         sendLength = ERROR_LENGTH;
-    }
-
-    if(sensor->getId() != 0) { // PRINTS THE DATA TO MONITOR WHAT IS BEING SENT
-        Serial.print(sensor->getId());
-        Serial.print(": [1] = ");
-        Serial.print(sendData[0]);
-        Serial.print(" [2] = ");
-        Serial.println(sendData[1]);
     }
 
     // Create a new sensor data object for each int in the array
@@ -112,4 +187,8 @@ void DataCollector::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
  */
 void DataCollector::resetTimeZero(unsigned long startTime) {
     timeZero = startTime;
+}
+
+void DataCollector::setBrakeSensor(BrakeSensor* brakeSensorIn) {
+    brakeSensor = brakeSensorIn;
 }

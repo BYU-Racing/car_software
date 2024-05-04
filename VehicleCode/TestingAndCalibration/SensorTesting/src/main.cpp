@@ -7,6 +7,8 @@
 #include "Error.h"
 #include "DataCollector.h"
 #include "ThrottleSensor.h"
+#include "BrakeSensor.h"
+#include "DigitalSensor.h"
 
 
 // throttle sensor variables
@@ -56,14 +58,31 @@ int countMismatch = 0;
 
 // initialize throttle sensor
 int throttleFreq = 30;
-int numSensors = 2;
+int numSensors = 4;
 int damperID = 12;
 int damperFreq = 75;
 int damperPin = 17;
+
+
+int brakeID = 11;
+int brakeFreq = 50;
+int brakePin = 20;
+int brakeLength = 2;
+int baseline = 40;
+int errorMargin = 22;
+
+int switchID = 15;
+int switchTime = 100;
+
+
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
 AnalogSensor damperPot1 = AnalogSensor(damperID, damperFreq, damperPin);
-Sensor* sensors[] = {&throttle, &damperPot1};
-DataCollector collector = DataCollector(sensors, numSensors, millis());
+BrakeSensor myBrake = BrakeSensor(brakeID, brakeFreq, brakePin, brakeLength, baseline, errorMargin);
+
+DigitalSensor startSwitch = DigitalSensor(switchID, switchTime, 37);
+
+Sensor* sensors[] = {&throttle, &damperPot1, &myBrake, &startSwitch};
+DataCollector collector = DataCollector(sensors, numSensors, millis(), true);
 
 
 
@@ -80,6 +99,8 @@ void setup() {
   // TEST: I think this should be here but idk if it will cause a problem
   collector.setCAN(can1);
   collector.resetTimeZero(millis());
+
+  collector.setBrakeSensor(&myBrake);
 }
 
 
