@@ -9,7 +9,7 @@
 #define ERROR_LENGTH 6
 #define BRAKE_ID 11
 #define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 45
+#define BRAKE_LOWER_LIMIT2 65
 
 
 // TEST: define function

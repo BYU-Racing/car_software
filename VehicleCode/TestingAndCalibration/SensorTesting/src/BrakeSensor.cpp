@@ -84,6 +84,9 @@ int BrakeSensor::readInputs() {
 
     brakeP = analogRead(inputPins[0]);
 
+    Serial.print("BRAKE P: ");
+    Serial.println(brakeP);
+
     if(brakeP > baseline) {
         pressState = true;
     }

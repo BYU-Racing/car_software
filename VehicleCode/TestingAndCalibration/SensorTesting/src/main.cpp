@@ -65,10 +65,10 @@ int damperPin = 17;
 
 
 int brakeID = 11;
-int brakeFreq = 50;
+int brakeFreq = 30;
 int brakePin = 20;
 int brakeLength = 2;
-int baseline = 50;
+int baseline = 65;
 int errorMargin = 22;
 
 int switchID = 15;
