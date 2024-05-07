@@ -4,25 +4,23 @@
 #include <FlexCAN_T4.h>
 #include <Screen.h>
 
-
 CAN_message_t rmsg;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan;
-int pinsTemp[] = {7, 8, 9, 10, 11}; // Change these to be the pins we need
-int pinsBat[] = {2, 3, 4, 5, 6}; // Change these to be the pins we need
-int pinsHealth[] = {26, 27, 28, 29, 30}; // Change these to be the pins we need
-
+int pinsTemp[] = {14, 15, 16}; // Change these to be the pins we need
+const byte buttonPin = 35; //ARBITUARY
 LEDArray ledTemp = LEDArray(pinsTemp);
-LEDArray ledBat = LEDArray(pinsBat);
-LEDArray ledHealth = LEDArray(pinsHealth);
 
 Adafruit_7segment matrix = Adafruit_7segment();
 
 Screen myScreen = Screen();
 
 // Actuator* testArray[] = {&myScreen, &ledTemp, &ledBat, &ledHealth};
-Actuator* testArray[] = {&myScreen};
+//Actuator* testArray[] = {&myScreen};
+Actuator* testArray[] = {&ledTemp};
 
 Dashboard myDash(testArray, 0);
+
+int prevState = 0;
 
 
 void setup() {
@@ -39,22 +37,12 @@ void setup() {
 
   myDash.setCAN(myCan);
   myDash.resetTimeZero(millis());
+
+  //attachInterrupt(digitalPinToInterrupt(buttonPin), sendCommand, CHANGE); This is a better solution but is bugging out
 }
 
 void loop() {
 
-  //Serial.println("UpdateDisplay");
-
   myDash.updateDisplay();
-
-  // commented out for testing
-  myScreen.displayTime();
-
-  //matrix.print(100, DEC);
-  //matrix.writeDisplay();
-
-  // Serial.println("-----LOOP OVER-----");
-
-  delay(60);
 
 }

@@ -3,16 +3,17 @@
 
 #include "Sensor.h"
 #include <Arduino.h>
+
 class AnalogSensor : public Sensor {
 private:
     // Additional attributes specific to AnalogSensor
     int sensorValue = 0;
-    int bias = 0;
-    int max = 1023;
+    // int bias = 0;
+    // int max = 1023;
 
 public:
     // Constructor
-    AnalogSensor(int id, int waitTime, int inPin, int bias, int max, int dataLength); 
+    AnalogSensor(int id, int waitTime, int inPin); 
 
     // Implement the pure virtual functions from the base class
     int readInputs() override;
