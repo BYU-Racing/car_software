@@ -19,6 +19,8 @@ class BrakeSensor : public Sensor {
     int dataLength;
     int timeErrorStart;
     int errorBaseline;
+    int lastTorqueCommand;
+    int maxTorque;
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     
@@ -51,6 +53,8 @@ class BrakeSensor : public Sensor {
     void sendStopCommand();
 
     void sendStartCommand();
+
+    void setLastTorque();
 
     
 };

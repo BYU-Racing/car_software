@@ -32,6 +32,8 @@ BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int ba
     inError = false;
     inCriticalError = false;
     errorBaseline = baseline; // THIS SHOULD CHANGE
+    lastTorqueCommand = 0;
+    maxTorque = 2000;
     
 }
 
@@ -56,12 +58,12 @@ void BrakeSensor::setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn) {
 void BrakeSensor::sendMotorCommand() {
 
     if(!inCriticalError) { //if we are not in critical error
-        if(pressState == true && prevPressState == false && driveState == true) {
+        if(pressState == true && prevPressState == false && driveState == true) { // THIS ONLY NEEDS TO TRIGGER WHEN THROTTLE IS ALSO PAST 20% THROW
             sendStopCommand();
             prevPressState = pressState;
             //PRESSING TURN OFF
         }
-        else if (pressState == false && prevPressState == true && driveState == true)
+        else if (pressState == false && prevPressState == true && driveState == true && (lastTorqueCommand < maxTorque * 0.05))
         {
             //DEPRESS MOTOR ON
             sendStartCommand();
@@ -273,4 +275,9 @@ void BrakeSensor::sendStopCommand() {
     msg.buf[7]=0;
     msg.id=192;
     can2.write(msg);
+}
+
+
+void BrakeSensor::setLastTorque(int lastCommand) {
+    this->lastTorqueCommand = lastCommand;
 }

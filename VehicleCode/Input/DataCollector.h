@@ -31,6 +31,7 @@ private:
     bool switchActive;
     bool front;
     bool startFault;
+    int lastTorqueCommand;
 
     // Global variables
     int sendID = 0;

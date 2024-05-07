@@ -10,6 +10,7 @@
 #define BRAKE_ID 11
 #define SWITCH_ID 15
 #define BRAKE_LOWER_LIMIT2 45
+#define MAX_TORQUE_COMMAND 2000
 
 
 // TEST: define function
@@ -31,6 +32,7 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->switchActive = false;
     this->startFault = false;
     this->front = front;
+    this->lastTorqueCommand = 0;
 }
 
 
@@ -124,7 +126,7 @@ void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
 
-    if(sensor->getId() == SWITCH_ID && front) {
+    if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
         if(rawData == 1) {
 
             switchActive = true;
@@ -139,7 +141,14 @@ void DataCollector::readData(Sensor* sensor) {
         checkDriveState();
     }
 
-    if(sensor->getId() == BRAKE_ID && front) {
+    if(sensor.getId() == 192 && front) { // Records throttle
+        // Record the last TORQUE COMMAND!!!
+        lastTorqueCommand = rawData;
+        brakeSensor.setLastTorque(lastTorqueCommand);
+    }
+
+    if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
+        // Potentially pass in the last read throttle into the brakes??
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
     }
 
