@@ -234,7 +234,7 @@ void Car::createNewCSV() {
 void Car::writeHeader() {
     dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     if (dataFile) {
-        dataFile.println("ID, Time, Data");
+        dataFile.println("ID,Time,Data0,Data1,Data2,Data3,Data4,Data5,Data6,Data7");
     } else {
         Serial.println("Error: Can't open/start file.");
     }
