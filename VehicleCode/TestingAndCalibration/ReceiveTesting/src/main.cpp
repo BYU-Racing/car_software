@@ -28,7 +28,7 @@
 #define BEGIN 9600          // 9,600
 #define BAUDRATE 250000     // 250,000
 #define SAVE_DELAY 20000    // 20,000 ms
-#define DELAYBY 100
+#define DELAYBY 0
 
 #define TESTING 1
 
@@ -82,4 +82,5 @@ void setup() {
 
 void loop() {
     car.readSensors();
+    delay(DELAYBY);
 }
