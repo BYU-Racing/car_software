@@ -11,8 +11,8 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(analogRead(PIN1));
-  Serial.println(analogRead(PIN2));
+  Serial.println(digitalRead(PIN1));
+  Serial.println(digitalRead(PIN2));
   Serial.println();
   delay(500);  
 }
