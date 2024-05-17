@@ -1,5 +1,22 @@
 # Wiring Harness
 
+## Wiring
+
+### Colors
+
+- Red = Power
+- Black = Ground
+- Yellow = Can High
+- Green = Can Low
+- Green/white twisted pair
+  - Green = Can Low
+  - White = Can High
+- Blue = Analog
+- White = Digital
+- I2C
+  - Blue = SCL
+  - White = SDA
+
 ## 24-Pin Plugs
 
 ### Teensy 1 - Rear Data Collector
