@@ -78,7 +78,7 @@
 #### Output Pins
 
 - 3.3V Output
-  - Not Required
+  - Is only needed to power the switches, a bullet connector should be sufficient
 - 5V in
   - Single pin plug required
   - Will need to be spliced to the screen
@@ -88,6 +88,7 @@
   - Along with 5V, goes to 7 segment display
 - Pins 14-19
   - Pins to control RGBs
+- Need to add output digital pin for the horn
 
 #### Necessary Plugs
 
