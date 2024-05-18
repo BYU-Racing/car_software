@@ -67,6 +67,11 @@ void DataCollector::checkDriveState() {
     if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
         driveState = !driveState;
         sendLog(driveState);
+
+        //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
+        delay(4000);
+
+
         brakeSensor->setDriveState();
         Serial.println("INITIAL START");
         return;
