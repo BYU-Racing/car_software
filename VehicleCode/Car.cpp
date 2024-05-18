@@ -102,6 +102,12 @@ void Car::readSensors() {
         if(rmsg.id == 222) {
             if(rmsg.buf[0] == 1) {
                 updateState(true);
+                //START HORN
+                digitalWrite(HORN_PIN, 1);
+                //3 SECOND HORN SOUND
+                delay(3000);
+                //STOP HORN
+                digitalWrite(HORN_PIN, 0);
             }
             else {
                 updateState(false);
