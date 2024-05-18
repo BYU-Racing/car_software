@@ -31,8 +31,6 @@ private:
     bool switchActive = false;
     bool front;
     bool startFault = false;
-    int lastTorqueCommand = 0;
-    CAN_message_t msg;
 
     // Global variables
     int sendID = 0;
@@ -40,6 +38,9 @@ private:
     int i = 0;
     int rawData = 0;
     int* sendData;
+    int lastTorqueCommand = 0;
+
+    CAN_message_t msg;
 
 
     

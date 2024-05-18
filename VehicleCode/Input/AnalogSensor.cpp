@@ -77,7 +77,7 @@ int* AnalogSensor::buildError() {
  */
 int AnalogSensor::rescale(int data) {
     //Transform data
-    return map(data, bias, max, 0, MAXPERCENT);
+    return data;
 };
 
 

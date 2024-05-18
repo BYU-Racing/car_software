@@ -27,10 +27,6 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
-    this->driveState = false;
-    this->brakeActive = false;
-    this->switchActive = false;
-    this->startFault = false;
     this->front = front;
     this->lastTorqueCommand = 0;
 }
@@ -144,10 +140,10 @@ void DataCollector::readData(Sensor* sensor) {
         checkDriveState();
     }
 
-    if(sensor.getId() == 192 && front) { // Records throttle
+    if(sensor->getId() == 192 && front) { // Records throttle
         // Record the last TORQUE COMMAND!!!
         lastTorqueCommand = rawData;
-        brakeSensor.setLastTorque(lastTorqueCommand);
+        brakeSensor->setLastTorque(lastTorqueCommand);
     }
 
     if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
