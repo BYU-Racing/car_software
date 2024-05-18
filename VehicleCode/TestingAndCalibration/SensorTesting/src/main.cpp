@@ -53,9 +53,9 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 // TODO: recalibrate brake pressure sensor
 #define BRAKE_ID 11
 #define BRAKE_WAIT 30
-#define BRAKE_PIN 3
+#define BRAKE_PIN 21
 #define BRAKE_LENGTH 2
-#define BRAKE_BIAS 65
+#define BRAKE_BIAS 101
 #define BRAKE_TOLERANCE 22
 
 // switch variables
