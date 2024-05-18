@@ -63,10 +63,7 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 #define SWITCH_WAIT 100
 #define SWITCH_PIN 38
 
-// data collector variables
-#define NUM_SENSORS 5
-
-
+// Declare sensor variables
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT_ID, THROTTLE_WAIT, POT1_PIN, 
                                          POT2_PIN, BIAS1, MAX1, BIAS2, MAX2, LENGTH);
 AnalogSensor rightDamperPot = AnalogSensor(DAMPER_R_ID, DAMPER_WAIT, DAMPER_R_PIN);
@@ -76,10 +73,11 @@ BrakeSensor myBrake = BrakeSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, BRAKE_LENGTH,
 
 DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
 
+// data collector variables
+#define NUM_SENSORS 5
 Sensor* sensors[] = {&throttle, &rightDamperPot, &leftDamperPot, 
                      &myBrake, &startSwitch};
 DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis(), true);
-
 
 
 // MAIN -------------------------------------------------------------------------------------------
