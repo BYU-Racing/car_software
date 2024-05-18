@@ -1,8 +1,6 @@
 #include "BrakeSensor.h"
 #include "Sensor.h"
 
-
-
 /*!
  * @brief Constructor
  * Initializes the variables needed for the brake sensor to operate
@@ -22,18 +20,8 @@ BrakeSensor::BrakeSensor(int id, int waitTime, int inPin, int dataLength, int ba
     inputPins[0] = inPin;
     this->baseline = baseline;
     this->errorMargin = errorMargin;
-    pressState = false;
-    prevPressState = false;
-    driveState = false;
-    brakeP = 0;
-    sendData = new int[8];
     this->dataLength = dataLength;
-    timeErrorStart = 0;
-    inError = false;
-    inCriticalError = false;
     errorBaseline = baseline; // THIS SHOULD CHANGE
-    lastTorqueCommand = 0;
-    maxTorque = 2000;
     
 }
 
@@ -56,9 +44,10 @@ void BrakeSensor::setCan(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIn) {
  */ 
 
 void BrakeSensor::sendMotorCommand() {
-
-    if(!inCriticalError) { //if we are not in critical error
-        if(pressState == true && prevPressState == false && driveState == true) { // THIS ONLY NEEDS TO TRIGGER WHEN THROTTLE IS ALSO PAST 20% THROW
+    //if we are not in critical error
+    if(!inCriticalError) { 
+        // THIS ONLY NEEDS TO TRIGGER WHEN THROTTLE IS ALSO PAST 20% THROW but to be safe we are doing always unless bugs occur
+        if(pressState == true && prevPressState == false && driveState == true) { 
             sendStopCommand();
             prevPressState = pressState;
             //PRESSING TURN OFF
@@ -80,7 +69,6 @@ void BrakeSensor::sendMotorCommand() {
  * @param None
  * @return INT the reading from the sensor
  */ 
-
 int BrakeSensor::readInputs() {
     previousUpdateTime = millis();
 
@@ -102,12 +90,14 @@ int BrakeSensor::readInputs() {
 
     return brakeP;
 }
+
 /*!
  * @brief rescales data and is UNUSED
  * 
  * @param data the data that is to be rescaled
  * @return None
  */ 
+
 int BrakeSensor::rescale(int data) {
     return data;
     // Don't know why we would need this for brake p rn
@@ -204,25 +194,32 @@ void BrakeSensor::setDriveState() {
  * @param int value -> the brake preassure that is read
  * @return bool (if a perceived error is occuring or not)
  */ 
-bool BrakeSensor::checkError(int value) { //This function seems like it could have some bugs
+bool BrakeSensor::checkError(int value) { 
+    //This function seems like it could have some bugs
     //If an abnormal or no reading is read for more than 100 msec, the motor power must be deactivated
-    if(!driveState) { // IF we are not in a driving state this error checking is irrelevant
+    
+    
+    // IF we are not in a driving state this error checking is irrelevant
+    if(!driveState) { 
         return true;
     }
     //TODO: CHECK IF THIS IS RULES COMPLIANT
     if(value == 0) { // || value < errorBaseline - errorMargin) { //If we currently have an in error reading (techincally just need lower??)
-        if(inError && (millis() - timeErrorStart) > 100) { // If we have been in error for 100msec ENTER CRITICAL ERROR STATE
+        // If we have been in error for 100msec ENTER CRITICAL ERROR STATE
+        if(inError && (millis() - timeErrorStart) > 100) { 
             sendStopCommand();
             inCriticalError = true;
             return true;
-        } else if(!inError) { //if we are not in error enter the error state
+        } else if(!inError) { 
+            // ^^ if we are not in error enter the error state
             inError = true;
             timeErrorStart = millis();
             return true;
         }
         return false;
     }
-    else if(inCriticalError) { //Moving out of critical error state
+    //Moving out of critical error state
+    else if(inCriticalError) { 
         //Remove in error
         timeErrorStart = 0;
         sendStartCommand();
@@ -230,7 +227,8 @@ bool BrakeSensor::checkError(int value) { //This function seems like it could ha
         inCriticalError = false;
         return false;
     }
-    else if(inError) { // Moving out of error state
+    // Moving out of error state
+    else if(inError) { 
         inError = false;
         inCriticalError = false;
         timeErrorStart = 0;
@@ -244,7 +242,6 @@ bool BrakeSensor::checkError(int value) { //This function seems like it could ha
  * @return none
  */ 
 void BrakeSensor::sendStartCommand() {
-    CAN_message_t msg;
     msg.len=8;
     msg.buf[0]=0;
     msg.buf[1]=0;
@@ -263,7 +260,6 @@ void BrakeSensor::sendStartCommand() {
  * @return none
  */ 
 void BrakeSensor::sendStopCommand() {
-    CAN_message_t msg;
     msg.len=8;
     msg.buf[0]=0;
     msg.buf[1]=0;

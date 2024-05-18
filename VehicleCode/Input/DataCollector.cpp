@@ -99,7 +99,6 @@ void DataCollector::checkDriveState() {
  */ 
 
 void DataCollector::sendLog(bool driveState) {
-    CAN_message_t msg;
     msg.len=8;
     msg.buf[0]=driveState;
     msg.buf[1]=0;
@@ -128,7 +127,6 @@ void DataCollector::readData(Sensor* sensor) {
 
     if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
         if(rawData == 1) {
-
             switchActive = true;
             if(!brakeActive) {
                 startFault = true;
@@ -168,7 +166,6 @@ void DataCollector::readData(Sensor* sensor) {
 }
 
 
-// TEST: define function
 /*!
  * @brief Send data to Car and Dashboard objects
  * Initializes the CAN bus, then sends a CAN message to the Car and Dashboard
