@@ -9,16 +9,19 @@ class BrakeSensor : public Sensor {
     private:
     int baseline;
     int errorMargin;
-    bool pressState;
-    bool prevPressState;
-    bool driveState;
-    bool inError;
-    bool inCriticalError;
-    int brakeP;
-    int* sendData;
+    bool pressState = false;
+    bool prevPressState = false;
+    bool driveState = false;
+    bool inError = false;
+    bool inCriticalError = false;
+    int brakeP = 0;
+    int* sendData = new int[8];
     int dataLength;
     int timeErrorStart;
     int errorBaseline;
+    int lastTorqueCommand = 0;
+    int maxTorque = 2000;
+    CAN_message_t msg;
     
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     
@@ -51,6 +54,8 @@ class BrakeSensor : public Sensor {
     void sendStopCommand();
 
     void sendStartCommand();
+
+    void setLastTorque(int lastCommand);
 
     
 };

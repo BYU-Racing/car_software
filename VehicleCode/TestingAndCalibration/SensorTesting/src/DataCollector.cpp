@@ -9,7 +9,8 @@
 #define ERROR_LENGTH 6
 #define BRAKE_ID 11
 #define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 65
+#define BRAKE_LOWER_LIMIT2 45
+#define MAX_TORQUE_COMMAND 2000
 
 
 // TEST: define function
@@ -26,11 +27,8 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
-    this->driveState = false;
-    this->brakeActive = false;
-    this->switchActive = false;
-    this->startFault = false;
     this->front = front;
+    this->lastTorqueCommand = 0;
 }
 
 
@@ -65,6 +63,11 @@ void DataCollector::checkDriveState() {
     if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
         driveState = !driveState;
         sendLog(driveState);
+
+        //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
+        delay(4000);
+
+
         brakeSensor->setDriveState();
         Serial.println("INITIAL START");
         return;
@@ -97,7 +100,6 @@ void DataCollector::checkDriveState() {
  */ 
 
 void DataCollector::sendLog(bool driveState) {
-    CAN_message_t msg;
     msg.len=8;
     msg.buf[0]=driveState;
     msg.buf[1]=0;
@@ -124,9 +126,8 @@ void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
 
-    if(sensor->getId() == SWITCH_ID && front) {
+    if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
         if(rawData == 1) {
-
             switchActive = true;
             if(!brakeActive) {
                 startFault = true;
@@ -139,7 +140,14 @@ void DataCollector::readData(Sensor* sensor) {
         checkDriveState();
     }
 
-    if(sensor->getId() == BRAKE_ID && front) {
+    if(sensor->getId() == 192 && front) { // Records throttle
+        // Record the last TORQUE COMMAND!!!
+        lastTorqueCommand = rawData;
+        brakeSensor->setLastTorque(lastTorqueCommand);
+    }
+
+    if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
+        // Potentially pass in the last read throttle into the brakes??
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
     }
 
@@ -159,7 +167,6 @@ void DataCollector::readData(Sensor* sensor) {
 }
 
 
-// TEST: define function
 /*!
  * @brief Send data to Car and Dashboard objects
  * Initializes the CAN bus, then sends a CAN message to the Car and Dashboard

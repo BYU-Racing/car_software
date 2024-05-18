@@ -26,11 +26,11 @@ private:
     int numSensors;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
     BrakeSensor* brakeSensor;
-    bool driveState;
-    bool brakeActive;
-    bool switchActive;
+    bool driveState = false;
+    bool brakeActive = false;
+    bool switchActive = false;
     bool front;
-    bool startFault;
+    bool startFault = false;
 
     // Global variables
     int sendID = 0;
@@ -38,6 +38,9 @@ private:
     int i = 0;
     int rawData = 0;
     int* sendData;
+    int lastTorqueCommand = 0;
+
+    CAN_message_t msg;
 
 
     
