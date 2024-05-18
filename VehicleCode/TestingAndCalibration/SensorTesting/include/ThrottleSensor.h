@@ -48,7 +48,7 @@ public:
     int getDataLength();
 
     // Setters
-    void setPin(int inPin, int index);
+    void setPin(int inPin, int index=0);
     void setWaitTime(int inWait);
     void setId(int inId);
 };

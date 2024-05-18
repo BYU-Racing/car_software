@@ -65,7 +65,6 @@ int ThrottleSensor::readInputs() {
     throttle1 = map(analogRead(inputPins[0]), pos_bias, pos_max, MIN_OUTPUT, MAX_OUTPUT);
     throttle2 = map(-analogRead(inputPins[1]), -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
 
-    //Insert Debug Print statements here if sensors disagree
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -118,9 +117,6 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
-
-    
-
     if(torque <= 90) { // Buffer for the 
         torque = 0;
     }
