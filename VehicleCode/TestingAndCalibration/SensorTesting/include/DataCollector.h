@@ -38,6 +38,9 @@ private:
     int i = 0;
     int rawData = 0;
     int* sendData;
+    int lastTorqueCommand = 0;
+
+    CAN_message_t msg;
 
 
     

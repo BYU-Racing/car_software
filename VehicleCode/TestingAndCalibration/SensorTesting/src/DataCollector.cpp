@@ -140,10 +140,10 @@ void DataCollector::readData(Sensor* sensor) {
         checkDriveState();
     }
 
-    if(sensor.getId() == 192 && front) { // Records throttle
+    if(sensor->getId() == 192 && front) { // Records throttle
         // Record the last TORQUE COMMAND!!!
         lastTorqueCommand = rawData;
-        brakeSensor.setLastTorque(lastTorqueCommand);
+        brakeSensor->setLastTorque(lastTorqueCommand);
     }
 
     if(sensor->getId() == BRAKE_ID && front) { // Brake Checks

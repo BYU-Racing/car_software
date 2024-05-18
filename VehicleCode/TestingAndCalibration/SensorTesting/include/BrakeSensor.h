@@ -55,7 +55,7 @@ class BrakeSensor : public Sensor {
 
     void sendStartCommand();
 
-    void setLastTorque();
+    void setLastTorque(int lastCommand);
 
     
 };
