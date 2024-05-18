@@ -12,7 +12,7 @@
  * Initializes an AnalogSensor object with specified parameters.
  *
  * @param id (int) The unique identifier for the sensor.
- * @param freq (int) The update delay of the sensor in milliseconds.
+ * @param waitTime (int) The update delay of the sensor in milliseconds.
  * @param inPins (int) The input pin id for the analog sensor.
  */
 AnalogSensor::AnalogSensor(int id, int waitTime, int inPin) {
@@ -37,31 +37,24 @@ int AnalogSensor::readInputs() {
     //Grab Sensor Value
     sensorValue = analogRead(inputPins[0]);
 
-    //Return a pointer to the private value
-    return sensorValue;
+    //Returns sensorValue but limits it to 1023
+    return (sensorValue < 1023) ? sensorValue : 1023;
     
 };
 
 
 /**
- * @brief Builds the data array for the CAN message.
+ * @brief Builds the data array for the CAN message. Expected input is the analog sensor raw value that is read
+ * Expected output is a 2 item array that contains [1000s place 100s place, 10s place 1s place]
+ * EX: 1023 -> [10, 23] and 921 -> [9, 21] 
  * 
- * @param torque (int) The torque value to be sent.
- * @param percent (int) The percent value to be sent.
+ * @param int value value that was read from the sensor allows for it to be converted to CAN format
  * 
  * @return (int*) The data array for the CAN message.
 */
 int* AnalogSensor::buildData(int value) {
 
-    int first = value / 100;
-    int second;
-
-    second = value - (first * 100);
-
-
-
-
-    return new int[2]{first, second};
+    return new int[2]{(value / 100), (value - ((value / 100) * 100))};
 }
 
 /**
