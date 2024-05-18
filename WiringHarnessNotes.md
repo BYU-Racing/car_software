@@ -2,7 +2,15 @@
 
 ## Wiring
 
-### Colors
+### Standards
+
+#### Plugs
+
+- CAN wires
+  - CANH(Green) goes to pin 1
+  - CANL(White or Yellow) goes to pin 2
+
+#### Colors
 
 - Red = Power
 - Black = Ground
@@ -58,20 +66,24 @@
   - No plug necessary, gets bolted straight to chassis
 - Pins 39 & 40
   - Inputs for Throttle pots
-  - Along with power to throttle package, we will need a 3-Pin connector if power for both is consoladated to 1 pin
+  - Both will get seperate single wire plugs to make them easy to monitor
 - Pins 22 & 23
   - Inputs for damper pots
   - Along with power each will need 2 pin plug
+- Pin 38
+  - Will be used for the dash board switch
+- Pin 3
+  - has a voltage divider to be used with the brake line pressure sensor
 
 #### Necessary Plugs
 
 | | 1- Pin |  2- Pin | 3-Pin |
 | --- | --- | --- | --- |
 | | 5V in | CAN Line| I2C Breakout |
-| | - | Right Damper Pot | Throttle Package |
-| | - | Left Damper Pot | - |
-| | - | Brake Line Pressure | - |
-| Totals| 1 | 4 | 2 |
+| | Throttle Pot 1 | Right Damper Pot | - |
+| | Throttle Pot 2 | Left Damper Pot | - |
+| | Dash Switch | Brake Line Pressure | - |
+| Totals| 4 | 4 | 1 |
 
 ### Teensy 3 & 4 - Dashboard and ECU
 
