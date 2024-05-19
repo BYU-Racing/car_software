@@ -32,6 +32,11 @@ private:
     bool front;
     bool startFault = false;
 
+    bool tractiveActive = false;
+    bool lastTractive = false;
+
+    unsigned long lastTractive = 0;
+
     // Global variables
     int sendID = 0;
     int sendLength = 0;
