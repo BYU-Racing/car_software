@@ -170,7 +170,7 @@ void DataCollector::readData(Sensor* sensor) {
         
 
         //TRACTIVE SHUTOFF  TURN OFF CAR
-        if(tractiveActive = 0 && driveState == true) {
+        if(tractiveActive == 0 && driveState == true) {
             driveState = !driveState;
 
             checkDriveState();
