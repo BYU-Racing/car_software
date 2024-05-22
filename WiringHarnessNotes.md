@@ -7,8 +7,8 @@
 #### Plugs
 
 - CAN wires
-  - CANH(Green) goes to pin 1
-  - CANL(White or Yellow) goes to pin 2
+  - CANL(Green) goes to pin 1
+  - CANH(White or Yellow) goes to pin 2
 
 #### Colors
 
