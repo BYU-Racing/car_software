@@ -16,15 +16,19 @@ int TractiveSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Use the BMS IDs
+    //THIS CHECKS FOR 6 MILLISECONDS!!!!!!!
 
-    if(can.read(rmsg)) {
-        if(rmsg.id == 37 || rmsg.id == 38) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
+    while(millis() - previousUpdateTime <= 6) {
+        if(can.read(rmsg)) {
+            if(rmsg.id == 37 || rmsg.id == 38) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        } 
     }
+
 
     return 0;
 }
