@@ -127,10 +127,12 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
 
     if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
+        Serial.println(rawData);
         if(rawData == 1) {
             switchActive = true;
             if(!brakeActive) {
                 startFault = true;
+                Serial.println("Start fault");
             }
         }
         else {
