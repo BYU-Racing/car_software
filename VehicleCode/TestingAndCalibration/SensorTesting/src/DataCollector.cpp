@@ -12,6 +12,8 @@
 #define BRAKE_LOWER_LIMIT2 45
 #define MAX_TORQUE_COMMAND 2000
 
+#define TRACTIVE_ID 30
+
 
 // TEST: define function
 /*!
@@ -60,12 +62,13 @@ void DataCollector::checkSensors() {
 void DataCollector::checkDriveState() {
 
     //INITIAL START
-    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
+    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault && tractiveActive) {
         driveState = !driveState;
         sendLog(driveState);
 
         //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
-        delay(4000);
+        delay(2000);
+        Serial.println("HORN");
 
 
         brakeSensor->setDriveState();
@@ -74,7 +77,7 @@ void DataCollector::checkDriveState() {
     }
 
     //FINAL STOP
-    if(driveState && !switchActive && (brakeSensor != nullptr)) {
+    if((driveState && !switchActive && (brakeSensor != nullptr)) || (driveState && !tractiveActive && (brakeSensor != nullptr))) {
         driveState = !driveState;
         sendLog(driveState);
         brakeSensor->setDriveState();
@@ -127,12 +130,10 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
 
     if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
-        Serial.println(rawData);
         if(rawData == 1) {
             switchActive = true;
-            if(!brakeActive) {
+            if(!brakeActive || !tractiveActive) {
                 startFault = true;
-                Serial.println("Start fault");
             }
         }
         else {
@@ -151,6 +152,29 @@ void DataCollector::readData(Sensor* sensor) {
     if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
         // Potentially pass in the last read throttle into the brakes??
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
+    }
+
+    if(sensor->getId() == TRACTIVE_ID && front) {
+        // Initial on of tractive
+        if (!tractiveActive) {
+            tractiveActive = (rawData == 1);
+            if (tractiveActive) {lastTractive = millis();}
+        }
+        else {
+            // If tractive is read on and hasnt been read on in 150ms
+            if(millis() - lastTractive >= 300) {
+                tractiveActive = false;
+            }
+        }
+        
+
+        //TRACTIVE SHUTOFF  TURN OFF CAR
+        if(tractiveActive == 0 && driveState == true) {
+            driveState = !driveState;
+
+            checkDriveState();
+
+        }
     }
 
     if (rawData != -1) {

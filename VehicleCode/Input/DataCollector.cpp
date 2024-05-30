@@ -158,7 +158,7 @@ void DataCollector::readData(Sensor* sensor) {
         // Initial on of tractive
         if (!tractiveActive) {
             tractiveActive = (rawData == 1);
-            if (tractiveActive) {lastTractive = millis()};
+            if (tractiveActive) {lastTractive = millis();}
         }
         else {
             // If tractive is read on and hasnt been read on in 150ms

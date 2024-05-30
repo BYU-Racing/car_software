@@ -9,6 +9,7 @@
 #include "ThrottleSensor.h"
 #include "BrakeSensor.h"
 #include "DigitalSensor.h"
+#include "TractiveSensor.h"
 
 
 // throttle sensor variables
@@ -50,7 +51,6 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 #define DAMPER_WAIT 100
 
 // brake variables
-// TODO: recalibrate brake pressure sensor
 #define BRAKE_ID 11
 #define BRAKE_WAIT 30
 #define BRAKE_PIN 21
@@ -63,6 +63,10 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 #define SWITCH_WAIT 100
 #define SWITCH_PIN 38
 
+//TRACTIVE SENSOR VARS
+#define TRACTIVE_ID 30
+#define TRACTIVE_WAIT 100
+
 // Declare sensor variables
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT_ID, THROTTLE_WAIT, POT1_PIN, 
                                          POT2_PIN, BIAS1, MAX1, BIAS2, MAX2, LENGTH);
@@ -71,12 +75,14 @@ AnalogSensor leftDamperPot = AnalogSensor(DAMPER_L_ID, DAMPER_WAIT, DAMPER_L_PIN
 BrakeSensor myBrake = BrakeSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, BRAKE_LENGTH, 
                                   BRAKE_BIAS, BRAKE_TOLERANCE);
 
+TractiveSensor BMSLover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT);
+
 DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
 
 // data collector variables
-#define NUM_SENSORS 5
+#define NUM_SENSORS 6
 Sensor* sensors[] = {&throttle, &rightDamperPot, &leftDamperPot, 
-                     &myBrake, &startSwitch};
+                     &myBrake, &startSwitch, &BMSLover};
 DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis(), true);
 
 
