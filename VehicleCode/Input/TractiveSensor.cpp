@@ -1,6 +1,7 @@
 #include "TractiveSensor.h"
 #include <Arduino.h>
 
+#define CHECK_TIME_MS 6
 
 TractiveSensor::TractiveSensor(int id, int waitTime) {
     sensorID = id;
@@ -18,18 +19,13 @@ int TractiveSensor::readInputs() {
     //Use the BMS IDs
     //THIS CHECKS FOR 6 MILLISECONDS!!!!!!!
 
-    while(millis() - previousUpdateTime <= 6) {
+    while(millis() - previousUpdateTime <= CHECK_TIME_MS) {
         if(can.read(rmsg)) {
             if(rmsg.id == 37 || rmsg.id == 38) {
                 return 1;
             }
-            else {
-                return 0;
-            }
         } 
     }
-
-
     return 0;
 }
 

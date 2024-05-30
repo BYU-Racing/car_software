@@ -67,7 +67,8 @@ void DataCollector::checkDriveState() {
         sendLog(driveState);
 
         //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
-        delay(4000);
+        delay(2000);
+        Serial.println("HORN");
 
 
         brakeSensor->setDriveState();
