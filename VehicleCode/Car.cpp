@@ -105,7 +105,7 @@ void Car::readSensors() {
                 //START HORN
                 digitalWrite(HORN_PIN, HIGH);
                 //3 SECOND HORN SOUND
-                delay(3500);
+                delay(2000);
                 //STOP HORN
                 digitalWrite(HORN_PIN, LOW);
             }
