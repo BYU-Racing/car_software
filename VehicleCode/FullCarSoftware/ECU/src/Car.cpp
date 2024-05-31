@@ -1,31 +1,28 @@
 #include "Car.h"
-#include <SD.h> 
-
-#define KEY_PIN 24
-#define BUTTON_PIN 25 // not used rn
-#define SWITCH_PIN 25
-#define LOG_PIN 26
-#define ACCELERATOR_POT_1 3
-#define ID_ERROR 0
-#define SHUTDOWN 1
-#define NO_SHUTDOWN 0
-#define COMMAND_IDX 1
-
-
-
 
 /**
  * @brief Default constructor for Car class
 */
 Car::Car() {
-    active = false;
-    key = false;
-    switchOn = false;
+    goFast = false;
     logState = false;
     timeZero = millis();
     lastSave = millis();
-    buttonState = 0;
     speed = 0;
+
+    startMotor.len = 8;
+    startMotor.buf[0] = 0;
+    startMotor.buf[1] = 0;
+    startMotor.buf[2] = 0;
+    startMotor.buf[3] = 0;
+    startMotor.buf[4] = 0;
+    startMotor.buf[5] = 0;
+    startMotor.buf[6] = 0;
+    startMotor.buf[7] = 0;
+    startMotor.id = 192; 
+
+    stopMotor = startMotor;
+    stopMotor.buf[4] = 1;
 }
 
 
@@ -33,17 +30,13 @@ Car::Car() {
  * @brief Fancy constructor for Car class
  * 
  * @param logFileName (const char*) The name of the log file
- * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+ * @param myCan (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+ * 
+ * Calls the default constructor to initialize the rest of the attributes
 */
-Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    active = false;
-    key = false;
-    switchOn = false;
-    logState = false;
+Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan) : Car() {
     fileName = logFileName;
-    timeZero = millis();
-    lastSave = millis();
-    can2 = can2;
+    this->myCan = myCan;
 }
 
 
@@ -52,6 +45,27 @@ Car::Car(String logFileName, FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
 */
 Car::~Car() {
     shutdown();
+}
+
+
+/**
+ * @brief Initializes the Car object in one command
+ * 
+ * @param myCan (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus object
+ * @param saveDelay (int) The delay interval for saving data
+ * 
+ * Creates a new CSV file for logging
+ * Initializes the CAN bus object
+ * Sets the save delay interval
+ * Sets the logging state to true
+ * Resets the time zero for logging purposes.
+ */
+void Car::initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan, int saveDelay) {
+    // createNewCSV();
+    setCAN(myCan);
+    setSaveDelay(saveDelay);
+    // refreshLog();
+    resetTimeZero(millis());
 }
 
 
@@ -80,22 +94,36 @@ Car::~Car() {
  * Checks for a shutdown command in case of an error
 */
 void Car::readSensors() {
-    // update states
-    checkKey();
-    checkSwitch();
-    checkToLog();
-    setActive(true); // TODO remove after testing
-    setLogState(true); // TODO remove after testing
 
-    bool canRead = can2.read(rmsg);
-    if (active && canRead) {
+    if (myCan.read(rmsg)) {
+
+
+        //Checks if it is a start stop message!
+        if(rmsg.id == 222) {
+            if(rmsg.buf[0] == 1) {
+                updateState(true);
+                //START HORN
+                digitalWrite(HORN_PIN, HIGH);
+                //3 SECOND HORN SOUND
+                delay(2000);
+                //STOP HORN
+                digitalWrite(HORN_PIN, LOW);
+            }
+            else {
+                updateState(false);
+            }
+            return;
+        }
+
         SensorData* msg = new SensorData(rmsg);
 
-        // log the data
-        logData(msg);
-
-        // save the data on the SD card
-        saveSD();
+        if (logState) {
+            // log the data, save SD every few seconds
+            logData(msg);
+            saveSD();
+        } else { 
+            // Serial.println("Waiting: Log state is False");
+        }
 
         // check for shutdown command
         if (msg->getId() == ID_ERROR && msg->getData()[COMMAND_IDX] == SHUTDOWN) {
@@ -117,28 +145,23 @@ void Car::readSensors() {
  * @param data (const SensorData&) The sensor data to be logged
 */
 void Car::logData(SensorData* data) {
-    if (logState) {
-        if (dataFile) {
-            // Write data to the file in CSV format
-            dataFile.print(data->getId());
-            dataFile.print(",");
-            dataFile.print(millis() - timeZero);
-            dataFile.print(",");
+    if (dataFile) {
+        // Write data to the file in CSV format
+        dataFile.print(data->getId());
+        dataFile.print(",");
+        dataFile.print(millis() - timeZero);
+        dataFile.print(",");
 
-            sensorData = data->getData();
-            for (i = 0; i < data->length(); i++) {
-                dataFile.print(sensorData[i]);
-                if (i < data->length() - 1) {
-                    dataFile.print(",");
-                }
+        sensorData = data->getData();
+        for (i = 0; i < data->length(); i++) {
+            dataFile.print(sensorData[i]);
+            if (i < data->length() - 1) {
+                dataFile.print(",");
             }
-            dataFile.println();
-        } else {
-            Serial.println("Error: File not open.");
         }
+        dataFile.println();
     } else {
-        Serial.print("Waiting: Log state=");
-        Serial.println(logState);
+        Serial.println("Error: File not open.");
     }
 }
 
@@ -150,10 +173,10 @@ void Car::logData(SensorData* data) {
  * @param data (int*&) The data from the CAN message 
 */
 int Car::deconstructSpeed(int* data) {
-    speed = int(data[3] * byteValue + data[2]) / scale;
+    speed = int(data[3] * BYTE_VALUE + data[2]) / SCALE;
 
     // Set speed to zero if less than 10 (start threshold)
-    if (speed < startThreshold) {
+    if (speed < START_THRESHOLD) {
         speed = 0;
     }
     return speed;
@@ -181,7 +204,6 @@ int Car::deconstructSpeed(int* data) {
 */
 void Car::saveSD() {
     if (millis() - lastSave > saveDelay) {
-        Serial.println("Saving to SD card.");
         lastSave = millis();
         if (dataFile) {
             dataFile.close();
@@ -218,14 +240,10 @@ void Car::createNewCSV() {
 void Car::writeHeader() {
     dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     if (dataFile) {
-        dataFile.println("ID, Time, Data");
+        dataFile.println("ID,Time,Data0,Data1,Data2,Data3,Data4,Data5,Data6,Data7");
     } else {
         Serial.println("Error: Can't open/start file.");
-        // Warning: infinite while loop if file can't be opened
-        while(1);
     }
-    // New approach leaves the file open and closes it every saveDelay milliseconds
-    // dataFile.close();
 }
 
 
@@ -341,14 +359,8 @@ int Car::tempLength(const int &maxNumber) {
         temp /= 10;
         count++;
     }
-    return maxNameLength - count;
+    return MAX_NAME_LENGTH - count;
 }
-
-
-
-
-
-
 
 
 
@@ -364,30 +376,26 @@ int Car::tempLength(const int &maxNumber) {
 
 /**
  * @brief Set the CAN bus
- * @param can2 (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
+ * @param myCan (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
-void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2) {
-    this->can2 = can2;
+void Car::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan) {
+    this->myCan = myCan;
 }
 
 /**
  * @brief Method to shutdown the car
- * 
  * Sets all states to false and closes the SD card file
 */
 void Car::shutdown() {
     // Update the state
-    key = false;
-    switchOn = false;
-    active = false;
+    Serial.println("Shutting down the car.");
+    goFast = false;
     logState = false;
 
     // Close the file
     if (dataFile) {
         dataFile.close();
     }
-
-    // update error LED?
 }
 
 /**
@@ -396,69 +404,116 @@ void Car::shutdown() {
  */
 void Car::resetTimeZero(unsigned long startTime) {
     timeZero = startTime;
+    lastOffSignal = startTime;
 }
 
-// Method to set the save delay
+/**
+ * @brief Set the delay for saving data
+*/
 void Car::setSaveDelay(int delay) {
     if (delay >= 0) {
         saveDelay = delay;
     }
 }
 
-// Method to set the active state of the car for testing only
-void Car::setActive(bool state) { 
-    active = state;
+/**
+ * @brief Set the log state of the car based on the log switch
+ * 
+ * Reads the log switch and sets the log state of the car
+ * Updates the most last log update time
+ * Sends a signal to the motor controller if necessary
+*/
+void Car::updateState(bool newState) {
+    if (millis() - lastGoUpdate > goUpdateSpeed) {
+        // update states
+        goFast = newState;
+        logState = goFast;
+        lastGoUpdate = millis() + timeZero;
+        lastLogUpdate = lastGoUpdate;
+
+        // send a signal to the motor controller if the go switch changes
+        if (goFast != prevGoState) {
+            if (!goFast) {
+                Serial.println("Closing file.");
+                if (dataFile) {
+                    dataFile.close();
+                    Serial.println("Closed file.");
+                }
+            } else {
+                createNewCSV();
+            }
+        } 
+        prevGoState = goFast;
+        prevLogState = logState;
+    }
 }
 
-// Method to set the log state of the car for testing only
-// Closes the file when logging is turned off
+
+
+/**
+ * @brief Method to set the log state of the car
+ * @param state (bool) The new log state
+*/
 void Car::setLogState(bool state) {
     logState = state;
-    if (!logState && dataFile) {
+}
+
+
+// NOT USED ANYMORE
+
+/**
+ * @brief NOT USED Method to check the log switch and set the log state
+ * 
+ * Reads the go switch and sets the log state of the car
+ * Updates the most last log update time
+ * Opens or closes the file for logging data as necessary
+*/
+void Car::checkToLog() {
+    if (millis() - lastLogUpdate > logUpdateSpeed) {
+        logState = digitalRead(GO_PIN);
+        lastLogUpdate = millis() + timeZero;
+        refreshLog();
+        prevLogState = logState;
+    }
+}
+
+/**
+ * @brief NOT USED Method to set the log state of the car
+
+ * Opens or closes the file for logging data as necessary
+*/
+void Car::refreshLog() {
+    if (!logState && prevLogState && dataFile) {
         dataFile.close();
-    } else if (logState && !dataFile) {
+    } else if (logState && !prevLogState && !dataFile) {
+        Serial.println("RefreshLog");
+        Serial.println(fileName);
         dataFile = SD.open(fileName.c_str(), FILE_WRITE);
     }
 }
 
-// Car is active if key is turned and button is pushed
-void Car::updateState() {
-    active = key && switchOn;
-}
-// Method to check if the key is turned
-void Car::checkKey() {
-    key = digitalRead(KEY_PIN);
-    updateState();
-}
-// Method to check if the power switch is flipped to the on position
-void Car::checkSwitch() {
-    switchOn = digitalRead(SWITCH_PIN);
-    updateState();
-}
-// Method to check if the log switch is flipped to the on position
-void Car::checkToLog() {
-    logState = digitalRead(LOG_PIN);
-}
-// Method to check if the car is active
-// not used rn
-bool Car::checkActive() {
-    return active;
-}
 
-// Method to push the button
-// Not used rn
-void Car::buttonPushed() {
-    buttonState = !buttonState;
-    updateState();
-}
-// Method to check if the button is pushed
-// Not used rn
-void Car::checkButton() {
-    buttonState = digitalRead(BUTTON_PIN);
-    if (buttonState != prevButtonState) {
-        if (buttonState == HIGH) {
-            buttonPushed();
-        }
-        prevButtonState = buttonState;
+void Car::countFiles(){
+    fileCount = 0;
+    File root = SD.open("/");
+    if (!root) {
+        Serial.println("Failed to open directory.");
+        return;
     }
+
+    // Count files in the root directory
+    while (true) {
+        File entry = root.openNextFile();
+        if (!entry) {
+        break; // No more files
+        }
+        if (entry.isDirectory()) {
+        continue; // Skip directories
+        }
+        fileCount++;
+        entry.close();
+    }
+
+    // Close the root directory
+    root.close();
 }

@@ -1,11 +1,8 @@
 #include <Arduino.h>
 #include <FlexCAN_T4.h>
 #include <string>
-#include "AnalogSensor.h"
-#include "Sensor.h"
-#include "SensorData.h"
-#include "DataCollector.h"
-#include "ThrottleSensor.h"
+
+
 #include "Car.h"
 
 
@@ -32,17 +29,9 @@
 
 #define TESTING 1
 
-
-// sensors and datacollector
-// ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, THROTTLE_RATE, POT1, POT2, 
-//                                          BIAS1, THROTTLE_MAX, LENGTH);
-// Sensor* sensors[] = {&throttle};
-// DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis());
-
 // initialize can, car, and horn
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 Car car;
-//TODO: initialize horn object
 
 
 
@@ -58,9 +47,6 @@ void setup() {
 
     // set up car
     car.initialize(can1, SAVE_DELAY);
-
-
-    // TODO: honk
 
     // visibility control
     if (TESTING == 1) {

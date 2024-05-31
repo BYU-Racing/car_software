@@ -102,6 +102,12 @@ void Car::readSensors() {
         if(rmsg.id == 222) {
             if(rmsg.buf[0] == 1) {
                 updateState(true);
+                //START HORN
+                digitalWrite(HORN_PIN, HIGH);
+                //3 SECOND HORN SOUND
+                delay(2000);
+                //STOP HORN
+                digitalWrite(HORN_PIN, LOW);
             }
             else {
                 updateState(false);
@@ -355,6 +361,13 @@ int Car::tempLength(const int &maxNumber) {
     }
     return MAX_NAME_LENGTH - count;
 }
+
+
+
+
+
+
+
 
 
 

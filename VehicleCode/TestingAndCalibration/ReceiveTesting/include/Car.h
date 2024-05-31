@@ -8,6 +8,7 @@
 // teensy hardware info
 #define GO_PIN 23
 #define ACCELERATOR_POT_1 3
+#define HORN_PIN 12 //TODO: THIS NEEDS TO BE LEGIT HORN PIN
 
 // commands and logging integers
 #define ID_ERROR 0

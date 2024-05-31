@@ -98,11 +98,10 @@ void SensorData::setTimeStamp(unsigned long inTimeStamp) {
     timeStamp = inTimeStamp;
 }
 
-// TODO: Implement this method
 /**
- * @brief Format the SensorData into a CAN_message_t.
+ * @brief Format the SensorData obejct into a CAN_message_t.
  * 
- * @return (CAN_message_t) The formmatted CAN message.
+ * @return (CAN_message_t) The formatted CAN message.
 */
 CAN_message_t SensorData::formatCAN() const {
     CAN_message_t canMessage;
