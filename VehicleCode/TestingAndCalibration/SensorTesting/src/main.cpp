@@ -75,14 +75,14 @@ AnalogSensor leftDamperPot = AnalogSensor(DAMPER_L_ID, DAMPER_WAIT, DAMPER_L_PIN
 BrakeSensor myBrake = BrakeSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, BRAKE_LENGTH, 
                                   BRAKE_BIAS, BRAKE_TOLERANCE);
 
-TractiveSensor BMSLover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT);
+TractiveSensor CASCADIALover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT);
 
 DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
 
 // data collector variables
 #define NUM_SENSORS 6
 Sensor* sensors[] = {&throttle, &rightDamperPot, &leftDamperPot, 
-                     &myBrake, &startSwitch, &BMSLover};
+                     &myBrake, &startSwitch, &CASCADIALover};
 DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis(), true);
 
 

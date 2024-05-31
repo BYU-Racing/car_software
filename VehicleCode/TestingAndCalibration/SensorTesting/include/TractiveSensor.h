@@ -13,6 +13,7 @@ private:
     bool tractiveActive;
     CAN_message_t rmsg;
     int waitTime;
+    CAN_message_t msg;
 
 
 

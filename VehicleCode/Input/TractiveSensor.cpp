@@ -6,6 +6,7 @@
 TractiveSensor::TractiveSensor(int id, int waitTime) {
     sensorID = id;
     this->waitTime = waitTime;
+    
 }
 
 
@@ -14,14 +15,27 @@ void TractiveSensor::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN) {
 }
 
 int TractiveSensor::readInputs() {
+    
+
+    //Send the motor command message
+    msg.id = 0x0C1;
+
+    msg.buf[0] = 141;
+    msg.buf[1] = 0;
+    msg.buf[2] = 0;
+    msg.buf[3] = 0;
+    msg.buf[4] = 0;
+    msg.buf[5] = 0;
+    msg.buf[6] = 0;
+    msg.buf[7] = 0;
+
+    can.write(msg);
+
+
     previousUpdateTime = millis();
-
-    //Use the BMS IDs
-    //THIS CHECKS FOR 6 MILLISECONDS!!!!!!!
-
     while(millis() - previousUpdateTime <= CHECK_TIME_MS) {
         if(can.read(rmsg)) {
-            if(rmsg.id == 37 || rmsg.id == 38) {
+            if(rmsg.id == 0x0C2) {
                 return 1;
             }
         } 

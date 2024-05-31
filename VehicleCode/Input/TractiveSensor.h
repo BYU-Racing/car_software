@@ -12,6 +12,7 @@ private:
     int gap;
     bool tractiveActive;
     CAN_message_t rmsg;
+    CAN_message_t msg;
     int waitTime;
 
 
