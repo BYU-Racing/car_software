@@ -10,12 +10,18 @@ private:
     int throttle1 = 0;
     int throttle2 = 0;
     int torque = 200;
-    int bias = 0;
-    int max = 1023;
     int countMismatch = 0;
     int command = 0;
     int errorType = 0;
     int* sendData;
+
+    // Calibration values for the pot with negative slope
+    int neg_bias = 0;
+    int neg_max = 1023;
+
+    // Calibration values for the pot with positive slope
+    int pos_bias = 0;
+    int pos_max = 1023;
     
     bool checkError(int percent1, int percent2);
     int computeTorque(int percent);
@@ -24,7 +30,8 @@ private:
 
 public:
     // Constructor
-    ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int bias, int max, int dataLength); 
+    ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int bias1, 
+                   int max1, int bias2, int max2, int dataLength); 
 
     // Implement the pure virtual functions from the base class
     int readInputs() override;
@@ -41,7 +48,7 @@ public:
     int getDataLength();
 
     // Setters
-    void setPin(int inPin, int index);
+    void setPin(int inPin, int index=0);
     void setWaitTime(int inWait);
     void setId(int inId);
 };
