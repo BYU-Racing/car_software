@@ -7,18 +7,21 @@
 #include "Error.h"
 #include "DataCollector.h"
 #include "ThrottleSensor.h"
+#include "BrakeSensor.h"
+#include "DigitalSensor.h"
+#include "TractiveSensor.h"
 
 
 // throttle sensor variables
-#define POT1 24
-#define POT2 25
+#define POT1_PIN 39
+#define POT2_PIN 40
 #define ID_ERROR 0
-#define THROTTLE_POT 192
-#define WHEEL_SPEED_FL 5
-#define BIAS1 512
-#define BIAS2 0
-#define MAX1 1024
-#define MAX2 1000
+#define THROTTLE_POT_ID 192
+#define BIAS1 36
+#define BIAS2 679
+#define MAX1 169
+#define MAX2 907
+#define THROTTLE_WAIT 30
 
 // error variables
 #define ERROR_TOL 1000
@@ -32,39 +35,55 @@
 
 // CAN message variables
 #define LENGTH 8
-#define DELAYBY 30
-#define BEGIN 9600      // 9,600
-#define BAUDRATE 250000 // 250,000
+#define DELAYBY 0
+#define BEGIN 9600
+#define BAUDRATE 250000
 
 
-// HELPER FUNCTIONS
-// int percentCalc(double, double, double);
-int* buildData(int, int);
-int getLow(int);
-int getHigh(int);
-void sendError(int*, int, int);
-
-
-// initialize data processing variables
+// initialize CAN variable
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
-int percent1 = 0;
-int percent2 = 0;
-int input1 = 0;
-int input2 = 0;
-const int torque = 200;
-int countMismatch = 0;
 
-// initialize throttle sensor
-int throttleFreq = 30;
-int numSensors = 2;
-int damperID = 12;
-int damperFreq = 75;
-int damperPin = 17;
-ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT, throttleFreq, POT1, POT2, BIAS1, MAX1, LENGTH);
-AnalogSensor damperPot1 = AnalogSensor(damperID, damperFreq, damperPin);
-Sensor* sensors[] = {&throttle, &damperPot1};
-DataCollector collector = DataCollector(sensors, numSensors, millis());
+// damper variables
+#define DAMPER_R_ID 12
+#define DAMPER_R_PIN 22
+#define DAMPER_L_ID 13
+#define DAMPER_L_PIN 23
+#define DAMPER_WAIT 100
 
+// brake variables
+#define BRAKE_ID 11
+#define BRAKE_WAIT 30
+#define BRAKE_PIN 21
+#define BRAKE_LENGTH 2
+#define BRAKE_BIAS 101
+#define BRAKE_TOLERANCE 22
+
+// switch variables
+#define SWITCH_ID 15
+#define SWITCH_WAIT 100
+#define SWITCH_PIN 38
+
+//TRACTIVE SENSOR VARS
+#define TRACTIVE_ID 30
+#define TRACTIVE_WAIT 100
+
+// Declare sensor variables
+ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT_ID, THROTTLE_WAIT, POT1_PIN, 
+                                         POT2_PIN, BIAS1, MAX1, BIAS2, MAX2, LENGTH);
+AnalogSensor rightDamperPot = AnalogSensor(DAMPER_R_ID, DAMPER_WAIT, DAMPER_R_PIN);
+AnalogSensor leftDamperPot = AnalogSensor(DAMPER_L_ID, DAMPER_WAIT, DAMPER_L_PIN);
+BrakeSensor myBrake = BrakeSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, BRAKE_LENGTH, 
+                                  BRAKE_BIAS, BRAKE_TOLERANCE);
+
+TractiveSensor CASCADIALover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT);
+
+DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
+
+// data collector variables
+#define NUM_SENSORS 6
+Sensor* sensors[] = {&throttle, &rightDamperPot, &leftDamperPot, 
+                     &myBrake, &startSwitch, &CASCADIALover};
+DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis(), true);
 
 
 // MAIN -------------------------------------------------------------------------------------------
@@ -77,14 +96,17 @@ void setup() {
   can1.begin();
   can1.setBaudRate(BAUDRATE);
 
-  // TEST: I think this should be here but idk if it will cause a problem
   collector.setCAN(can1);
   collector.resetTimeZero(millis());
+
+  collector.setBrakeSensor(&myBrake);
 }
 
 
 void loop() {
 
   collector.checkSensors();
+
+  delay(DELAYBY);
 
 }

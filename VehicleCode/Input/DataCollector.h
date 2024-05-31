@@ -16,6 +16,7 @@
 
 #include "Sensor.h"
 #include "SensorData.h"
+#include "BrakeSensor.h"
 
 class DataCollector {
 private:
@@ -24,6 +25,17 @@ private:
     unsigned long timeZero;
     int numSensors;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+    BrakeSensor* brakeSensor;
+    bool driveState = false;
+    bool brakeActive = false;
+    bool switchActive = false;
+    bool front;
+    bool startFault = false;
+
+    bool tractiveActive = false;
+    bool lastTractive = false;
+
+    unsigned long lastTractive = 0;
 
     // Global variables
     int sendID = 0;
@@ -31,6 +43,10 @@ private:
     int i = 0;
     int rawData = 0;
     int* sendData;
+    int lastTorqueCommand = 0;
+
+    CAN_message_t msg;
+
 
     
     // Read signals from sensors
@@ -39,9 +55,12 @@ private:
     // Send a signal to Car and Dashboard objects
     void sendSignal(SensorData* sensorData);
 
+    // Send the start log command to the Car Object
+    void sendLog(bool driveState);
+
 public:
     // Constructor
-    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime);
+    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front);
 
     // Check sensor data and send signals
     void checkSensors();
@@ -49,6 +68,10 @@ public:
     // Getters and Setters
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2);
     void resetTimeZero(unsigned long startTime);
+
+    void setBrakeSensor(BrakeSensor* brakeSensorIn);
+
+    void checkDriveState();
 };
 
 #endif // DATACOLLECTOR_H

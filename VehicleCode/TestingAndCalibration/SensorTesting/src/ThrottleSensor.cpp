@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 1000
+#define MAX_OUTPUT 3500
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
@@ -33,7 +33,8 @@
  * @param freq (int) The update delay of the sensor in milliseconds.
  * @param inPins (int) The input pin id for the analog sensor.
  */
-ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int bias, int max, int dataLength) {
+ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int bias1, 
+                   int max1, int bias2, int max2, int dataLength) {
     sensorID = id;
     this->waitTime = waitTime;
     previousUpdateTime = millis();
@@ -42,10 +43,12 @@ ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int
     throttle1 = 0;
     throttle2 = 0;
     torque = 200;
-    this->bias = bias;
-    this->max = max;
     this->dataLength = dataLength;
     sendData = new int[LENGTH];
+    pos_bias = bias1;
+    pos_max = max1;
+    neg_bias = bias2;
+    neg_max = max2;
 };
 
 /**
@@ -59,10 +62,9 @@ int ThrottleSensor::readInputs() {
     previousUpdateTime = millis();
 
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[1]), 0, 175, MIN_OUTPUT, MAX_OUTPUT);
-    throttle2 = map(-analogRead(inputPins[0]), -max, -810, MIN_OUTPUT, MAX_OUTPUT);
+    throttle1 = map(analogRead(inputPins[0]), pos_bias, pos_max, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-analogRead(inputPins[1]), -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
 
-    //Insert Debug Print statements here if sensors disagree
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -115,9 +117,6 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
-
-    
-
     if(torque <= 90) { // Buffer for the 
         torque = 0;
     }
@@ -191,9 +190,9 @@ int ThrottleSensor::rescale(int data) {
 int ThrottleSensor::rescale(int data, bool invert) {
     //Transform data
     if (invert) {
-        return map(data, -max, -bias, MIN_OUTPUT, MAX_OUTPUT);
+        return map(data, -1023, -0, MIN_OUTPUT, MAX_OUTPUT);
     }
-    return map(data, 0, bias, MIN_OUTPUT, MAX_OUTPUT);
+    return map(data, 0, 1023, MIN_OUTPUT, MAX_OUTPUT);
 };
 
 

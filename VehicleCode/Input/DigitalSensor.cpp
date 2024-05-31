@@ -126,3 +126,7 @@ int DigitalSensor::rescale(int data) {
     //Transform data
     return -1;
 };
+
+bool DigitalSensor::readyToCheck() {
+    return (waitTime <= int(millis() - previousUpdateTime));
+}
