@@ -18,29 +18,29 @@ int TractiveSensor::readInputs() {
     
 
     //Send the motor read message
-    msg.id = 0x0C1;
+    // msg.id = 0x0C1;
 
-    msg.buf[0] = 141;
-    msg.buf[1] = 0;
-    msg.buf[2] = 0;
-    msg.buf[3] = 0;
-    msg.buf[4] = 0;
-    msg.buf[5] = 0;
-    msg.buf[6] = 0;
-    msg.buf[7] = 0;
+    // msg.buf[0] = 141;
+    // msg.buf[1] = 0;
+    // msg.buf[2] = 0;
+    // msg.buf[3] = 0;
+    // msg.buf[4] = 0;
+    // msg.buf[5] = 0;
+    // msg.buf[6] = 0;
+    // msg.buf[7] = 0;
 
-    can.write(msg);
+    // can.write(msg);
 
 
-    previousUpdateTime = millis();
-    while(millis() - previousUpdateTime <= CHECK_TIME_MS) {
-        if(can.read(rmsg)) {
-            if(rmsg.id == 0x0C2) {
-                return 1;
-            }
-        } 
-    }
-    return 0;
+    // previousUpdateTime = millis();
+    // while(millis() - previousUpdateTime <= CHECK_TIME_MS) {
+    //     if(can.read(rmsg)) {
+    //         if(rmsg.id == 0x0C2) {
+    //             return 1;
+    //         }
+    //     } 
+    // }
+    return 1;
 }
 
 bool TractiveSensor::readyToCheck() {

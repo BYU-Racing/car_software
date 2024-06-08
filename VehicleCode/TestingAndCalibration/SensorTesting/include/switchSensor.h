@@ -1,0 +1,38 @@
+#ifndef SWITCHSENSOR_H
+#define SWITCHSENSOR_H
+
+#include "Sensor.h"
+#include "SensorData.h"
+#include <Arduino.h>
+
+class SwitchSensor : public Sensor {
+    private:
+
+        int SwitchVal = 0;
+        float runner = 0;
+        float ticker = 0;
+
+        float comparitor = 0;
+
+    public:
+
+        SwitchSensor(int id, int time, int pin);
+
+
+        int readInputs() override;
+        bool readyToCheck() override;
+
+            // Additional methods for DigitalSensor
+        int getPins();
+        int getWaitTime();
+        int getDataLength();
+        int getId();
+
+        int rescale(int data);
+        int* buildData(int value);
+        int* buildError();
+
+
+};
+
+#endif

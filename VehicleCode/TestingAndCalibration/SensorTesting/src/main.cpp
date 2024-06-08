@@ -10,6 +10,7 @@
 #include "BrakeSensor.h"
 #include "DigitalSensor.h"
 #include "TractiveSensor.h"
+#include "switchSensor.h"
 
 
 // throttle sensor variables
@@ -17,10 +18,10 @@
 #define POT2_PIN 40
 #define ID_ERROR 0
 #define THROTTLE_POT_ID 192
-#define BIAS1 36
-#define BIAS2 679
-#define MAX1 169
-#define MAX2 907
+#define BIAS1 115  //74
+#define BIAS2 692 //722
+#define MAX1 161  //175
+#define MAX2 771 // 893
 #define THROTTLE_WAIT 30
 
 // error variables
@@ -77,12 +78,16 @@ BrakeSensor myBrake = BrakeSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, BRAKE_LENGTH,
 
 TractiveSensor CASCADIALover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT);
 
-DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
+
+SwitchSensor experimentSwitch = SwitchSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
+// Tractive sensor will run as a ghost in the background to check functionality 
+
+//DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);
 
 // data collector variables
 #define NUM_SENSORS 6
 Sensor* sensors[] = {&throttle, &rightDamperPot, &leftDamperPot, 
-                     &myBrake, &startSwitch, &CASCADIALover};
+                     &myBrake, &experimentSwitch, &CASCADIALover};
 DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis(), true);
 
 

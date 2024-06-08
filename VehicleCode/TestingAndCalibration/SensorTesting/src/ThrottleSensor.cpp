@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 // Sensor and data constants
-#define MAX_OUTPUT 3500
+#define MAX_OUTPUT 1200
 #define MIN_OUTPUT 0
 #define LENGTH 8
 #define BYTESIZE 256
@@ -20,7 +20,7 @@
 // ECU formatting constants
 #define NO_DATA 0
 #define INVERTER_ACTIVE 1
-#define FORWARD 0
+#define FORWARD 1
 
 
 
@@ -42,7 +42,7 @@ ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int
     inputPins[1] = inPin2;
     throttle1 = 0;
     throttle2 = 0;
-    torque = 200;
+    torque = 0;
     this->dataLength = dataLength;
     sendData = new int[LENGTH];
     pos_bias = bias1;
@@ -65,6 +65,16 @@ int ThrottleSensor::readInputs() {
     throttle1 = map(analogRead(inputPins[0]), pos_bias, pos_max, MIN_OUTPUT, MAX_OUTPUT);
     throttle2 = map(-analogRead(inputPins[1]), -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
 
+
+    if(throttle1 < 0 || throttle2 < 0) {
+        throttle1 = 0;
+        throttle2 = 0;
+    }
+
+    Serial.print("throttle 1: ");
+    Serial.print(throttle1);
+    Serial.print("\t throttle 2: ");
+    Serial.println(throttle2);
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
@@ -117,12 +127,9 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
-    if(torque <= 90) { // Buffer for the 
+    if(torque <= 5) { // Buffer for the 
         torque = 0;
     }
-
-    // Serial.print("SENT TORQUE: ");
-    // Serial.println(torque);
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow

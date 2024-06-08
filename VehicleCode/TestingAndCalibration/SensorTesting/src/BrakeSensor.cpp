@@ -52,7 +52,7 @@ void BrakeSensor::sendMotorCommand() {
             prevPressState = pressState;
             //PRESSING TURN OFF
         }
-        else if (pressState == false && prevPressState == true && driveState == true && (lastTorqueCommand < maxTorque * 0.05))
+        else if (pressState == false && prevPressState == true && driveState == true)
         {
             //DEPRESS MOTOR ON
             sendStartCommand();

@@ -100,13 +100,14 @@
   - Along with 5V, goes to 7 segment display
 - Pins 14-19
   - Pins to control RGBs
-- Need to add output digital pin for the horn
+- Pin 12 on ECU
+  - Horn
 
 #### Necessary Plugs
 
 | | 1- Pin |  2- Pin | 3-Pin |
 | --- | --- | --- | --- |
 | | 5V in | CAN Line | Screen |
+| | Horn | - | RGB LED 1 |
 | | - | - | RGB LED 1 |
-| | - | - | RGB LED 1 |
-| Totals| 1 | 1 | 3 |
+| Totals| 2 | 1 | 3 |

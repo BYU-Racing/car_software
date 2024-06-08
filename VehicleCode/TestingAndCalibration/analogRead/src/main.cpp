@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#define PIN1 23
-#define PIN2 22
+#define PIN1 40
+#define PIN2 39
 
 void setup() {
   pinMode(PIN1, INPUT);

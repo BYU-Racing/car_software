@@ -2,23 +2,7 @@
 #include <FlexCAN_T4.h>
 #include <string>
 
-
 #include "Car.h"
-
-
-// throttle sensor variables
-#define POT1 24
-#define POT2 25
-#define ID_ERROR 0
-#define SHUTDOWN 1
-#define NO_SHUTDOWN 0
-#define NO_COMMAND 2
-#define THROTTLE_POT 192
-#define WHEEL_SPEED_FL 5
-#define BIAS1 0
-#define THROTTLE_MAX 1024
-#define THROTTLE_RATE 20
-#define NUM_SENSORS 1
 
 // CAN message variables
 #define LENGTH 8
@@ -32,8 +16,6 @@
 // initialize can, car, and horn
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 Car car;
-
-
 
 // MAIN -------------------------------------------------------------------------------------------
 

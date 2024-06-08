@@ -9,8 +9,8 @@
 #define ERROR_LENGTH 6
 #define BRAKE_ID 11
 #define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 45
-#define MAX_TORQUE_COMMAND 2000
+#define BRAKE_LOWER_LIMIT2 200
+#define MAX_TORQUE_COMMAND 200
 
 #define TRACTIVE_ID 30
 
@@ -62,13 +62,14 @@ void DataCollector::checkSensors() {
 void DataCollector::checkDriveState() {
 
     //INITIAL START
-    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault && tractiveActive) {
+    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
         driveState = !driveState;
         sendLog(driveState);
 
         //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
+        Serial.println("HORN START");
         delay(2000);
-        Serial.println("HORN");
+        Serial.println("HORN END");
 
 
         brakeSensor->setDriveState();
@@ -77,7 +78,7 @@ void DataCollector::checkDriveState() {
     }
 
     //FINAL STOP
-    if((driveState && !switchActive && (brakeSensor != nullptr)) || (driveState && !tractiveActive && (brakeSensor != nullptr))) {
+    if((driveState && !switchActive && (brakeSensor != nullptr))) {
         driveState = !driveState;
         sendLog(driveState);
         brakeSensor->setDriveState();
@@ -130,9 +131,11 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
 
     if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
+        Serial.print("EXP SWITCH: ");
+        Serial.println(rawData);
         if(rawData == 1) {
             switchActive = true;
-            if(!brakeActive || !tractiveActive) {
+            if(!brakeActive && !driveState) {
                 startFault = true;
             }
         }
@@ -154,6 +157,8 @@ void DataCollector::readData(Sensor* sensor) {
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
     }
 
+    // THIS COULD WORK??
+
     if(sensor->getId() == TRACTIVE_ID && front) {
         // Initial on of tractive
         if (!tractiveActive) {
@@ -166,19 +171,27 @@ void DataCollector::readData(Sensor* sensor) {
                 tractiveActive = false;
             }
         }
+
+        // Serial.print("TRACTIVE EXP: ");
+        // Serial.println(tractiveActive);
         
 
-        //TRACTIVE SHUTOFF  TURN OFF CAR
-        if(tractiveActive == 0 && driveState == true) {
-            driveState = !driveState;
+        // //TRACTIVE SHUTOFF  TURN OFF CAR
+        // if(tractiveActive == 0 && driveState == true) {
+        //     driveState = !driveState;
 
-            checkDriveState();
+        //     checkDriveState();
 
-        }
+        // }
     }
 
     if (rawData != -1) {
-        sendData = sensor->buildData(rawData);
+        if((brakeActive || !driveState) && sensor->getId() == 192) {
+            sendData = sensor->buildData(0);
+        }
+        else {
+            sendData = sensor->buildData(rawData);
+        }
         sendID = sensor->getId();
         sendLength = sensor->getDataLength();
     } else {
