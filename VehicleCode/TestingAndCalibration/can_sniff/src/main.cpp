@@ -13,7 +13,7 @@ CAN_message_t rmsg;
 CAN_message_t msg;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
-#define BAUD 250000
+#define BAUD 500000
 #define LED 13
 
 unsigned long last_print;
@@ -34,9 +34,12 @@ void setup() {
 
 void loop() {
   if(can2.read(rmsg)) {
-    Serial.println(rmsg.id);
+    Serial.print("ID: ");
+    Serial.print(rmsg.id);
+    Serial.print("  DATA: ");
     for ( uint8_t i = 0; i < rmsg.len; i++ ) {
       Serial.print(rmsg.buf[i], HEX); Serial.print(" ");
     } Serial.println();
+  
   }
 }

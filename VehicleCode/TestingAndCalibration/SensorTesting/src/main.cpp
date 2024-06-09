@@ -18,10 +18,10 @@
 #define POT2_PIN 40
 #define ID_ERROR 0
 #define THROTTLE_POT_ID 192
-#define BIAS1 115  //74
-#define BIAS2 692 //722
-#define MAX1 161  //175
-#define MAX2 771 // 893
+#define BIAS1 666 
+#define BIAS2 632 
+#define MAX1 833 
+#define MAX2 983 
 #define THROTTLE_WAIT 30
 
 // error variables
