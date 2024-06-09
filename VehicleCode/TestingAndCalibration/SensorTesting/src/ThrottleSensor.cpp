@@ -8,7 +8,7 @@
 #define BYTESIZE 256
 
 // Error handling constants (not all used but kept for future use)
-#define ERROR_TOL 1600
+#define ERROR_TOL 1200 // TODO: THIS VALUE NEEDS TO BE 120
 #define MAINTAIN_TOL 2
 #define SHUTDOWN_TOL 50
 #define SHUTDOWN 1
@@ -49,6 +49,11 @@ ThrottleSensor::ThrottleSensor(int id, int waitTime, int inPin1, int inPin2, int
     pos_max = max1;
     neg_bias = bias2;
     neg_max = max2;
+
+    magiMemory[0] = 0;
+    magiMemory[1] = 0;
+    magiMemory[2] = 0;
+    magiMemory[3] = 0;
 };
 
 /**
@@ -61,9 +66,11 @@ int ThrottleSensor::readInputs() {
     //Update previous update time
     previousUpdateTime = millis();
 
+    currT1 = analogRead(inputPins[0]);
+    currT2 = analogRead(inputPins[1]);
     //Grab Sensor Value
-    throttle1 = map(analogRead(inputPins[0]), pos_bias, pos_max, MIN_OUTPUT, MAX_OUTPUT);
-    throttle2 = map(-analogRead(inputPins[1]), -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
+    throttle1 = map(currT1, pos_bias, pos_max, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-currT1, -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
 
 
     if(throttle1 < 0 || throttle2 < 0) {
@@ -76,9 +83,14 @@ int ThrottleSensor::readInputs() {
     Serial.print("\t throttle 2: ");
     Serial.println(throttle2);
 
+    if(currT1 == 0 || currT2 == 0) {
+        return -1;
+    }
+
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
-      return (throttle1 + throttle2) / 2;
+
+      return consultMAGI((throttle1 + throttle2) / 2);
     }
     if (countMismatch > SHUTDOWN_TOL) {
         command = SHUTDOWN;
@@ -101,10 +113,8 @@ int ThrottleSensor::readInputs() {
  *                  False otherwise.
 */
 bool ThrottleSensor::checkError(int percent1, int percent2) {
-
-    // Serial.print("abs: ");
-    // Serial.println(abs(percent1 - percent2));
     
+    // TODO: THIS IS PLAIN WRONG MATH
     // update countMismatch
     if (abs(percent1 - percent2) < ERROR_TOL) {
       countMismatch = 0;
@@ -290,4 +300,25 @@ void ThrottleSensor::setWaitTime(int inWait) {
  */
 void ThrottleSensor::setId(int inId) {
     sensorID = inId;
+}
+
+
+int ThrottleSensor::consultMAGI(int torque) {
+
+    // Add it to the memory
+
+    this->magiMemory[3] = this->magiMemory[2];
+    this->magiMemory[2] = this->magiMemory[1];
+    this->magiMemory[1] = this->magiMemory[0];
+    this->magiMemory[0] = torque;
+
+
+    for(int i = 0; i < 4; i++) {
+        if(this->magiMemory[i] == 0) {
+            return 0;
+        }
+    }
+
+    return torque;
+
 }

@@ -81,7 +81,9 @@ int BrakeSensor::readInputs() {
         pressState = false;
     }
 
-    checkError(brakeP);
+    if(checkError(brakeP)) {
+        return -1;
+    }
 
     if(driveState) {
         sendMotorCommand();

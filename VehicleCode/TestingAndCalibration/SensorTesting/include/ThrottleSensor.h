@@ -15,6 +15,8 @@ private:
     int errorType = 0;
     int* sendData;
 
+    int magiMemory[4];
+
     // Calibration values for the pot with negative slope
     int neg_bias = 0;
     int neg_max = 1023;
@@ -22,6 +24,9 @@ private:
     // Calibration values for the pot with positive slope
     int pos_bias = 0;
     int pos_max = 1023;
+
+    int currT1 = 0;
+    int currT2 = 0;
     
     bool checkError(int percent1, int percent2);
     int computeTorque(int percent);
@@ -40,6 +45,8 @@ public:
     int rescale(int data, bool invert);
     int* buildData(int percent) override;
     int* buildError() override;
+
+    int consultMAGI(int torque);
 
     // Getters
     int getId();

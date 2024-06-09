@@ -4,12 +4,12 @@
 
 // Global variables
 #define BAUDRATE 250000
-#define TORQUE_DEFAULT 200
+#define TORQUE_DEFAULT 1200
 #define ERROR_ID 0
 #define ERROR_LENGTH 6
 #define BRAKE_ID 11
 #define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 200
+#define BRAKE_LOWER_LIMIT2 250  // CHECK THIS!!!!
 #define MAX_TORQUE_COMMAND 200
 
 #define TRACTIVE_ID 30
@@ -155,6 +155,18 @@ void DataCollector::readData(Sensor* sensor) {
     if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
         // Potentially pass in the last read throttle into the brakes??
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
+
+        // Checks for the throttle override
+        //WE NEED TO EXPIREMENT WITH REMOVING THE BRAKE MOTOR COMMANDS!!! ASAP
+        // WARNING THIS IS UNTESTED CODE IT PROLLY WONT WORK!!!!!!!!!
+        if(brakeTOVERRIDE && !brakeActive && (lastTorqueCommand <= 40)) {
+            // Check if we leave the break override state
+            brakeTOVERRIDE = false;
+        }
+
+        if(lastTorqueCommand >= 240 && !brakeTOVERRIDE && brakeActive) {
+            brakeTOVERRIDE = true;
+        }
     }
 
     // THIS COULD WORK??
@@ -186,7 +198,9 @@ void DataCollector::readData(Sensor* sensor) {
     }
 
     if (rawData != -1) {
-        if((brakeActive || !driveState) && sensor->getId() == 192) {
+
+        //ENABLE THE BRAKE CHECK
+        if((brakeTOVERRIDE || !driveState) && sensor->getId() == 192) {
             sendData = sensor->buildData(0);
         }
         else {
@@ -195,6 +209,8 @@ void DataCollector::readData(Sensor* sensor) {
         sendID = sensor->getId();
         sendLength = sensor->getDataLength();
     } else {
+        driveState = false;
+        checkDriveState();
         sendData = sensor->buildError();
         sendID = ERROR_ID;
         sendLength = ERROR_LENGTH;
