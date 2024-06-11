@@ -61,6 +61,8 @@ void DataCollector::checkSensors() {
  */ 
 void DataCollector::checkDriveState() {
 
+
+
     //INITIAL START
     if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
         driveState = !driveState;
@@ -131,8 +133,11 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
 
     if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
-        Serial.print("EXP SWITCH: ");
-        Serial.println(rawData);
+        // Serial.print("SWITCH: ");
+        // Serial.println(rawData);
+        // Serial.print("DigitalRead: ");
+        // Serial.println(digitalRead(38));
+        // Serial.println();
         if(rawData == 1) {
             switchActive = true;
             if(!brakeActive && !driveState) {

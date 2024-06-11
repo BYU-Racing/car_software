@@ -71,10 +71,10 @@ int ThrottleSensor::readInputs() {
         throttle2 = 0;
     }
 
-    Serial.print("throttle 1: ");
-    Serial.print(throttle1);
-    Serial.print("\t throttle 2: ");
-    Serial.println(throttle2);
+    // Serial.print("throttle 1: ");
+    // Serial.print(throttle1);
+    // Serial.print("\t throttle 2: ");
+    // Serial.println(throttle2);
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {

@@ -6,6 +6,7 @@ SwitchSensor::SwitchSensor(int id, int time, int pin) {
     this->sensorID = id;
     this->waitTime = time;
     this->inputPins[0] = pin;
+    pinMode(pin, INPUT_PULLDOWN);
 
     this->SwitchVal = 0;
 }
@@ -31,6 +32,8 @@ int SwitchSensor::readInputs() {
     } else {
         return 0;
     }
+
+    // return digitalRead(this->inputPins[0]);
 }
 
 /*! 

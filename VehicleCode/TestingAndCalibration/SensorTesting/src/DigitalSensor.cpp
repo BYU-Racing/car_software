@@ -15,7 +15,7 @@ DigitalSensor::DigitalSensor(int id, int time, int pin) {
     sensorID = id;
     waitTime = time;
     inputPins[0] = pin;
-    pinMode(inputPins[0], INPUT);
+    pinMode(inputPins[0], INPUT_PULLDOWN);
     sensorValue = 0;
     previousUpdateTime = millis();
 };
