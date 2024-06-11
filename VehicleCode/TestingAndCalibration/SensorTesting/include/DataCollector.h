@@ -35,6 +35,8 @@ private:
     bool tractiveActive = false;
     bool lastTractiveBool = false;
 
+    bool brakeTOVERRIDE = false;
+
     unsigned long lastTractive = 0;
 
     // Global variables
