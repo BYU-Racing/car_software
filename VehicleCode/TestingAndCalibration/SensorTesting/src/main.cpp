@@ -18,10 +18,10 @@
 #define POT2_PIN 40
 #define ID_ERROR 0
 #define THROTTLE_POT_ID 192
-#define BIAS1 2 
-#define BIAS2 726 
-#define MAX1 123 
-#define MAX2 989 
+#define BIAS1 106
+#define BIAS2 564
+#define MAX1 231
+#define MAX2 769
 #define THROTTLE_WAIT 30
 
 // error variables
@@ -53,7 +53,7 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
 // brake variables
 #define BRAKE_ID 11
-#define BRAKE_WAIT 30
+#define BRAKE_WAIT 10
 #define BRAKE_PIN 21
 #define BRAKE_LENGTH 2
 #define BRAKE_BIAS 101

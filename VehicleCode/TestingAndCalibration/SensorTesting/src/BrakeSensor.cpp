@@ -199,14 +199,13 @@ void BrakeSensor::setDriveState() {
 bool BrakeSensor::checkError(int value) { 
     //This function seems like it could have some bugs
     //If an abnormal or no reading is read for more than 100 msec, the motor power must be deactivated
-    
-    
+
     // IF we are not in a driving state this error checking is irrelevant
     if(!driveState) { 
-        return true;
+        return false;
     }
     //TODO: CHECK IF THIS IS RULES COMPLIANT
-    if(value == 0) { // || value < errorBaseline - errorMargin) { //If we currently have an in error reading (techincally just need lower??)
+    if(value <= 4) { // || value < errorBaseline - errorMargin) { //If we currently have an in error reading (techincally just need lower??)
         // If we have been in error for 100msec ENTER CRITICAL ERROR STATE
         if(inError && (millis() - timeErrorStart) > 100) { 
             sendStopCommand();
@@ -216,7 +215,7 @@ bool BrakeSensor::checkError(int value) {
             // ^^ if we are not in error enter the error state
             inError = true;
             timeErrorStart = millis();
-            return true;
+            return false;
         }
         return false;
     }

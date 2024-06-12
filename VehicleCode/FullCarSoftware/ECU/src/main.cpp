@@ -29,11 +29,12 @@ void setup() {
 
     // set up car
     car.initialize(can1, SAVE_DELAY);
+    pinMode(12, OUTPUT);
 
     // visibility control
     if (TESTING == 1) {
         Serial.println("Waiting 5 seconds to start.");
-        delay(5000); // so that you can read the file name at the start
+        delay(2000); // so that you can read the file name at the start
         Serial.println("ALERT:");
         Serial.print("SD card saves every ");
         Serial.print(SAVE_DELAY / 1000);

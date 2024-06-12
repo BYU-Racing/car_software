@@ -8,7 +8,7 @@
 #define BYTESIZE 256
 
 // Error handling constants (not all used but kept for future use)
-#define ERROR_TOL 1200 // TODO: THIS VALUE NEEDS TO BE 120
+#define ERROR_TOL 150 // TODO: THIS VALUE NEEDS TO BE 120
 #define MAINTAIN_TOL 2
 #define SHUTDOWN_TOL 50
 #define SHUTDOWN 1
@@ -70,27 +70,35 @@ int ThrottleSensor::readInputs() {
     currT2 = analogRead(inputPins[1]);
     //Grab Sensor Value
     throttle1 = map(currT1, pos_bias, pos_max, MIN_OUTPUT, MAX_OUTPUT);
-    throttle2 = map(-currT1, -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
+    throttle2 = map(-currT2, -neg_max, -neg_bias, MIN_OUTPUT, MAX_OUTPUT);
 
+
+    // Serial.print("T1: ");
+    // Serial.print(throttle1);
+    // Serial.print(" T2: ");
+    // Serial.println(throttle2);
 
     if(throttle1 < 0 || throttle2 < 0) {
         throttle1 = 0;
         throttle2 = 0;
     }
 
-    // Serial.print("throttle 1: ");
-    // Serial.print(throttle1);
-    // Serial.print("\t throttle 2: ");
-    // Serial.println(throttle2);
+    // Serial.print("T1: ");
+    // Serial.print(currT1);
+    // Serial.print(" T2: ");
+    // Serial.println(currT2);
 
     if(currT1 == 0 || currT2 == 0) {
+        Serial.println("FAULT SENSOR");
         return -1;
     }
+
+
 
     //Return a pointer to the private value
     if (checkError(throttle1, throttle2)) {
 
-      return consultMAGI((throttle1 + throttle2) / 2);
+        return consultMAGI((throttle1 + throttle2) / 2);
     }
     if (countMismatch > SHUTDOWN_TOL) {
         command = SHUTDOWN;
@@ -116,6 +124,9 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
     
     // TODO: THIS IS PLAIN WRONG MATH
     // update countMismatch
+    // Serial.print(percent1);
+    // Serial.print("-");
+    // Serial.println(percent2);
     if (abs(percent1 - percent2) < ERROR_TOL) {
       countMismatch = 0;
     }
@@ -124,6 +135,9 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
     }
 
     // return the status of the error
+    if(countMismatch >= MAINTAIN_TOL) {
+        Serial.println("FATAL THROTTLE");
+    }
     return countMismatch <= MAINTAIN_TOL;
 }
 
@@ -137,9 +151,6 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
-    if(torque <= 5) { // Buffer for the 
-        torque = 0;
-    }
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow

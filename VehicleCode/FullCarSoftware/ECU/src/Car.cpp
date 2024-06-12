@@ -23,6 +23,8 @@ Car::Car() {
 
     stopMotor = startMotor;
     stopMotor.buf[4] = 1;
+
+    digitalWrite(HORN_PIN, LOW);
 }
 
 
@@ -96,21 +98,24 @@ void Car::initialize(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan, int saveDe
 void Car::readSensors() {
 
     if (myCan.read(rmsg)) {
-
-
         //Checks if it is a start stop message!
         if(rmsg.id == 222) {
-            if(rmsg.buf[0] == 1) {
+            Serial.print("RECIEVED");
+            Serial.println(rmsg.buf[0]);
+            if(rmsg.buf[0] == 1 && goFast == false) {
                 updateState(true);
                 //START HORN
+                Serial.println("HOrn on");
                 digitalWrite(HORN_PIN, HIGH);
                 //3 SECOND HORN SOUND
-                delay(2000);
+                delay(1500);
                 //STOP HORN
                 digitalWrite(HORN_PIN, LOW);
+                Serial.println("START!");
             }
-            else {
+            else if(rmsg.buf[0] == 0) {
                 updateState(false);
+                Serial.print("UPDATED OFF");
             }
             return;
         }

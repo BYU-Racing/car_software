@@ -9,7 +9,7 @@
 #define ERROR_LENGTH 6
 #define BRAKE_ID 11
 #define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 250  // CHECK THIS!!!!
+#define BRAKE_LOWER_LIMIT2 150  // CHECK THIS!!!!
 #define MAX_TORQUE_COMMAND 200
 
 #define TRACTIVE_ID 30
@@ -60,19 +60,18 @@ void DataCollector::checkSensors() {
  * @return None
  */ 
 void DataCollector::checkDriveState() {
-
-
-
     //INITIAL START
-    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
-        driveState = !driveState;
-        sendLog(driveState);
+    if (!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
+        driveState = true;
+        if (driveState != prevDriveState) {
+            sendLog(driveState);
+            prevDriveState = driveState;
+        }
 
         //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
         Serial.println("HORN START");
-        delay(2000);
+        delay(3500);
         Serial.println("HORN END");
-
 
         brakeSensor->setDriveState();
         Serial.println("INITIAL START");
@@ -80,18 +79,30 @@ void DataCollector::checkDriveState() {
     }
 
     //FINAL STOP
-    if((driveState && !switchActive && (brakeSensor != nullptr))) {
-        driveState = !driveState;
-        sendLog(driveState);
+    if (driveState && !switchActive && (brakeSensor != nullptr)) {
+        driveState = false;
+        if (driveState != prevDriveState) {
+            sendLog(driveState);
+            prevDriveState = driveState;
+        }
         brakeSensor->setDriveState();
         brakeSensor->sendStopCommand();
         Serial.println("FINAL STOP");
         return;
     }
 
+    if(inFault) {
+        driveState = false;
+        prevDriveState = false;
+        sendLog(driveState);
+        brakeSensor->setDriveState();
+        brakeSensor->sendStartCommand();
+        inFault = false;
+        Serial.println("FAULT STOP");
+    }
 
     //RUNNING STOP
-    if(!driveState && !switchActive && (brakeSensor != nullptr)) { // Allows for the timeout to not trip
+    if (!driveState && !switchActive && (brakeSensor != nullptr)) { // Allows for the timeout to not trip
         brakeSensor->sendStopCommand();
         return;
     }
@@ -106,8 +117,13 @@ void DataCollector::checkDriveState() {
  */ 
 
 void DataCollector::sendLog(bool driveState) {
+    if(driveState == true) {
+        msg.buf[0] = 1;
+    }
+    else {
+        msg.buf[0] = 0;
+    }
     msg.len=8;
-    msg.buf[0]=driveState;
     msg.buf[1]=0;
     msg.buf[2]=0;
     msg.buf[3]=0;
@@ -117,6 +133,8 @@ void DataCollector::sendLog(bool driveState) {
     msg.buf[7]=0;
     msg.id=222;
     can2.write(msg);
+    Serial.println("SENT COMMAND");
+    return;
 }
 
 
@@ -133,11 +151,6 @@ void DataCollector::readData(Sensor* sensor) {
     rawData = sensor->readInputs();
 
     if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
-        // Serial.print("SWITCH: ");
-        // Serial.println(rawData);
-        // Serial.print("DigitalRead: ");
-        // Serial.println(digitalRead(38));
-        // Serial.println();
         if(rawData == 1) {
             switchActive = true;
             if(!brakeActive && !driveState) {
@@ -164,13 +177,21 @@ void DataCollector::readData(Sensor* sensor) {
         // Checks for the throttle override
         //WE NEED TO EXPIREMENT WITH REMOVING THE BRAKE MOTOR COMMANDS!!! ASAP
         // WARNING THIS IS UNTESTED CODE IT PROLLY WONT WORK!!!!!!!!!
+        // Serial.print("BTO: ");
+        // Serial.print(brakeTOVERRIDE);
+        // Serial.print(" BA: ");
+        // Serial.print(brakeActive);
+        // Serial.print(" LT: ");
+        // Serial.println(lastTorqueCommand);
         if(brakeTOVERRIDE && !brakeActive && (lastTorqueCommand <= 40)) {
             // Check if we leave the break override state
             brakeTOVERRIDE = false;
+            Serial.println("BRAKE OVERRIDE RELEASED");
         }
 
         if(lastTorqueCommand >= 240 && !brakeTOVERRIDE && brakeActive) {
             brakeTOVERRIDE = true;
+            Serial.println("BRAKE OVERRIDE SET");
         }
     }
 
@@ -214,6 +235,9 @@ void DataCollector::readData(Sensor* sensor) {
         sendID = sensor->getId();
         sendLength = sensor->getDataLength();
     } else {
+        inFault = true;
+        Serial.print("FAULT -> ");
+        Serial.println(sensor->getId());
         driveState = false;
         checkDriveState();
         sendData = sensor->buildError();

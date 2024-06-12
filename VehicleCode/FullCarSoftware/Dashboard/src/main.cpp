@@ -9,6 +9,7 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> myCan;
 int pinsTemp[] = {14, 15, 16}; // Change these to be the pins we need
 int pinsBat[] = {17, 18, 19};
 LEDArray ledTemp = LEDArray(pinsTemp);
+LEDArray ledBat = LEDArray(pinsBat);
 
 Adafruit_7segment matrix = Adafruit_7segment();
 
