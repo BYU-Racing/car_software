@@ -1,0 +1,4 @@
+Controller for the whole car
+Sees the whole state of the car and makes motor/drive decisions based off that information
+
+Ease of expansion is key. If someone says 1 more thing needs to have input on drivestate/torque commanded it should be a simple and clear addition

@@ -1,0 +1,1 @@
+Just need to extract the SD writing code out of the Car class and put it in its own BlackBox class
