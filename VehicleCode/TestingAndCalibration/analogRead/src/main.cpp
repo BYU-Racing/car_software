@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#define PIN1 21
-#define PIN2 38
+#define PIN1 39
+#define PIN2 40
 
 void setup() {
   pinMode(PIN1, INPUT);
@@ -12,7 +12,7 @@ void setup() {
 
 void loop() {
   Serial.println(analogRead(PIN1));
-  Serial.println(digitalRead(PIN2));
+  Serial.println(analogRead(PIN2));
   Serial.println();
   delay(500);  
 }

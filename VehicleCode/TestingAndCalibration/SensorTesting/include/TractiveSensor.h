@@ -20,7 +20,7 @@ private:
 public:
 
 
-    TractiveSensor(int id, int waitTime);
+    TractiveSensor(int id, int waitTime, int inPin);
 
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN);
 

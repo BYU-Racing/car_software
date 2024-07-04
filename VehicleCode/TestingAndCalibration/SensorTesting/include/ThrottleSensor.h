@@ -15,6 +15,8 @@ private:
     int errorType = 0;
     int* sendData;
 
+    int rollingTorque = 0;
+
     int magiMemory[4];
 
     // Calibration values for the pot with negative slope

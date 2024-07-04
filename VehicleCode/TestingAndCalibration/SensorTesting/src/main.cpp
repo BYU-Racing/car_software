@@ -18,10 +18,10 @@
 #define POT2_PIN 40
 #define ID_ERROR 0
 #define THROTTLE_POT_ID 192
-#define BIAS1 106
-#define BIAS2 564
-#define MAX1 231
-#define MAX2 769
+#define BIAS1 120
+#define BIAS2 545
+#define MAX1 249
+#define MAX2 752
 #define THROTTLE_WAIT 30
 
 // error variables
@@ -66,7 +66,8 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
 
 //TRACTIVE SENSOR VARS
 #define TRACTIVE_ID 30
-#define TRACTIVE_WAIT 100
+#define TRACTIVE_WAIT 50
+#define TRACTIVE_PIN 23
 
 // Declare sensor variables
 ThrottleSensor throttle = ThrottleSensor(THROTTLE_POT_ID, THROTTLE_WAIT, POT1_PIN, 
@@ -76,7 +77,7 @@ AnalogSensor leftDamperPot = AnalogSensor(DAMPER_L_ID, DAMPER_WAIT, DAMPER_L_PIN
 BrakeSensor myBrake = BrakeSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, BRAKE_LENGTH, 
                                   BRAKE_BIAS, BRAKE_TOLERANCE);
 
-TractiveSensor CASCADIALover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT);
+TractiveSensor CASCADIALover = TractiveSensor(TRACTIVE_ID, TRACTIVE_WAIT, TRACTIVE_PIN);
 
 
 SwitchSensor experimentSwitch = SwitchSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN);

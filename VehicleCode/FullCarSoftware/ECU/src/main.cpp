@@ -11,7 +11,7 @@
 #define SAVE_DELAY 20000    // 20,000 ms
 #define DELAYBY 0
 
-#define TESTING 1
+#define TESTING 0
 
 // initialize can, car, and horn
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;

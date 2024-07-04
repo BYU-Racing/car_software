@@ -9,7 +9,7 @@
 #define ERROR_LENGTH 6
 #define BRAKE_ID 11
 #define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 150  // CHECK THIS!!!!
+#define BRAKE_LOWER_LIMIT2 160  // CHECK THIS!!!!
 #define MAX_TORQUE_COMMAND 200
 
 #define TRACTIVE_ID 30
@@ -61,7 +61,7 @@ void DataCollector::checkSensors() {
  */ 
 void DataCollector::checkDriveState() {
     //INITIAL START
-    if (!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault) {
+    if (!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault && tractiveActive) {
         driveState = true;
         if (driveState != prevDriveState) {
             sendLog(driveState);
@@ -79,7 +79,7 @@ void DataCollector::checkDriveState() {
     }
 
     //FINAL STOP
-    if (driveState && !switchActive && (brakeSensor != nullptr)) {
+    if ((driveState && !switchActive && (brakeSensor != nullptr)) || (driveState && !tractiveActive && (brakeSensor != nullptr))) {
         driveState = false;
         if (driveState != prevDriveState) {
             sendLog(driveState);
@@ -96,7 +96,7 @@ void DataCollector::checkDriveState() {
         prevDriveState = false;
         sendLog(driveState);
         brakeSensor->setDriveState();
-        brakeSensor->sendStartCommand();
+        brakeSensor->sendStopCommand();
         inFault = false;
         Serial.println("FAULT STOP");
     }
@@ -173,23 +173,24 @@ void DataCollector::readData(Sensor* sensor) {
     if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
         // Potentially pass in the last read throttle into the brakes??
         brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
+        Serial.println(rawData);
 
         // Checks for the throttle override
         //WE NEED TO EXPIREMENT WITH REMOVING THE BRAKE MOTOR COMMANDS!!! ASAP
         // WARNING THIS IS UNTESTED CODE IT PROLLY WONT WORK!!!!!!!!!
-        // Serial.print("BTO: ");
-        // Serial.print(brakeTOVERRIDE);
-        // Serial.print(" BA: ");
-        // Serial.print(brakeActive);
-        // Serial.print(" LT: ");
-        // Serial.println(lastTorqueCommand);
-        if(brakeTOVERRIDE && !brakeActive && (lastTorqueCommand <= 40)) {
+        Serial.print("BTO: ");
+        Serial.print(brakeTOVERRIDE);
+        Serial.print(" BA: ");
+        Serial.print(brakeActive);
+        Serial.print(" LT: ");
+        Serial.println(lastTorqueCommand);
+        if(brakeTOVERRIDE && !brakeActive && (lastTorqueCommand <= 85)) {
             // Check if we leave the break override state
             brakeTOVERRIDE = false;
             Serial.println("BRAKE OVERRIDE RELEASED");
         }
 
-        if(lastTorqueCommand >= 240 && !brakeTOVERRIDE && brakeActive) {
+        if(lastTorqueCommand >= 100 && !brakeTOVERRIDE && brakeActive) {
             brakeTOVERRIDE = true;
             Serial.println("BRAKE OVERRIDE SET");
         }
@@ -201,31 +202,28 @@ void DataCollector::readData(Sensor* sensor) {
         // Initial on of tractive
         if (!tractiveActive) {
             tractiveActive = (rawData == 1);
-            if (tractiveActive) {lastTractive = millis();}
         }
         else {
             // If tractive is read on and hasnt been read on in 150ms
+            if (tractiveActive && rawData == 1) {lastTractive = millis();}
             if(millis() - lastTractive >= 300) {
                 tractiveActive = false;
+                Serial.println("Tractive Timeout");
             }
         }
 
-        // Serial.print("TRACTIVE EXP: ");
-        // Serial.println(tractiveActive);
-        
+        //TRACTIVE SHUTOFF  TURN OFF CAR
+        if(tractiveActive == 0 && driveState == true) {
+            Serial.println("TRACTIVE SHUTOFF");
 
-        // //TRACTIVE SHUTOFF  TURN OFF CAR
-        // if(tractiveActive == 0 && driveState == true) {
-        //     driveState = !driveState;
+            checkDriveState();
 
-        //     checkDriveState();
-
-        // }
+        }
     }
 
     if (rawData != -1) {
 
-        //ENABLE THE BRAKE CHECK
+        //ENABLE THE BRAKE CHECK)
         if((brakeTOVERRIDE || !driveState) && sensor->getId() == 192) {
             sendData = sensor->buildData(0);
         }

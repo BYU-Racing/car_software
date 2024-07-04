@@ -8,7 +8,7 @@
 #define BYTESIZE 256
 
 // Error handling constants (not all used but kept for future use)
-#define ERROR_TOL 150 // TODO: THIS VALUE NEEDS TO BE 120
+#define ERROR_TOL 200 // TODO: THIS VALUE NEEDS TO BE 120
 #define MAINTAIN_TOL 2
 #define SHUTDOWN_TOL 50
 #define SHUTDOWN 1
@@ -88,7 +88,7 @@ int ThrottleSensor::readInputs() {
     // Serial.print(" T2: ");
     // Serial.println(currT2);
 
-    if(currT1 == 0 || currT2 == 0) {
+    if(currT1 <= 2 || currT2 <= 2) {
         Serial.println("FAULT SENSOR");
         return -1;
     }
@@ -151,6 +151,11 @@ bool ThrottleSensor::checkError(int percent1, int percent2) {
  * @return (int*) The data array for the CAN message.
 */
 int* ThrottleSensor::buildData(int torque){
+    //Serial.println(torque);
+
+    if(torque <= 45) {
+        torque = 0; 
+    }
 
     // convert to motor controller format
     sendData[0] = getLow(torque); //torqueLow
@@ -317,6 +322,7 @@ void ThrottleSensor::setId(int inId) {
 int ThrottleSensor::consultMAGI(int torque) {
 
     // Add it to the memory
+    rollingTorque = 0;
 
     this->magiMemory[3] = this->magiMemory[2];
     this->magiMemory[2] = this->magiMemory[1];
@@ -328,8 +334,9 @@ int ThrottleSensor::consultMAGI(int torque) {
         if(this->magiMemory[i] == 0) {
             return 0;
         }
+        rollingTorque += this->magiMemory[i];
     }
 
-    return torque;
+    return rollingTorque / 4;
 
 }

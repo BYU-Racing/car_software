@@ -3,9 +3,11 @@
 
 #define CHECK_TIME_MS 6
 
-TractiveSensor::TractiveSensor(int id, int waitTime) {
+TractiveSensor::TractiveSensor(int id, int waitTime, int inPin) {
     sensorID = id;
     this->waitTime = waitTime;
+    pinMode(inPin, INPUT_PULLDOWN);
+    this->inputPins[0] = inPin;
     
 }
 
@@ -15,9 +17,8 @@ void TractiveSensor::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN) {
 }
 
 int TractiveSensor::readInputs() {
-    
 
-    //Send the motor read message
+        //Send the motor read message
     msg.id = 0x0C1;
 
     msg.buf[0] = 141;
