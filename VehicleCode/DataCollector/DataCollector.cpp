@@ -29,8 +29,6 @@ DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long sta
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
-    this->front = front;
-    this->lastTorqueCommand = 0;
 }
 
 
@@ -53,68 +51,6 @@ void DataCollector::checkSensors() {
 }
 
 
-/*!
- * @brief checks the drive state and commands if the motor should be active or not
- * 
- * @param None
- * @return None
- */ 
-void DataCollector::checkDriveState() {
-
-    //INITIAL START
-    if(!driveState && brakeActive && switchActive && (brakeSensor != nullptr) && !startFault && tractiveActive) {
-        driveState = !driveState;
-        sendLog(driveState);
-
-        //THIS DELAY ALLOWS FOR THE HORN TO BE BLASTED BEFORE GOING INTO DRIVE
-        delay(4000);
-
-
-        brakeSensor->setDriveState();
-        Serial.println("INITIAL START");
-        return;
-    }
-
-    //FINAL STOP
-    if((driveState && !switchActive && (brakeSensor != nullptr)) || (driveState && !tractiveActive && (brakeSensor != nullptr))) {
-        driveState = !driveState;
-        sendLog(driveState);
-        brakeSensor->setDriveState();
-        brakeSensor->sendStopCommand();
-        Serial.println("FINAL STOP");
-        return;
-    }
-
-
-    //RUNNING STOP
-    if(!driveState && !switchActive && (brakeSensor != nullptr)) { // Allows for the timeout to not trip
-        brakeSensor->sendStopCommand();
-        return;
-    }
-}
-
-/*!
- * @brief Sends the currentDrive State to the ECU (Car Class) Teensy so that it can 
- * start logging
- * 
- * @param bool driveState (the current drive state being communicated)
- * @return None
- */ 
-
-void DataCollector::sendLog(bool driveState) {
-    msg.len=8;
-    msg.buf[0]=driveState;
-    msg.buf[1]=0;
-    msg.buf[2]=0;
-    msg.buf[3]=0;
-    msg.buf[4]=0;
-    msg.buf[5]=0;
-    msg.buf[6]=0;
-    msg.buf[7]=0;
-    msg.id=222;
-    can2.write(msg);
-}
-
 
 /*!
  * @brief Read data from sensors
@@ -127,56 +63,6 @@ void DataCollector::sendLog(bool driveState) {
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
-
-    if(sensor->getId() == SWITCH_ID && front) { // Switch Checks
-        if(rawData == 1) {
-            switchActive = true;
-            if(!brakeActive || !tractiveActive) {
-                startFault = true;
-            }
-        }
-        else {
-            switchActive = false;
-            startFault = false;
-        }
-        checkDriveState();
-    }
-
-    if(sensor->getId() == 192 && front) { // Records throttle
-        // Record the last TORQUE COMMAND!!!
-        lastTorqueCommand = rawData;
-        brakeSensor->setLastTorque(lastTorqueCommand);
-    }
-
-    if(sensor->getId() == BRAKE_ID && front) { // Brake Checks
-        // Potentially pass in the last read throttle into the brakes??
-        brakeActive = (rawData >= BRAKE_LOWER_LIMIT2);
-    }
-
-    if(sensor->getId() == TRACTIVE_ID && front) {
-
-        // Initial on of tractive
-        if (!tractiveActive) {
-            tractiveActive = (rawData == 1);
-
-            if (tractiveActive) {lastTractive = millis()};
-        }
-        else {
-            // If tractive is read on and hasnt been read on in 150ms
-            if(millis() - lastTractive >= 150) {
-                tractiveActive = false;
-            }
-        }
-        
-
-        //TRACTIVE SHUTOFF  TURN OFF CAR
-        if(tractiveActive == 0 && driveState == true) {
-            driveState = !driveState;
-
-            checkDriveState();
-
-        }
-    }
 
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
