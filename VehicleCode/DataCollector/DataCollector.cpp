@@ -25,10 +25,11 @@
  * @param startTime (unsigned long) The time the car started
  * @return None
  */
-DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front) {
+DataCollector::DataCollector(Sensor** sensors, int numSensors, unsigned long startTime) {
     this->sensors = sensors;
     this->numSensors = numSensors;
     this->timeZero = startTime;
+    health = 0;
 }
 
 
@@ -77,6 +78,40 @@ void DataCollector::readData(Sensor* sensor) {
     // Create a new sensor data object for each int in the array
     SensorData sensorData = SensorData(sendID, sendData, sendLength, millis() - timeZero);
     sendSignal(&sensorData);
+}
+
+
+//TODO: Figure out how to make this work with DigitalSensors? 
+void DataCollector::runHealth() {
+    //We start with assumption of a healthy DC then work backwards
+    health = 3; 
+    for(i = 0; i < numSensors; i++) {
+        rawData = sensors[i]->readInputs();
+        //Assuming a failed AnalogSensor
+        if(rawData == 0 && typeid(sensors[i]).name != "DigitalSensor") {
+            if(sensors[i]->getCritical()) {
+                health = 1;
+                return;
+            }
+            health = 2;
+        }
+    }
+}
+
+
+void DataCollector::sendHealthReport() {
+    msg.len = 8;
+    msg.buf[0] = health;
+    msg.buf[1] = 0;
+    msg.buf[2] = 0;
+    msg.buf[3] = 0;
+    msg.buf[4] = 0;
+    msg.buf[5] = 0;
+    msg.buf[6] = 0;
+    msg.buf[7] = 0;
+
+    can2.write(msg);
+    return;
 }
 
 

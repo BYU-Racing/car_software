@@ -1,0 +1,33 @@
+Really just to keep my head from spinning to much as I develop out these beginning ideas of the code
+
+NEW FORMAT FOR CAN MESSAGES
+
+ID RANGE 1-50
+    NORMAL RUNNING OF SENSORS
+
+ID RANGE OF 51-100 -> Calculated VIA SensorID + 50
+    SENSOR ERROR
+
+ID RANGE OF 101-104 
+    DIAGNOSTIC STARTS
+
+
+
+WHAT DOES HEALTH MEAN??
+
+    HEALTH 0 = UNKNOWN
+
+    HEALTH 1 = CRITICAL FUNCTIONS FAILED
+
+    HEALTH 2 = CRITICAL FUNCTIONS WORKING - OTHER FAILED
+
+    HEALTH 3 = ALL FUNCTIONS WORKING
+
+
+
+ECU & DATA COLLECTOR HEALTH COMS
+    On start ECU calls for the health of the Car
+        CAN message sent out that triggers the DCs to run a self health check report
+
+    Responds with the above health (Sensors might need to have an extra attribute that tells the DC how critical they are)
+

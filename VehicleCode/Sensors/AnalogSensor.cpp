@@ -15,13 +15,14 @@
  * @param waitTime (int) The update delay of the sensor in milliseconds.
  * @param inPins (int) The input pin id for the analog sensor.
  */
-AnalogSensor::AnalogSensor(int id, int waitTime, int inPin) {
+AnalogSensor::AnalogSensor(int id, int waitTime, int inPin, bool isCritical) {
     sensorID = id;
     this->waitTime = waitTime;
     previousUpdateTime = millis();
     inputPins[0] = inPin;
     sensorValue = 0;
     this->dataLength = 2;
+    this->critical = isCritical;
 };
 
 /**
@@ -149,4 +150,8 @@ void AnalogSensor::setWaitTime(int inWait) {
  */
 void AnalogSensor::setId(int inId) {
     sensorID = inId;
+}
+
+bool AnalogSensor::getCritical() {
+    return critical;
 }

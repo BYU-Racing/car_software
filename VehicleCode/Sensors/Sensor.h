@@ -18,6 +18,7 @@ protected:
     unsigned long previousUpdateTime = 0;
     int sensorID;
     int dataLength;
+    bool critical;
 
 public:
 
@@ -37,6 +38,7 @@ public:
     virtual int rescale(int data) = 0;
     virtual int* buildData(int value) = 0;
     virtual int* buildError() = 0;
+    virtual bool getCritical();
 };
 
 #endif // SENSOR_H

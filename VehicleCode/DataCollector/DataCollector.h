@@ -31,6 +31,7 @@ private:
     int i = 0;
     int rawData = 0;
     int* sendData;
+    int health;
 
     CAN_message_t msg;
 
@@ -45,9 +46,13 @@ private:
     // Send the start log command to the Car Object
     void sendLog(bool driveState);
 
+    void runHealth();
+
+    void sendHealthReport();
+
 public:
     // Constructor
-    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime, bool front);
+    DataCollector(Sensor** sensors, int numSensors, unsigned long startTime);
 
     // Check sensor data and send signals
     void checkSensors();

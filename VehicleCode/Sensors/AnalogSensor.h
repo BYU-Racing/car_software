@@ -13,7 +13,7 @@ private:
 
 public:
     // Constructor
-    AnalogSensor(int id, int waitTime, int inPin); 
+    AnalogSensor(int id, int waitTime, int inPin, bool isCritical); 
 
     // Implement the pure virtual functions from the base class
     int readInputs() override;
