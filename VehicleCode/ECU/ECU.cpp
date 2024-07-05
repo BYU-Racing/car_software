@@ -170,7 +170,7 @@ void ECU::updateThrottle(SensorData* msg) {
 
 void ECU::updateBrake(SensorData* msg) {
     brake.updateValue(msg->getData());
-    brakeOK = (brake.getBrakeErrorState() == 2);
+    brakeOK = (brake.getBrakeErrorState() != 2); 
 }
 
 void ECU::updateSwitch(SensorData* msg) {
