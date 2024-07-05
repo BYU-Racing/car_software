@@ -30,6 +30,7 @@ class ECU {
         int data1Health = 0;
         int data2Health = 0;
         int data3Health = 0;
+        unsigned int timer = 0;
 
         int wheelSpeed1Health = 0;
         int wheelSpeed2Health = 0;

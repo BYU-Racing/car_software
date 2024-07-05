@@ -44,6 +44,46 @@ bool ECU::runDiagnostics() {
     return (reportDiagnostics()); // Reads Diagnostics
 }
 
+void ECU::askForDiagnostics() {
+    //Just send the CAN message out for diagnositcs
+    rmsg.id = 100; // DIAGNOSTIC ID
+
+    rmsg.len = 8;
+
+    rmsg.buf[0] = 0;
+    rmsg.buf[1] = 0;
+    rmsg.buf[2] = 0;
+    rmsg.buf[3] = 0;
+    rmsg.buf[4] = 0;
+    rmsg.buf[5] = 0;
+    rmsg.buf[6] = 0;
+    rmsg.buf[7] = 0;
+
+    // Write on the comsCAN
+
+    comsCAN.write(rmsg);
+}
+
+bool ECU::reportDiagnostics() {
+    timer = millis();
+    // No handoff should be needed to dashboard since it is on comsCAN line
+    while(millis() - timer <= 100) {
+        if(comsCAN.read(rmsg)) {
+            if(rmsg.id == 101) {
+                data1Health = rmsg.buf[0];
+            }
+            if(rmsg.id == 102) {
+                data2Health = rmsg.buf[0];
+            }
+            if(rmsg.id == 103) {
+                data3Health = rmsg.buf[0];
+            }
+        }
+    }
+
+    return (data1Health >= 2 && data2Health >= 2 && data3Health >= 2);
+}
+
 //START + HORN
 void ECU::InitialStart() {
     digitalWrite(HORN_PIN, HIGH);
@@ -191,7 +231,7 @@ void ECU::shutdown() {
 }
 
 bool ECU::attemptStart() {
-    if(brake.getBrakeActive() && !throttle.throttleActive && !startFault && tractiveActive) {
+    if(brake.getBrakeActive() && !throttle.throttleActive && !startFault && tractiveActive && carIsGood) {
         if(startSwitchState) {
             InitialStart();
             return true;
