@@ -11,20 +11,21 @@
 #define DASHBOARD_H
 
 #include "Actuator.h"
+#include "EasyNextionLibrary.h"
 
 class Dashboard {
 private:
     // Instantiate attributes
-    Actuator** display;
-    int numActuators;
     unsigned long startTime;
     FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
+    EasyNex display;
+
 
     int getSensorIndex(int id);
 
 public:
     // Constructor
-    Dashboard(Actuator** display, unsigned long startTime);
+    Dashboard(EasyNex inDisplay);
 
     // Destructor
     ~Dashboard();
@@ -33,6 +34,10 @@ public:
     void updateDisplay();
     void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN);
     void resetTimeZero(unsigned long startTime);
+    void routeData(SensorData* data);
+
+    //Control functions
+    void updateSwitchState(SensorData* data);
 };
 
 #endif // DASHBOARD_H
