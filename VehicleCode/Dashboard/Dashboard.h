@@ -38,6 +38,10 @@ public:
 
     //Control functions
     void updateSwitchState(SensorData* data);
+    void updateSOCState(SensorData* data);
+    void updateTractiveActiveState(SensorData* data);
+    void updateBrakeActiveState(SensorData* data);
+    void updateStartFaultState(SensorData* data);
 };
 
 #endif // DASHBOARD_H
