@@ -61,16 +61,16 @@ void Dashboard::routeData(SensorData* data) {
             updateSwitchState(data);
             break;
         case TRACTIVE_ID:
-            updateTractiveState(data);
+            updateTractiveActoveState(data);
             break;
         case BRAKE_ID:
-            updateBrakeState(data);
+            updateBrakeActiveState(data);
             break;
         case BATTERY_TEMP_ID:
-            updateBatteryTemp(data);
+            //updateBatteryTemp(data);
             break;
         case BATTERY_PERC_ID:
-            updateBatteryPerc(data);
+            updateSOCState(data);
             break;
     }
 
