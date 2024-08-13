@@ -141,9 +141,11 @@ void Dashboard::updateStartFaultState(SensorData* data) {
 void Dashboard::updateDriveState(SensorData* data) {
     if(data->getData() == 0 && currDriveState == 1) {
         display.writeStr("page Running");
+        currDriveState = 0;
     }
 
     if(data->getData() == 1 && currDriveState == 0) {
         display.writeStr("page PreRun");
+        currDriveState = 1;
     }
 }
