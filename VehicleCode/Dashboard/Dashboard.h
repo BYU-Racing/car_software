@@ -22,6 +22,7 @@ private:
 
 
     int getSensorIndex(int id);
+    int currDriveState;
 
 public:
     // Constructor
@@ -42,6 +43,7 @@ public:
     void updateTractiveActiveState(SensorData* data);
     void updateBrakeActiveState(SensorData* data);
     void updateStartFaultState(SensorData* data);
+    void updateDriveState(SensorData* data);
 };
 
 #endif // DASHBOARD_H

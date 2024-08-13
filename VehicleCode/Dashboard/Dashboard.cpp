@@ -36,7 +36,7 @@ Dashboard::Dashboard(EasyNex inDisplay) {
 */
 Dashboard::~Dashboard() {
     // Delete the actuators
-    int x = 12;
+    currDriveState = 0;
 }
 
 /*!
@@ -99,41 +99,51 @@ void Dashboard::resetTimeZero(unsigned long startTime) {
 void Dashboard::updateSwitchState(SensorData* data) {
     // Get the current state && update all SWITCH COMPONENTS!!!
     if(data->getData() == 0) {
-        display.writeNum("SwitchVar", 0);
+        display.writeNum("PreRun.SwitchVar.val", 0);
     }
     else {
-        display.writeNum("SwitchVar", 1);
+        display.writeNum("PreRun.SwitchVar.val", 1);
     }
 }
 
 void Dashboard::updateSOCState(SensorData* data) {
     //TODO: Check the units this comes from the BMS in
-    display.writeNum("SOC", data->getData());
+    display.writeNum("PreRun.SOC.val", data->getData());
 }
 
 void Dashboard::updateTractiveActiveState(SensorData* data){ 
     if(data->getData() == 0) {
-        display.writeNum("TractiveActive", 0);
+        display.writeNum("PreRun.TractiveActive.val", 0);
     }
     else {
-        display.writeNum("TractiveActive", 1);
+        display.writeNum("PreRun.TractiveActive.val", 1);
     }
 }
 
 void Dashboard::updateBrakeActiveState(SensorData* data) {
     if(data->getData() == 0) {
-        display.writeNum("BrakeActive", 0);
+        display.writeNum("PreRun.BrakeActive.val", 0);
     }
     else {
-        display.writeNum("BrakeActive", 1);
+        display.writeNum("PreRun.BrakeActive.val", 1);
     }
 }
 
 void Dashboard::updateStartFaultState(SensorData* data) {
     if(data->getData() == 0) {
-        display.writeNum("StartFault", 0);
+        display.writeNum("PreRun.StartFault.val", 0);
     }
     else {
-        display.writeNum("StartFault", 1);
+        display.writeNum("PreRun.StartFault.val", 1);
+    }
+}
+
+void Dashboard::updateDriveState(SensorData* data) {
+    if(data->getData() == 0 && currDriveState == 1) {
+        display.writeStr("page Running");
+    }
+
+    if(data->getData() == 1 && currDriveState == 0) {
+        display.writeStr("page PreRun");
     }
 }
