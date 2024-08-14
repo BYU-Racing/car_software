@@ -1,6 +1,7 @@
 #include "ECU.h"
 #include "FlexCAN_T4.h"
 #include "Throttle.h"
+#include "Brake.h"
 
 #define HORN_PIN 10
 #define BRAKE_THRESHOLD 50
@@ -29,15 +30,17 @@
 #define KEY_ID 1
 
 
-ECU::ECU(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> comsCANin, FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> motorCANin) {
-    comsCAN = comsCANin;
-    motorCAN = motorCANin;
-
+ECU::ECU() {
     throttle = Throttle();
+    brake = Brake();
 
     tractiveActive = true; //For testing until we come up with a good way to read tractive
 }
 
+void ECU::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> comsCANin, FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> motorCANin) {
+    comsCAN = comsCANin;
+    motorCAN = motorCANin;
+}
 
 //Initial Diagnostics
 void ECU::boot() {
@@ -182,7 +185,7 @@ void ECU::updateBrake(SensorData* msg) {
 void ECU::updateSwitch(SensorData* msg) {
     prevStartSwitchState = startSwitchState;
 
-    startSwitchState = (msg->getData() == 1);
+    startSwitchState = (msg->getData()[0] == 1);
 
     if(!startSwitchState && driveState) {
         //SHUTDOWN THE CAR!!!
@@ -194,6 +197,18 @@ void ECU::updateSwitch(SensorData* msg) {
 ///////////////////////////////////////////////
 ////////////ACTION FUNCTIONS///////////////////
 //////////////////////////////////////////////
+
+
+//STOP/START BASE FUNCTIONS
+
+void ECU::sendMotorStartCommand() {
+    Serial.println("Motor start command sent");
+    return;
+}
+
+void ECU::sendMotorStopCommand() {
+    Serial.println("Motor stop command sent");
+}
 
 void ECU::sendMotorCommand(int torque) {
     //Send the command to the motor

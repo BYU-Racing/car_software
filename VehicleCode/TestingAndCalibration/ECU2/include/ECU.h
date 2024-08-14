@@ -110,7 +110,8 @@ class ECU {
 
     public:
         ECU();
-        ECU(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> comsCANin, FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> motorCANin);
+
+        void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> comsCANin, FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> motorCANin);
 
         //OVERALL CAR OPERATIONS
         void boot(); // -> initialBoot of car + diagnostics
