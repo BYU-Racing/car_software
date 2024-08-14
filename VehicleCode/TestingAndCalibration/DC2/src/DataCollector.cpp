@@ -1,4 +1,5 @@
 #include "DataCollector.h"
+#include "DigitalSensor.h"
 // #include <Arduino.h>
 // #include <FlexCAN_T4.h>
 
@@ -88,7 +89,7 @@ void DataCollector::runHealth() {
     for(i = 0; i < numSensors; i++) {
         rawData = sensors[i]->readInputs();
         //Assuming a failed AnalogSensor
-        if(rawData == 0 && typeid(sensors[i]).name != "DigitalSensor") {
+        if(rawData == 0) {
             if(sensors[i]->getCritical()) {
                 health = 1;
                 return;
