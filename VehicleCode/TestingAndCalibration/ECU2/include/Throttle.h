@@ -20,6 +20,11 @@ class Throttle {
         int readIn = 0;
         int magiMemory[4];
 
+        int minT1 = 120;
+        int maxT1 = 249;
+        int minT2 = 545;
+        int maxT2 = 752;
+
     public:
         Throttle();
 
@@ -40,6 +45,8 @@ class Throttle {
         int consultMAGI(int input);
 
         bool getActive();
+
+        void setCalibrationValues(int min1, int max1, int min2, int max2);
 };
 
 #endif
