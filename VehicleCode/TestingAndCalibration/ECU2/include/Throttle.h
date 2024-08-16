@@ -46,7 +46,8 @@ class Throttle {
 
         bool getActive();
 
-        void setCalibrationValues(int min1, int max1, int min2, int max2);
+        void setCalibrationValueT1(int min1, int max1);
+        void setCalibrationValueT2(int min2, int max2);
 };
 
 #endif
