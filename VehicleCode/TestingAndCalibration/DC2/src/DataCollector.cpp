@@ -94,7 +94,7 @@ void DataCollector::runHealth() {
                 health = 1;
                 return;
             }
-            health = 2;
+            health = 3; // This a temp change for debugging until the digital sensor issue is resolved
         }
     }
 }

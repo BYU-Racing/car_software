@@ -203,21 +203,24 @@ void ECU::updateSwitch(SensorData* msg) {
 
 void ECU::sendMotorStartCommand() {
     Serial.println("Motor start command sent");
+    motorState = true;
     return;
 }
 
 void ECU::sendMotorStopCommand() {
     Serial.println("Motor stop command sent");
+    motorState = false;
+    return;
 }
 
 void ECU::sendMotorCommand(int torque) {
     //Send the command to the motor
-    if(!motorState && brakeOK && throttleOK && slipOK) { //If the motor has been commanded off but should be on
+    if(!motorState && brakeOK && throttleOK && slipOK && driveState) { //If the motor has been commanded off but should be on
         motorState = true;
         //TODO: Determine if this needs to re start the inverter
     }
 
-    if(motorState && brakeOK && throttleOK && slipOK && !BTOveride) {
+    if(motorState && brakeOK && throttleOK && slipOK && !BTOveride && driveState) {
         motorCommand.id = 192;
         motorCommand.buf[0] = torque % 256;
         motorCommand.buf[1] = torque / 256;
@@ -229,7 +232,7 @@ void ECU::sendMotorCommand(int torque) {
         motorCommand.buf[7] = 0;
         motorCAN.write(motorCommand);
     }
-    else if(motorState) { //Sends a torque Message of 0
+    else if(motorState || !driveState) { //Sends a torque Message of 0
         motorCommand.id = 192;
         motorCommand.buf[0] = 0;
         motorCommand.buf[1] = 0;
@@ -240,7 +243,7 @@ void ECU::sendMotorCommand(int torque) {
         motorCommand.buf[6] = 0;
         motorCommand.buf[7] = 0;
 
-        motorCAN.write(motorCommand);
+        motorCAN.write(motorCommand); 
     }
     return;
 }
@@ -251,18 +254,18 @@ void ECU::shutdown() {
     sendMotorStopCommand();
 }
 
+
 bool ECU::attemptStart() {
     if(brake.getBrakeActive() && !throttle.getActive() && !startFault && tractiveActive && carIsGood) {
         if(startSwitchState) {
             InitialStart();
             return true;
         }
-        else {
-            startFault = true;
-            return false;
-        }
     } else if(prevStartSwitchState && !startSwitchState && startFault) { // If we were in the fault position but are switching the switch off.
         startFault = false;
+    }
+    if(startSwitchState && !prevStartSwitchState) { // If we just flicked on the switch and did not satisfy the start conditions
+        startFault = true;
     }
     return false;
 }

@@ -163,7 +163,7 @@ class ECU {
 
 
         void sendError(int id, int reason); // -> When a sensor gives an odd reading send a message to dashboard for the screen to display
-
+        //A strong argument can be made for the above function to be handled by the DC
 
         bool runDiagnostics();
 
