@@ -83,12 +83,13 @@ bool Throttle::getActive() {
     return throttleActive;
 }
 
-void Throttle::setCalibrationValueT1(int min1, int max1) {
+void setCalibrationValueMin(int min1, int min2) {
+    maxT2 = min2;
     minT1 = min1;
-    maxT1 = max1;
 }
 
-void Throttle::setCalibrationValueT2(int min2, int max2) {
-    minT2 = min2;
-    maxT2 = max2;
+
+void setCalibrationValueMax(int max1, int max2) {
+    minT2 = max2;
+    maxT1 = max1;
 }

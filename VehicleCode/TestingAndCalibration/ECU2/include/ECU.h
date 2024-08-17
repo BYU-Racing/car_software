@@ -77,6 +77,8 @@ class ECU {
         //Throttle Sensor
         int throttle1;
         int throttle2;
+        int handoffCalVal1;
+        int handoffCalVal2;
 
         Throttle throttle;
 
@@ -170,6 +172,11 @@ class ECU {
         void askForDiagnostics();
 
         bool reportDiagnostics();
+
+
+        void calibrateThrottleMin(SensorData* data);
+
+        void calibrateThrottleMax(SensorData* data);
 
         
 };

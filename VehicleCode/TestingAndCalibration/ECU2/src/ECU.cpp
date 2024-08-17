@@ -29,6 +29,9 @@
 #define BRAKE_ID 2
 #define KEY_ID 1
 
+#define CALIBRATE_THROTTLE_MIN_ID 104
+#define CALIBRATE_THROTTLE_MAX_ID 105
+
 
 ECU::ECU() {
     throttle = Throttle();
@@ -142,6 +145,12 @@ void ECU::route(SensorData* data) {
             break;
         case KEY_ID:
             updateSwitch(data);
+            break;
+        case CALIBRATE_THROTTLE_MIN_ID:
+            calibrateThrottleMin(data);
+            break;
+        case CALIBRATE_THROTTLE_MAX_ID:
+            calibrateThrottleMax(data);
             break;
     }
 }
@@ -280,4 +289,20 @@ void ECU::checkBTOverride() {
     if(torqueCommanded >= BTO_ON_THRESHOLD && !BTOveride && brake.getBrakeActive()) {
         BTOveride = true;
     }
+}
+
+
+void ECU::calibrateThrottleMin(SensorData* data) {
+    //First 2 are t1 min Second 2 are t2 min
+    handoffCalVal1 = (data->getData()[0] * 100) + data->getData()[1];
+    handoffCalVal2 = (data->getData()[2] * 100) + data->getData()[3];
+
+    throttle.setCalibrationValueMin(handoffCalVal1, handoffCalVal2);
+}
+
+void ECU::calibrateThrottleMax(SensorData* data) {
+    handoffCalVal1 = (data->getData()[0] * 100) + data->getData()[1];
+    handoffCalVal2 = (data->getData()[2] * 100) + data->getData()[3];
+
+    throttle.setCalibrationValueMax(handoffCalVal1, handoffCalVal2);
 }
