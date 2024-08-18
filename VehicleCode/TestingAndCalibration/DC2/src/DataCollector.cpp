@@ -65,6 +65,7 @@ void DataCollector::checkSensors() {
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
+    Serial.println(rawData);
 
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);

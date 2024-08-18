@@ -17,13 +17,14 @@ class Throttle {
         bool throttle1UPDATE;
         bool throttle2UPDATE;
 
-        int readIn = 0;
+        int readIn1 = 0;
+        int readIn2 = 0;
         int magiMemory[4];
 
-        int minT1 = 120;
-        int maxT1 = 249;
-        int minT2 = 545;
-        int maxT2 = 752;
+        int minT1 = 90;
+        int maxT1 = 205;
+        int minT2 = 487;
+        int maxT2 = 666;
 
     public:
         Throttle();

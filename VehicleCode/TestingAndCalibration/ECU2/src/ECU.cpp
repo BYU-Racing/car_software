@@ -24,8 +24,8 @@
 #define THROTTLE_PIN_1 19
 #define THROTTLE_PIN_2 20
 
-#define THROTTLE1_ID 4
-#define THROTTLE2_ID 3
+#define THROTTLE1_ID 3
+#define THROTTLE2_ID 4
 #define BRAKE_ID 2
 #define KEY_ID 1
 
@@ -217,7 +217,7 @@ void ECU::sendMotorStartCommand() {
 }
 
 void ECU::sendMotorStopCommand() {
-    Serial.println("Motor stop command sent");
+    //Serial.println("Motor stop command sent");
     motorState = false;
     return;
 }
@@ -228,6 +228,9 @@ void ECU::sendMotorCommand(int torque) {
         motorState = true;
         //TODO: Determine if this needs to re start the inverter
     }
+
+    Serial.print("THROTTLE OK: ");
+    Serial.println(throttleOK);
 
     if(motorState && brakeOK && throttleOK && slipOK && !BTOveride && driveState) {
         motorCommand.id = 192;

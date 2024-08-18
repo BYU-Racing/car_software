@@ -10,7 +10,7 @@
 #define MIN_THROTTLE_READ_NEG 545
 #define MAX_THROTTLE_READ_NEG 752
 #define THROTTLE_ERROR_TOL 1600
-#define THROTTLE_MAINTAIN_TOL 2
+#define THROTTLE_MAINTAIN_TOL 20
 #define THROTTLE_NOISE_REDUCTION_THRESHOLD 60
 
 
@@ -30,8 +30,20 @@ bool Throttle::checkError() {
         countMisMatch++;
     }
 
-    if(countMisMatch <= THROTTLE_MAINTAIN_TOL) {
+    if(countMisMatch >= THROTTLE_MAINTAIN_TOL) {
         throttleError = true;
+        Serial.println("MISMATCH");
+        return true;
+    }
+
+    Serial.print("RI1: ");
+    Serial.println(readIn1);
+    Serial.print("RI2: ");
+    Serial.println(readIn2);
+
+    if(readIn1 == 0 || readIn2 == 0) {
+        throttleError = true;
+        Serial.println("0 THROTTLE THROWN");
         return true;
     }
 
@@ -40,13 +52,15 @@ bool Throttle::checkError() {
 
 void Throttle::setThrottle1(int* input) {
 
-    readIn = (input[0] * 100) + input[1];
-    this->throttle1 = map(readIn, minT1, maxT1, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
+    readIn1 = (input[0] * 100) + input[1];
+
+    this->throttle1 = map(readIn1, minT1, maxT1, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
 }
 
 void Throttle::setThrottle2(int* input) {
-    readIn = (input[0] * 100) + input[1];
-    this->throttle2 = map(-readIn, -maxT2, -minT2, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
+    readIn2 = (input[0] * 100) + input[1];
+
+    this->throttle2 = map(-readIn2, -maxT2, -minT2, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
 }
 
 int Throttle::calculateTorque() {
