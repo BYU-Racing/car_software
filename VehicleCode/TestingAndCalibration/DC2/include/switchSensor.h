@@ -21,7 +21,7 @@ class SwitchSensor : public Sensor {
 
 
         int readInputs() override;
-        bool readyToCheck() override;
+        bool readyToCheck();
         bool getCritical() override;
 
             // Additional methods for DigitalSensor

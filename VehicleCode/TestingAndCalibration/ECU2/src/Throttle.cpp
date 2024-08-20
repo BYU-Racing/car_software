@@ -36,11 +36,6 @@ bool Throttle::checkError() {
         return true;
     }
 
-    Serial.print("RI1: ");
-    Serial.println(readIn1);
-    Serial.print("RI2: ");
-    Serial.println(readIn2);
-
     if(readIn1 == 0 || readIn2 == 0) {
         throttleError = true;
         Serial.println("0 THROTTLE THROWN");

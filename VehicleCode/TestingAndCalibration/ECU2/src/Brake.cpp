@@ -14,7 +14,7 @@ Brake::Brake() {
 
 bool Brake::getBrakeActive() {
 
-    return brakeActive >= BRAKE_THRESHOLD;
+    return (brakeVal >= BRAKE_THRESHOLD);
 }
 
 void Brake::updateValue(int* data) {

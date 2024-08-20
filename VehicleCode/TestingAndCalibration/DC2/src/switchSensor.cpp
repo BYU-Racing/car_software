@@ -28,8 +28,13 @@ int SwitchSensor::readInputs() {
     this->comparitor = this->ticker / this->runner;
 
     if(this->comparitor >= 0.87) {
+        Serial.print("Switch: ");
+        Serial.println("1");
         return 1;
+
     } else {
+        Serial.print("Switch: ");
+        Serial.println("0");
         return 0;
     }
 

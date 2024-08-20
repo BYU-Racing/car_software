@@ -99,6 +99,7 @@ bool ECU::reportDiagnostics() {
 
 //START + HORN
 void ECU::InitialStart() {
+    Serial.println("INITIAL START ACHIEVED");
     digitalWrite(HORN_PIN, HIGH);
     delay(2000); // Delay for 2 seconds per rules
     digitalWrite(HORN_PIN,LOW);
@@ -174,6 +175,9 @@ void ECU::updateThrottle(SensorData* msg) {
     }
 
     torqueCommanded = throttle.calculateTorque();
+    if(torqueCommanded < 0) {
+        torqueCommanded = 0;
+    }
 
     throttleOK = !throttle.checkError(); // This is named awfully
 
@@ -235,8 +239,12 @@ void ECU::sendMotorCommand(int torque) {
         motorState = true;
         //TODO: Determine if this needs to re start the inverter
     }
+    if(driveState) {
+        checkBTOverride();
+    }
 
-    if(motorState && brakeOK && throttleOK && slipOK && !BTOveride && driveState) {
+    if(motorState && brakeOK && throttleOK && !BTOveride && driveState) {
+        Serial.println(torqueCommanded);
         motorCommand.id = 192;
         motorCommand.buf[0] = torque % 256;
         motorCommand.buf[1] = torque / 256;
@@ -249,6 +257,7 @@ void ECU::sendMotorCommand(int torque) {
         motorCAN.write(motorCommand);
     }
     else if(motorState || !driveState) { //Sends a torque Message of 0
+        Serial.println(0);
         motorCommand.id = 192;
         motorCommand.buf[0] = 0;
         motorCommand.buf[1] = 0;
@@ -267,12 +276,15 @@ void ECU::sendMotorCommand(int torque) {
 
 void ECU::shutdown() {
     driveState = false;
+    BTOveride = false;
+    Serial.println("SHUTDOWN");
     sendMotorStopCommand();
 }
 
 
 bool ECU::attemptStart() {
-    if(brake.getBrakeActive() && !throttle.getActive() && !startFault && tractiveActive && carIsGood) {
+    carIsGood = true;
+    if(brake.getBrakeActive() && !startFault && tractiveActive && carIsGood) {
         if(startSwitchState) {
             InitialStart();
             return true;
@@ -282,6 +294,7 @@ bool ECU::attemptStart() {
     }
     if(startSwitchState && !prevStartSwitchState) { // If we just flicked on the switch and did not satisfy the start conditions
         startFault = true;
+        Serial.println("Start Faulted");
     }
     return false;
 }
@@ -291,10 +304,12 @@ void ECU::checkBTOverride() {
 
     if(BTOveride && !brake.getBrakeActive() && (torqueCommanded <= BTO_OFF_THRESHOLD)) {
         BTOveride = false;
+        Serial.println("BTO Set");
     }
 
     if(torqueCommanded >= BTO_ON_THRESHOLD && !BTOveride && brake.getBrakeActive()) {
         BTOveride = true;
+        Serial.println("BTO Released");
     }
 }
 
