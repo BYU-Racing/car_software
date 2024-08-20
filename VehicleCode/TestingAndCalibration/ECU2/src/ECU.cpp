@@ -3,7 +3,7 @@
 #include "Throttle.h"
 #include "Brake.h"
 
-#define HORN_PIN 10
+#define HORN_PIN 12
 #define BRAKE_THRESHOLD 50
 
 #define MIN_THROTTLE_OUTPUT 0
@@ -38,6 +38,7 @@ ECU::ECU() {
     brake = Brake();
 
     tractiveActive = true; //For testing until we come up with a good way to read tractive
+    pinMode(HORN_PIN, OUTPUT);
 }
 
 void ECU::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> comsCANin, FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> motorCANin) {
@@ -105,8 +106,6 @@ void ECU::InitialStart() {
     //Start the motor
     driveState = true;
     sendMotorStartCommand();
-    
-    
 }
 
 
@@ -178,6 +177,10 @@ void ECU::updateThrottle(SensorData* msg) {
 
     throttleOK = !throttle.checkError(); // This is named awfully
 
+    if(!throttleOK) {
+        throwError(1);
+    }
+
     throttle1UPDATE = false;
     throttle2UPDATE = false;
 
@@ -189,6 +192,10 @@ void ECU::updateThrottle(SensorData* msg) {
 void ECU::updateBrake(SensorData* msg) {
     brake.updateValue(msg->getData());
     brakeOK = (brake.getBrakeErrorState() != 2); 
+
+    if(!brakeOK) {
+        throwError(4);
+    }
 }
 
 void ECU::updateSwitch(SensorData* msg) {
@@ -228,9 +235,6 @@ void ECU::sendMotorCommand(int torque) {
         motorState = true;
         //TODO: Determine if this needs to re start the inverter
     }
-
-    Serial.print("THROTTLE OK: ");
-    Serial.println(throttleOK);
 
     if(motorState && brakeOK && throttleOK && slipOK && !BTOveride && driveState) {
         motorCommand.id = 192;
@@ -308,4 +312,23 @@ void ECU::calibrateThrottleMax(SensorData* data) {
     handoffCalVal2 = (data->getData()[2] * 100) + data->getData()[3];
 
     throttle.setCalibrationValueMax(handoffCalVal1, handoffCalVal2);
+}
+
+
+void ECU::throwError(int code) {
+    rmsg.id = 200; // DIAGNOSTIC ID
+
+    rmsg.len = 8;
+
+    rmsg.buf[0] = code;
+    rmsg.buf[1] = 0;
+    rmsg.buf[2] = 0;
+    rmsg.buf[3] = 0;
+    rmsg.buf[4] = 0;
+    rmsg.buf[5] = 0;
+    rmsg.buf[6] = 0;
+    rmsg.buf[7] = 0;
+    // Send the error code to the Dashboard
+
+    comsCAN.write(rmsg);
 }

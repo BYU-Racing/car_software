@@ -178,6 +178,8 @@ class ECU {
 
         void calibrateThrottleMax(SensorData* data);
 
+        void throwError(int code);
+
         
 };
 

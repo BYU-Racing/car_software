@@ -3,6 +3,7 @@
 #include <DataCollector.h>
 #include <DigitalSensor.h>
 #include <AnalogSensor.h>
+#include <switchSensor.h>
 #include <Sensor.h>
 
 
@@ -22,20 +23,22 @@ FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
 #define SWITCH_ID 1
 #define SWITCH_WAIT 10
-#define SWITCH_PIN 15
+#define SWITCH_PIN 38
 
 
 AnalogSensor throttle1 = AnalogSensor(THROTTLE_1_ID, THROTTLE_1_WAIT, THROTTLE_1_PIN, true);
 AnalogSensor throttle2 = AnalogSensor(THROTTLE_2_ID, THROTTLE_2_WAIT, THROTTLE_2_PIN, true);
 AnalogSensor brake = AnalogSensor(BRAKE_ID, BRAKE_WAIT, BRAKE_PIN, true);
 
-DigitalSensor startSwitch = DigitalSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN, true);
+SwitchSensor startSwitch = SwitchSensor(SWITCH_ID, SWITCH_WAIT, SWITCH_PIN, true);
 
 #define NUM_SENSORS 4
 
 Sensor* sensors[] = {&throttle1, &throttle2, &brake, &startSwitch};
 
 DataCollector collector = DataCollector(sensors, NUM_SENSORS, millis());
+
+//We need to see if the debounced switch sensor is required
 
 void setup() {
   // put your setup code here, to run once:
@@ -47,6 +50,8 @@ void setup() {
 
   collector.setCAN(can2);
   collector.resetTimeZero(millis());
+
+  pinMode(SWITCH_PIN, INPUT_PULLDOWN);
   
 }
 
