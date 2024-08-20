@@ -117,6 +117,7 @@ void ECU::run() {
         attemptStart();
         if(startFault) {
             //SEND MESSAGE TO DRIVER SCREEN ABOUT START FAULT!!
+            throwError(5);
         }
     }
 
