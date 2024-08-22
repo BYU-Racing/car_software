@@ -23,6 +23,7 @@ private:
 
     int getSensorIndex(int id);
     int currDriveState;
+    int tempThrottle;
 
 public:
     // Constructor
@@ -44,6 +45,8 @@ public:
     void updateBrakeActiveState(SensorData* data);
     void updateStartFaultState(SensorData* data);
     void updateDriveState(SensorData* data);
+    void updateThrottle1(SensorData* data);
+    void updateThrottle2(SensorData* data);
 };
 
 #endif // DASHBOARD_H

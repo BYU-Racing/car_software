@@ -12,6 +12,11 @@
 #define BATTERY_TEMP_ID 54
 #define TRACTIVE_ID 194
 #define BRAKE_ID 4
+#define DRIVE_STATE_ID 203
+#define BRAKE_P 4
+#define THROTTLE1_ID 2
+#define THROTTLE2_ID 3
+
 /*!
  * @brief Constructor
  * Initializes the CAN bus and the actuators
@@ -72,6 +77,17 @@ void Dashboard::routeData(SensorData* data) {
         case BATTERY_PERC_ID:
             updateSOCState(data);
             break;
+        case THROTTLE1_ID:
+            updateThrottle1(data);
+            break;
+        case THROTTLE2_ID:
+            updateThrottle2(data);
+            break;
+        case DRIVE_STATE_ID:
+            updateDriveState(data);
+            break;
+
+
     }
 
 }
@@ -139,13 +155,25 @@ void Dashboard::updateStartFaultState(SensorData* data) {
 }
 
 void Dashboard::updateDriveState(SensorData* data) {
-    if(data->getData() == 0 && currDriveState == 1) {
+    if(data->getData()[0] == 0 && currDriveState == 1) {
         display.writeStr("page Running");
         currDriveState = 0;
     }
 
-    if(data->getData() == 1 && currDriveState == 0) {
+    if(data->getData()[0] == 1 && currDriveState == 0) {
         display.writeStr("page PreRun");
         currDriveState = 1;
     }
+}
+
+void Dashboard::updateThrottle1(SensorData* data) {
+    tempThrottle = (data->getData()[0] * 100) + data->getData()[1];
+
+    display.writeNum("PreRun.Throttle1Val.val", tempThrottle);
+}
+
+void Dashboard::updateThrottle2(SensorData* data) {
+    tempThrottle = (data->getData()[0] * 100) + data->getData()[1];
+
+    display.writeNum("PreRun.Throttle2Val.val", tempThrottle);
 }
