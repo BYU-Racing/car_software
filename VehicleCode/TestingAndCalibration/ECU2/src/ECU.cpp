@@ -21,9 +21,6 @@
 #define BTO_OFF_THRESHOLD 120
 #define BTO_ON_THRESHOLD 300
 
-#define THROTTLE_PIN_1 19
-#define THROTTLE_PIN_2 20
-
 #define THROTTLE1_ID 3
 #define THROTTLE2_ID 4
 #define BRAKE_ID 2
@@ -104,8 +101,21 @@ void ECU::InitialStart() {
     delay(2000); // Delay for 2 seconds per rules
     digitalWrite(HORN_PIN,LOW);
 
+    //Send the driveState command for the dash
+    rmsg.id=203;
+    rmsg.buf[0]=1;
+    rmsg.buf[1]=0;
+    rmsg.buf[2]=0;
+    rmsg.buf[3]=0;
+    rmsg.buf[4]=0;
+    rmsg.buf[5]=0;
+    rmsg.buf[6]=0;
+    rmsg.buf[7]=0;
+
+    comsCAN.write(rmsg);
     //Start the motor
     driveState = true;
+
     sendMotorStartCommand();
 }
 
@@ -180,10 +190,13 @@ void ECU::updateThrottle(SensorData* msg) {
         torqueCommanded = 0;
     }
 
-    throttleOK = !throttle.checkError(); // This is named awfully
+    throttleCode = throttle.checkError();
 
-    if(!throttleOK) {
-        throwError(1);
+    //Calling check error twice could accidentally count a mismatch twice so we want to carry the value over
+    throttleOK = (throttleCode == 0);
+
+    if(!throttleOk) {
+        throwError(throttleCode);
     }
 
     throttle1UPDATE = false;
@@ -279,6 +292,17 @@ void ECU::shutdown() {
     driveState = false;
     BTOveride = false;
     Serial.println("SHUTDOWN");
+    rmsg.id=203;
+    rmsg.buf[0]=0;
+    rmsg.buf[1]=0;
+    rmsg.buf[2]=0;
+    rmsg.buf[3]=0;
+    rmsg.buf[4]=0;
+    rmsg.buf[5]=0;
+    rmsg.buf[6]=0;
+    rmsg.buf[7]=0;
+
+    comsCAN.write(rmsg);
     sendMotorStopCommand();
 }
 

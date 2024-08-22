@@ -29,7 +29,7 @@ class Throttle {
     public:
         Throttle();
 
-        bool checkError();
+        int checkError();
 
         int calculateTorque();
 

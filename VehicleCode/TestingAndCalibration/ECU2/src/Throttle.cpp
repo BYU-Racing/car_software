@@ -23,7 +23,7 @@ Throttle::Throttle() {
 
 
 
-bool Throttle::checkError() {
+int Throttle::checkError() {
     if(abs(throttle1 - throttle2) < THROTTLE_ERROR_TOL) {
         countMisMatch = 0;
     } else {
@@ -33,16 +33,16 @@ bool Throttle::checkError() {
     if(countMisMatch >= THROTTLE_MAINTAIN_TOL) {
         throttleError = true;
         Serial.println("MISMATCH");
-        return true;
+        return 1;
     }
 
     if(readIn1 == 0 || readIn2 == 0) {
         throttleError = true;
         Serial.println("0 THROTTLE THROWN");
-        return true;
+        return 2;
     }
 
-    return false;
+    return 0;
 }
 
 void Throttle::setThrottle1(int* input) {

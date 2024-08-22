@@ -87,6 +87,8 @@ class ECU {
 
         int torqueCommanded;
 
+        int throttleCode;
+
 
         //CoolantLoop
         int coolantTemp1;
