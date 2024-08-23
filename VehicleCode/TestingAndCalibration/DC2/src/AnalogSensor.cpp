@@ -155,3 +155,10 @@ void AnalogSensor::setId(int inId) {
 bool AnalogSensor::getCritical() {
     return isCritical;
 }
+
+bool AnalogSensor::plugTest() {
+    if(analogRead(inputPins[0]) == 0) {
+        return true;
+    }
+    return false;
+}

@@ -38,6 +38,7 @@ public:
     virtual int* buildData(int value) = 0;
     virtual int* buildError() = 0;
     virtual bool getCritical();
+    virtual bool plugTest();
 };
 
 #endif // SENSOR_H

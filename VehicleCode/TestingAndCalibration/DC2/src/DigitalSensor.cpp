@@ -135,3 +135,17 @@ bool DigitalSensor::readyToCheck() {
 bool DigitalSensor::getCritical() {
     return critical;
 }
+
+bool DigitalSensor::plugTest() {
+    // Change pinMode twice
+    pinMode(inputPins[0], INPUT_PULLDOWN);
+    if (digitalRead(inputPins[0]) == 0) {
+        pinMode(inputPins[0], INPUT_PULLUP);
+        if(digitalRead(inputPins[0] == 0)) {
+            pinMode(inputPins[0], INPUT_PULLDOWN);
+            return true;
+        }
+    }
+    pinMode(inputPins[0], INPUT_PULLDOWN);
+    return false;
+}

@@ -70,7 +70,6 @@ void ECU::askForDiagnostics() {
     rmsg.buf[7] = 0;
 
     // Write on the comsCAN
-
     comsCAN.write(rmsg);
 }
 
@@ -169,9 +168,9 @@ void ECU::route(SensorData* data) {
 
 
 
-////////////////////////////////////////////////////////
-////////////UPDATE FUNCTIONS///////////////////////////
-///////////////////////////////////////////////////////
+////////////////////////////////////////////
+////////////UPDATE FUNCTIONS////////////////
+////////////////////////////////////////////
 
 void ECU::updateThrottle(SensorData* msg) {
     if(msg->getId() == THROTTLE1_ID) {
@@ -194,8 +193,8 @@ void ECU::updateThrottle(SensorData* msg) {
 
     //Calling check error twice could accidentally count a mismatch twice so we want to carry the value over
     throttleOK = (throttleCode == 0);
-
-    if(!throttleOk) {
+    
+    if(!throttleOK) {
         throwError(throttleCode);
     }
 
@@ -228,9 +227,9 @@ void ECU::updateSwitch(SensorData* msg) {
 }
 
 
-///////////////////////////////////////////////
-////////////ACTION FUNCTIONS///////////////////
-//////////////////////////////////////////////
+/////////////////////////////////////////
+////////////ACTION FUNCTIONS/////////////
+/////////////////////////////////////////
 
 
 //STOP/START BASE FUNCTIONS
@@ -281,9 +280,9 @@ void ECU::sendMotorCommand(int torque) {
         motorCommand.buf[5] = 1; //RE AFFIRMS THE INVERTER IS ACTIVE
         motorCommand.buf[6] = 0;
         motorCommand.buf[7] = 0;
-
         motorCAN.write(motorCommand); 
     }
+
     return;
 }
 
@@ -369,6 +368,5 @@ void ECU::throwError(int code) {
     rmsg.buf[6] = 0;
     rmsg.buf[7] = 0;
     // Send the error code to the Dashboard
-
     comsCAN.write(rmsg);
 }

@@ -23,6 +23,7 @@ public:
     int* buildData(int value) override;
     int* buildError() override;
     bool getCritical() override;
+    bool plugTest() override;
 
     // Getters
     int getId();

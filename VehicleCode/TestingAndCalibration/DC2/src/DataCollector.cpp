@@ -50,6 +50,10 @@ void DataCollector::checkSensors() {
             readData(sensors[i]);
         }
     }
+    //Runs health for DC
+    if(can2.read(msg) && msg.id == 100) {
+        runHealth();
+    }
 }
 
 
@@ -65,7 +69,6 @@ void DataCollector::checkSensors() {
 void DataCollector::readData(Sensor* sensor) {
     // Call the readInputs method to obtain an array of ints
     rawData = sensor->readInputs();
-    Serial.println(rawData);
 
     if (rawData != -1) {
         sendData = sensor->buildData(rawData);
@@ -82,24 +85,21 @@ void DataCollector::readData(Sensor* sensor) {
     sendSignal(&sensorData);
 }
 
-
-//TODO: Figure out how to make this work with DigitalSensors? 
 void DataCollector::runHealth() {
     //We start with assumption of a healthy DC then work backwards
     health = 3; 
     for(i = 0; i < numSensors; i++) {
-        rawData = sensors[i]->readInputs();
-        //Assuming a failed AnalogSensor
-        if(rawData == 0) {
+        if(sensors[i]->plugTest() == 0) {
             if(sensors[i]->getCritical()) {
                 health = 1;
                 return;
             }
-            health = 3; // This a temp change for debugging until the digital sensor issue is resolved
+            health = 2; // This a temp change for debugging until the digital sensor issue is resolved
         }
     }
-}
 
+    sendHealthReport();
+}
 
 void DataCollector::sendHealthReport() {
     msg.len = 8;
