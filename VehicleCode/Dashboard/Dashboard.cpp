@@ -1,8 +1,4 @@
  #include "Dashboard.h"
-#include "Actuator.h"
-#include "LEDArray.h"
-#include "Servo.h"
-#include "SensorID.h"
 
 
 // Global variables
@@ -57,6 +53,8 @@ void Dashboard::updateDisplay() {
         SensorData* msg = new SensorData(rmsg);
         routeData(msg);
     }
+
+    display.NextionListen();
 }
 
 void Dashboard::routeData(SensorData* data) {
