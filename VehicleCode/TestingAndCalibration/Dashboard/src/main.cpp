@@ -14,6 +14,9 @@ EasyNex myDisplay(Serial1);
 void trigger0();
 void trigger1();
 
+int ThrottleHandoff;
+CAN_message_t msg;
+
 Dashboard myDash;
 
 void setup() {
@@ -40,7 +43,45 @@ void loop() {
 
 
 void trigger0() {
-  //Read throttle
+  //Read throttle1 and throttle2 and send the MIN command to the ECU
 
-  
+  ThrottleHandoff = myDisplay.readNumber("PreRun.Throttle1Val.val");
+
+  msg.id=201;
+
+  msg.len=8;
+
+  msg.buf[0]=(ThrottleHandoff / 100);
+  msg.buf[1]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100);
+
+
+  ThrottleHandoff = myDisplay.readNumber("PreRun.Throttle2.val");
+
+  msg.buf[2]=(ThrottleHandoff / 100);
+  msg.buf[3]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100));
+
+
+  can1.write(msg);
+}
+
+void trigger1() {
+  //Read throttle1 and throttle2 and send the MIN command to the ECU
+
+  ThrottleHandoff = myDisplay.readNumber("PreRun.Throttle1Val.val");
+
+  msg.id=202;
+
+  msg.len=8;
+
+  msg.buf[0]=(ThrottleHandoff / 100);
+  msg.buf[1]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100);
+
+
+  ThrottleHandoff = myDisplay.readNumber("PreRun.Throttle2.val");
+
+  msg.buf[2]=(ThrottleHandoff / 100);
+  msg.buf[3]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100));
+
+
+  can1.write(msg);
 }
