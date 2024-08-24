@@ -9,7 +9,7 @@
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
-EasyNex myDisplay(Serial1);
+EasyNex myDisplay(Serial2);
 
 void trigger0();
 void trigger1();
@@ -61,7 +61,7 @@ void trigger0() {
   msg.buf[3]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100));
 
 
-  can1.write(msg);
+  can2.write(msg);
 }
 
 void trigger1() {
@@ -83,5 +83,5 @@ void trigger1() {
   msg.buf[3]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100));
 
 
-  can1.write(msg);
+  can2.write(msg);
 }
