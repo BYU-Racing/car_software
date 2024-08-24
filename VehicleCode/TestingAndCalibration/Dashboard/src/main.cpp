@@ -52,7 +52,7 @@ void trigger0() {
   msg.len=8;
 
   msg.buf[0]=(ThrottleHandoff / 100);
-  msg.buf[1]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100);
+  msg.buf[1]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100));
 
 
   ThrottleHandoff = myDisplay.readNumber("PreRun.Throttle2.val");
@@ -74,7 +74,7 @@ void trigger1() {
   msg.len=8;
 
   msg.buf[0]=(ThrottleHandoff / 100);
-  msg.buf[1]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100);
+  msg.buf[1]=(ThrottleHandoff - ((ThrottleHandoff / 100) * 100));
 
 
   ThrottleHandoff = myDisplay.readNumber("PreRun.Throttle2.val");
