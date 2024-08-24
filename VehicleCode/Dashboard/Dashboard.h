@@ -25,6 +25,17 @@ private:
     int currDriveState;
     int tempThrottle;
 
+
+    int switchState = 0;
+    int SOCState = 0;
+    int TractiveState = 0;
+    int BrakeActiveState = 0;
+    int BrakePState = 0;
+    int BrakeActiveHandoff = 0;
+    int StartFaultState = 0;
+    int throttle1State = 0;
+    int throttle2State = 0;
+
 public:
     // Constructor
     Dashboard(EasyNex inDisplay);

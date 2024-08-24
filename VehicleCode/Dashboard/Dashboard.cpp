@@ -114,44 +114,72 @@ void Dashboard::resetTimeZero(unsigned long startTime) {
 //CONTROL FUNCTIONS//
 void Dashboard::updateSwitchState(SensorData* data) {
     // Get the current state && update all SWITCH COMPONENTS!!!
-    if(data->getData() == 0) {
-        display.writeNum("PreRun.SwitchVar.val", 0);
-    }
-    else {
-        display.writeNum("PreRun.SwitchVar.val", 1);
+    if(data->getData()[0] != switchState) {
+        if(data->getData()[0] == 0) {
+            display.writeNum("PreRun.SwitchVar.val", 0);
+        }
+        else {
+            display.writeNum("PreRun.SwitchVar.val", 1);
+        }
+        switchState = data->getData()[0];
     }
 }
 
 void Dashboard::updateSOCState(SensorData* data) {
     //TODO: Check the units this comes from the BMS in
-    display.writeNum("PreRun.SOC.val", data->getData());
+
+    if(data->getData()[0] != SOCState) {
+        display.writeNum("PreRun.SOC.val", data->getData());
+        SOCState = data->getData()[0];
+    }
+
 }
 
 void Dashboard::updateTractiveActiveState(SensorData* data){ 
-    if(data->getData() == 0) {
-        display.writeNum("PreRun.TractiveActive.val", 0);
+
+    if(data->getData()[0] != TractiveState) {
+        if(data->getData()[0] == 0) {
+            display.writeNum("PreRun.TractiveActive.val", 0);
+        }
+        else {
+            display.writeNum("PreRun.TractiveActive.val", 1);
+        }
+        TractiveState = data->getData()[0];
     }
-    else {
-        display.writeNum("PreRun.TractiveActive.val", 1);
-    }
+
 }
 
 void Dashboard::updateBrakeActiveState(SensorData* data) {
-    if(data->getData() == 0) {
-        display.writeNum("PreRun.BrakeActive.val", 0);
+    //Update Pressure
+    if(((data->getData()[0] * 100) + data->getData()[1]) != BrakePState) {
+        display.writeNum("PreRun.BrakeP.val", ((data-getData()[0] * 100) + data->getData()[1]))
     }
-    else {
-        display.writeNum("PreRun.BrakeActive.val", 1);
+
+
+    BrakeActiveHandoff = (((data->getData()[0] * 100) + data->getData()[1]) > 50);
+    //Update Active
+    if(BrakeActiveHandoff != BrakeActiveState) {
+        if(BrakeActiveHandoff == 0) {
+            display.writeNum("PreRun.BrakeActive.val", 0);
+        }
+        else {
+            display.writeNum("PreRun.BrakeActive.val", 1);
+        }
+        BrakeActiveState=BrakeActiveHandoff;
     }
 }
 
 void Dashboard::updateStartFaultState(SensorData* data) {
-    if(data->getData() == 0) {
-        display.writeNum("PreRun.StartFault.val", 0);
+
+    if(StartFaultState != data->getData()[0]) {
+        if(data->getData()[0] == 0) {
+            display.writeNum("PreRun.StartFault.val", 0);
+        }
+        else {
+            display.writeNum("PreRun.StartFault.val", 1);
+        }
     }
-    else {
-        display.writeNum("PreRun.StartFault.val", 1);
-    }
+
 }
 
 void Dashboard::updateDriveState(SensorData* data) {
@@ -169,11 +197,19 @@ void Dashboard::updateDriveState(SensorData* data) {
 void Dashboard::updateThrottle1(SensorData* data) {
     tempThrottle = (data->getData()[0] * 100) + data->getData()[1];
 
-    display.writeNum("PreRun.Throttle1Val.val", tempThrottle);
+    if(tempThrottle != throttle1State) {
+        display.writeNum("PreRun.Throttle1Val.val", tempThrottle);
+        throttle1State = tempThrottle;
+    }
+    
 }
 
 void Dashboard::updateThrottle2(SensorData* data) {
     tempThrottle = (data->getData()[0] * 100) + data->getData()[1];
 
-    display.writeNum("PreRun.Throttle2Val.val", tempThrottle);
+    if(tempThrottle != throttle2State) {
+        display.writeNum("PreRun.Throttle2Val.val", tempThrottle);
+        throttle2State = tempThrottle;
+    }
+    
 }
