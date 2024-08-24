@@ -9,7 +9,7 @@
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
-EasyNex myDisplay(Serial2);
+EasyNex myDisplay(Serial1);
 
 void trigger0();
 void trigger1();
@@ -62,6 +62,8 @@ void trigger0() {
 
 
   can2.write(msg);
+
+  Serial.println("SET MIN");
 }
 
 void trigger1() {
@@ -84,4 +86,6 @@ void trigger1() {
 
 
   can2.write(msg);
+
+  Serial.println("SET MAX");
 }
