@@ -1,18 +1,46 @@
 #include <Arduino.h>
+#include <Dashboard.h>
+#include "EasyNextionLibrary.h"
+#include "FlexCAN_T4.h"
 
-// put function declarations here:
-int myFunction(int, int);
+#define BEGIN 9600
+#define BAUDRATE 250000
+
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
+
+EasyNex myDisplay(Serial1);
+
+void trigger0();
+void trigger1();
+
+Dashboard myDash;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
+  myDisplay.begin(9600);
+
+
+  myDash.setDisplay(&myDisplay);
+
+
+  can1.begin();
+  can2.begin();
+
+  can1.setBaudRate(BAUDRATE);
+  can2.setBaudRate(BAUDRATE);
+
+  myDash.setCAN(can2);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  myDash.updateDisplay();
+  myDisplay.NextionListen();
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+
+void trigger0() {
+  //Read throttle
+
+  
 }
