@@ -134,6 +134,7 @@ void ECU::run() {
     if(comsCAN.read(rmsg)) {
         SensorData* msg = new SensorData(rmsg);
         route(msg);
+        delete msg;
     }
 
     if(!carIsGood) { // If something bad happened shutdown the car again just in case
