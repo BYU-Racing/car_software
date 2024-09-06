@@ -81,7 +81,7 @@ void DataCollector::readData(Sensor* sensor) {
 }
 
 
-//TODO: Figure out how to make this work with DigitalSensors? 
+//TODO: Figure out how to make this work with DigitalSensors?
 void DataCollector::runHealth() {
     //We start with assumption of a healthy DC then work backwards
     health = 3; 
@@ -100,6 +100,7 @@ void DataCollector::runHealth() {
 
 
 void DataCollector::sendHealthReport() {
+    msg.id = 101; //This value is dependent on what DataCollector it is on the car.
     msg.len = 8;
     msg.buf[0] = health;
     msg.buf[1] = 0;
@@ -109,6 +110,9 @@ void DataCollector::sendHealthReport() {
     msg.buf[5] = 0;
     msg.buf[6] = 0;
     msg.buf[7] = 0;
+
+    //TODO:
+    // Add ID for the health check
 
     can2.write(msg);
     return;

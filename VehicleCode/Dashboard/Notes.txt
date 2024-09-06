@@ -1,1 +1,0 @@
-This prolly is all gonna have to be re worked? Except maybe the core core logic of dashboard. Everything will have to be routed to screen functions and that interface is still unknown as of yet
