@@ -1,4 +1,5 @@
 #include "DataCollector.h"
+#include "DigitalSensor.h"
 // #include <Arduino.h>
 // #include <FlexCAN_T4.h>
 
@@ -49,6 +50,10 @@ void DataCollector::checkSensors() {
             readData(sensors[i]);
         }
     }
+    //Runs health for DC
+    if(can2.read(msg) && msg.id == 100) {
+        runHealth();
+    }
 }
 
 
@@ -80,27 +85,23 @@ void DataCollector::readData(Sensor* sensor) {
     sendSignal(&sensorData);
 }
 
-
-//TODO: Figure out how to make this work with DigitalSensors?
 void DataCollector::runHealth() {
     //We start with assumption of a healthy DC then work backwards
     health = 3; 
     for(i = 0; i < numSensors; i++) {
-        rawData = sensors[i]->readInputs();
-        //Assuming a failed AnalogSensor
-        if(rawData == 0 && typeid(sensors[i]).name != "DigitalSensor") {
+        if(sensors[i]->plugTest() == 0) {
             if(sensors[i]->getCritical()) {
                 health = 1;
                 return;
             }
-            health = 2;
+            health = 2; // This a temp change for debugging until the digital sensor issue is resolved
         }
     }
+
+    sendHealthReport();
 }
 
-
 void DataCollector::sendHealthReport() {
-    msg.id = 101; //This value is dependent on what DataCollector it is on the car.
     msg.len = 8;
     msg.buf[0] = health;
     msg.buf[1] = 0;
@@ -110,9 +111,6 @@ void DataCollector::sendHealthReport() {
     msg.buf[5] = 0;
     msg.buf[6] = 0;
     msg.buf[7] = 0;
-
-    //TODO:
-    // Add ID for the health check
 
     can2.write(msg);
     return;

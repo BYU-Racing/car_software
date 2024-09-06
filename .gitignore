@@ -3,3 +3,6 @@
 
 # Files to ignore
 *.ds_store
+
+*/.pio/*
+*/.vscode/*
