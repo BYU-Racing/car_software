@@ -2,13 +2,14 @@
 #define DASHBOARD_H
 
 #include "EasyNextionLibrary.h"
+#include "SensorData.h"
 
 class Dashboard {
 private:
     // Instantiate attributes
     unsigned long startTime;
-    FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can1;
-    EasyNex display;
+    FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
+    EasyNex* display;
     
     int currDriveState;
     int tempThrottle;
@@ -26,14 +27,15 @@ private:
 
 public:
     // Constructor
-    Dashboard(EasyNex inDisplay);
+    Dashboard();
+    void setDisplay(EasyNex* inDisplay);
 
     // Destructor
     ~Dashboard();
 
     // Method to update the display based on sensor data
     void updateDisplay();
-    void setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN);
+    void setCAN(FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> canIN);
     void resetTimeZero(unsigned long startTime);
     void routeData(SensorData* data);
 
