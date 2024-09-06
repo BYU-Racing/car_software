@@ -7,11 +7,11 @@
 #define SWITCH_ID 1
 #define BATTERY_TEMP_ID 54
 #define TRACTIVE_ID 194
-#define BRAKE_ID 4
+#define BRAKE_ID 2
 #define DRIVE_STATE_ID 203
-#define BRAKE_P 4
-#define THROTTLE1_ID 2
-#define THROTTLE2_ID 3
+#define BRAKE_P 2
+#define THROTTLE1_ID 3
+#define THROTTLE2_ID 4
 #define BATTERY_PERC_ID 5
 
 /*!
@@ -56,6 +56,7 @@ void Dashboard::updateDisplay() {
     if (this->can1.read(rmsg)) {
         SensorData* msg = new SensorData(rmsg);
         routeData(msg);
+        delete msg;
     }
 }
 
@@ -181,13 +182,12 @@ void Dashboard::updateStartFaultState(SensorData* data) {
 }
 
 void Dashboard::updateDriveState(SensorData* data) {
-    Serial.println("HIT START");
-    if(data->getData()[0] == 0 && currDriveState == 1) {
+    if(data->getData()[0] == 1 && currDriveState == 0) {
         display->writeStr("page Running");
         currDriveState = 0;
     }
 
-    if(data->getData()[0] == 1 && currDriveState == 0) {
+    if(data->getData()[0] == 0 && currDriveState == 1) {
         display->writeStr("page PreRun");
         currDriveState = 1;
     }
