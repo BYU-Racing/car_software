@@ -86,10 +86,7 @@ void Dashboard::routeData(SensorData* data) {
         case DRIVE_STATE_ID:
             updateDriveState(data);
             break;
-
-
     }
-
 }
 
 /**
@@ -97,7 +94,7 @@ void Dashboard::routeData(SensorData* data) {
  * 
  * @param canIN (FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16>) The CAN bus
 */
-void Dashboard::setCAN(FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> canIN) {
+void Dashboard::setCAN(FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> canIN) {
     this->can1 = canIN;
 }
 
@@ -155,8 +152,8 @@ void Dashboard::updateBrakeActiveState(SensorData* data) {
         display->writeNum("PreRun.BrakeP.val", ((data->getData()[0] * 100) + data->getData()[1]));
     }
 
-
     BrakeActiveHandoff = (((data->getData()[0] * 100) + data->getData()[1]) > 50);
+
     //Update Active
     if(BrakeActiveHandoff != BrakeActiveState) {
         if(BrakeActiveHandoff == 0) {
@@ -178,11 +175,13 @@ void Dashboard::updateStartFaultState(SensorData* data) {
         else {
             display->writeNum("PreRun.StartFault.val", 1);
         }
+        StartFaultState = data->getData()[0];
     }
 
 }
 
 void Dashboard::updateDriveState(SensorData* data) {
+    Serial.println("HIT START");
     if(data->getData()[0] == 0 && currDriveState == 1) {
         display->writeStr("page Running");
         currDriveState = 0;

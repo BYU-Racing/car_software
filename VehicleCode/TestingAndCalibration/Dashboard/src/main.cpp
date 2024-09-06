@@ -9,7 +9,7 @@
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> can1;
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> can2;
 
-EasyNex myDisplay(Serial1);
+EasyNex myDisplay(Serial3);
 
 void trigger0();
 void trigger1();
@@ -20,11 +20,11 @@ CAN_message_t msg;
 Dashboard myDash;
 
 void setup() {
-  Serial.begin(9600);
   myDisplay.begin(9600);
 
 
   myDash.setDisplay(&myDisplay);
+  ThrottleHandoff = 0;
 
 
   can1.begin();
@@ -33,7 +33,11 @@ void setup() {
   can1.setBaudRate(BAUDRATE);
   can2.setBaudRate(BAUDRATE);
 
-  myDash.setCAN(can2);
+  myDash.setCAN(can1);
+
+  Serial.println("Begin");
+
+  delay(1000);
 }
 
 void loop() {
