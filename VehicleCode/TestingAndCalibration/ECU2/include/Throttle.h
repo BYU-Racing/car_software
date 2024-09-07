@@ -6,6 +6,8 @@ class Throttle {
         int throttle1 = 0;
         int throttle2 = 0;
 
+        int maxTorque = 3100;
+
         int torque = 0;
         int rollingTorque = 0;
 
@@ -49,6 +51,8 @@ class Throttle {
 
         void setCalibrationValueMin(int min1, int min2);
         void setCalibrationValueMax(int max1, int max2);
+        
+        void setMaxTorque(int torqueVal);
 };
 
 #endif

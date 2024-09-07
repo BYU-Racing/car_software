@@ -49,13 +49,13 @@ void Throttle::setThrottle1(int* input) {
 
     readIn1 = (input[0] * 100) + input[1];
 
-    this->throttle1 = map(readIn1, minT1, maxT1, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
+    this->throttle1 = map(readIn1, minT1, maxT1, MIN_THROTTLE_OUTPUT, maxTorque);
 }
 
 void Throttle::setThrottle2(int* input) {
     readIn2 = (input[0] * 100) + input[1];
 
-    this->throttle2 = map(-readIn2, -maxT2, -minT2, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
+    this->throttle2 = map(-readIn2, -maxT2, -minT2, MIN_THROTTLE_OUTPUT, maxTorque);
 }
 
 int Throttle::calculateTorque() {
@@ -101,4 +101,8 @@ void Throttle::setCalibrationValueMin(int min1, int min2) {
 void Throttle::setCalibrationValueMax(int max1, int max2) {
     minT2 = max2;
     maxT1 = max1;
+}
+
+void Throttle::setMaxTorque(int torqueVal) {
+    maxTorque = torqueVal;
 }

@@ -26,6 +26,8 @@
 #define BRAKE_ID 2
 #define KEY_ID 1
 
+#define DRIVEMODE_ID 204
+
 #define CALIBRATE_THROTTLE_MIN_ID 104
 #define CALIBRATE_THROTTLE_MAX_ID 105
 
@@ -163,6 +165,9 @@ void ECU::route(SensorData* data) {
         case CALIBRATE_THROTTLE_MAX_ID:
             calibrateThrottleMax(data);
             break;
+        case DRIVEMODE_ID:
+            updateDriveMode(data);
+            break;
     }
 }
 
@@ -229,7 +234,27 @@ void ECU::updateSwitch(SensorData* msg) {
 
 
 void ECU::updateDriveMode(SensorData* msg) {
-    
+    if(msg->getData()[0] == 0) {
+        driveMode = 0;
+        throttle.setMaxTorque(3100);
+    }
+    else if(msg->getData()[0] == 1) {
+        throttle.setMaxTorque(1500);
+    }
+    else {
+        //TODO: VERIFY THIS WORKING!!
+        // Call the rpm limiter to the motor
+        rmsg.id = 0x0C1;
+        rmsg.buf[0] = 128
+        rmsg.buf[2] = 1 // 1 to write value
+
+        rmsg.buf[4] = 255; // Write values for max RPM
+        rmsg.buf[5] = 255;
+
+        motorCAN.write(rmsg); 
+
+        throttle.setMaxTorque(3100);
+    }
 }
 
 /////////////////////////////////////////
