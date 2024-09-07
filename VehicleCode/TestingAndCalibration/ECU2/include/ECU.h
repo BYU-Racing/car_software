@@ -24,6 +24,8 @@ class ECU {
 
         bool carIsGood = true;
 
+        int driveMode = 0; //0 = Full beans, 1 = Endurance, 2 = SkidPad
+
         //MONITORING VARS
 
         //Diagnostics
@@ -146,6 +148,7 @@ class ECU {
 
         void updateSteering(SensorData* msg);
 
+        void updateDriveMode(SensorData* msg);
 
 
         //ACTION FUNCTIONS
