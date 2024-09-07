@@ -24,6 +24,7 @@ private:
     int StartFaultState = 0;
     int throttle1State = 0;
     int throttle2State = 0;
+    int driveModeState = 0;
 
 public:
     // Constructor
@@ -48,6 +49,7 @@ public:
     void updateDriveState(SensorData* data);
     void updateThrottle1(SensorData* data);
     void updateThrottle2(SensorData* data);
+    void updateDriveMode(SensorData* data);
 };
 
 #endif // DASHBOARD_H

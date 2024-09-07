@@ -13,6 +13,7 @@
 #define THROTTLE1_ID 3
 #define THROTTLE2_ID 4
 #define BATTERY_PERC_ID 5
+#define DRIVE_MODE_ID 204
 
 /*!
  * @brief Constructor
@@ -87,6 +88,8 @@ void Dashboard::routeData(SensorData* data) {
         case DRIVE_STATE_ID:
             updateDriveState(data);
             break;
+        case DRIVE_MODE_ID:
+            updateDriveMode(data);
     }
 }
 
@@ -211,4 +214,21 @@ void Dashboard::updateThrottle2(SensorData* data) {
         throttle2State = tempThrottle;
     }
     
+}
+
+void Dashboard::updateDriveMode(SensorData* data) {
+    if(data->getData()[0] == 0 && driveModeState != 0) {
+        display->writeNum("PreRun.DriveMode.val", 0);
+        driveModeState = 0;
+    }
+
+    if(data->getData()[0] == 1 && driveModeState != 1) {
+        display->writeNum("PreRun.DriveMode.val", 1);
+        driveModeState = 1;
+    }
+
+    if(data->getData()[0] == 2 && driveModeState != 2) {
+        display->writeNum("PreRun.DriveMode.val", 2);
+        driveModeState = 2;
+    }
 }
