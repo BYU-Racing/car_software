@@ -239,10 +239,12 @@ void ECU::updateDriveMode(SensorData* msg) {
         throttle.setMaxTorque(3100);
     }
     else if(msg->getData()[0] == 1) {
+        driveMode = 1;
         throttle.setMaxTorque(1500);
     }
     else {
         //TODO: VERIFY THIS WORKING!!
+        driveMode = 2;
         // Call the rpm limiter to the motor
         rmsg.id = 0x0C1;
         rmsg.buf[0] = 128
