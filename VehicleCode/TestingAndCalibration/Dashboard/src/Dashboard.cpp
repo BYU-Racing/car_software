@@ -217,18 +217,9 @@ void Dashboard::updateThrottle2(SensorData* data) {
 }
 
 void Dashboard::updateDriveMode(SensorData* data) {
-    if(data->getData()[0] == 0 && driveModeState != 0) {
-        display->writeNum("PreRun.DriveMode.val", 0);
-        driveModeState = 0;
-    }
 
-    if(data->getData()[0] == 1 && driveModeState != 1) {
-        display->writeNum("PreRun.DriveMode.val", 1);
-        driveModeState = 1;
-    }
-
-    if(data->getData()[0] == 2 && driveModeState != 2) {
-        display->writeNum("PreRun.DriveMode.val", 2);
-        driveModeState = 2;
+    if(data->getData()[0] != driveModeState && data->getData()[0] <= 4 && data->getData()[0] >= 0) {
+        display->writeNum("PreRun.DriveMode.val", data->getData()[0]);
+        driveModeState = data->getData()[0];
     }
 }
