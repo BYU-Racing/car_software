@@ -116,12 +116,7 @@ void Dashboard::resetTimeZero(unsigned long startTime) {
 void Dashboard::updateSwitchState(SensorData* data) {
     // Get the current state && update all SWITCH COMPONENTS!!!
     if(data->getData()[0] != switchState) {
-        if(data->getData()[0] == 0) {
-            display->writeNum("PreRun.SwitchVar.val", 0);
-        }
-        else {
-            display->writeNum("PreRun.SwitchVar.val", 1);
-        }
+        display->writeNum("PreRun.SwitchVar.val", data->getData()[0]);
         switchState = data->getData()[0];
     }
 }
@@ -139,12 +134,7 @@ void Dashboard::updateSOCState(SensorData* data) {
 void Dashboard::updateTractiveActiveState(SensorData* data){ 
 
     if(data->getData()[0] != TractiveState) {
-        if(data->getData()[0] == 0) {
-            display->writeNum("PreRun.TractiveActive.val", 0);
-        }
-        else {
-            display->writeNum("PreRun.TractiveActive.val", 1);
-        }
+        display->writeNum("PreRun.TractiveActive.val", data->getData()[0]);
         TractiveState = data->getData()[0];
     }
 
@@ -173,12 +163,7 @@ void Dashboard::updateBrakeActiveState(SensorData* data) {
 void Dashboard::updateStartFaultState(SensorData* data) {
 
     if(StartFaultState != data->getData()[0]) {
-        if(data->getData()[0] == 0) {
-            display->writeNum("PreRun.StartFault.val", 0);
-        }
-        else {
-            display->writeNum("PreRun.StartFault.val", 1);
-        }
+        display->writeNum("PreRun.StartFault.val", data->getData()[0]);
         StartFaultState = data->getData()[0];
     }
 
