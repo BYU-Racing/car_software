@@ -3,33 +3,33 @@
 #include "Throttle.h"
 #include "Brake.h"
 
-#define HORN_PIN 12
-#define BRAKE_THRESHOLD 50
+constexpr int HORN_PIN = 12;
+constexpr int BRAKE_THRESHOLD = 50;
 
-#define MIN_THROTTLE_OUTPUT 0
-#define MAX_THROTTLE_OUTPUT 5000
+constexpr int MIN_THROTTLE_OUTPUT = 0;
+constexpr int MAX_THROTTLE_OUTPUT = 5000;
 
-#define MIN_THROTTLE_READ_POS 36
-#define MAX_THROTTLE_READ_POS 500
+constexpr int MIN_THROTTLE_READ_POS = 36;
+constexpr int MAX_THROTTLE_READ_POS = 500;
 
-#define MIN_THROTTLE_READ_NEG 679
-#define MAX_THROTTLE_READ_NEG 962
-#define THROTTLE_ERROR_TOL 1600
-#define THROTTLE_MAINTAIN_TOL 2
-#define THROTTLE_NOISE_REDUCTION_THRESHOLD 60
+constexpr int MIN_THROTTLE_READ_NEG = 679;
+constexpr int MAX_THROTTLE_READ_NEG = 962;
+constexpr int THROTTLE_ERROR_TOL = 1600;
+constexpr int THROTTLE_MAINTAIN_TOL = 2;
+constexpr int THROTTLE_NOISE_REDUCTION_THRESHOLD = 60;
 
-#define BTO_OFF_THRESHOLD 120
-#define BTO_ON_THRESHOLD 300
+constexpr int BTO_OFF_THRESHOLD = 120;
+constexpr int BTO_ON_THRESHOLD = 300;
 
-#define THROTTLE1_ID 3
-#define THROTTLE2_ID 4
-#define BRAKE_ID 2
-#define KEY_ID 1
+constexpr int THROTTLE1_ID = 3;
+constexpr int THROTTLE2_ID = 4;
+constexpr int BRAKE_ID = 2;
+constexpr int KEY_ID = 1;
 
-#define DRIVEMODE_ID 204
+constexpr int DRIVEMODE_ID = 204;
 
-#define CALIBRATE_THROTTLE_MIN_ID 104
-#define CALIBRATE_THROTTLE_MAX_ID 105
+constexpr int CALIBRATE_THROTTLE_MIN_ID = 104;
+constexpr int CALIBRATE_THROTTLE_MAX_ID = 105;
 
 
 ECU::ECU() {

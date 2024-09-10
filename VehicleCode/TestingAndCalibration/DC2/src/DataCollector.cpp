@@ -4,16 +4,16 @@
 // #include <FlexCAN_T4.h>
 
 // Global variables
-#define BAUDRATE 250000
-#define TORQUE_DEFAULT 200
-#define ERROR_ID 0
-#define ERROR_LENGTH 6
-#define BRAKE_ID 11
-#define SWITCH_ID 15
-#define BRAKE_LOWER_LIMIT2 45
-#define MAX_TORQUE_COMMAND 2000
+constexpr int BAUDRATE = 250000;
+constexpr int TORQUE_DEFAULT = 200;
+constexpr int ERROR_ID = 0;
+constexpr int ERROR_LENGTH = 6;
+constexpr int BRAKE_ID = 11;
+constexpr int SWITCH_ID = 15;
+constexpr int BRAKE_LOWER_LIMIT2 = 45;
+constexpr int MAX_TORQUE_COMMAND = 2000;
 
-#define TRACTIVE_ID 30
+constexpr int TRACTIVE_ID = 30;
 
 
 // TEST: define function

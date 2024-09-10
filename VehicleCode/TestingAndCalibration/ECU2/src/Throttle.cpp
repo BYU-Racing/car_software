@@ -1,17 +1,17 @@
 #include "Throttle.h"
 #include "Arduino.h"
 
-#define MIN_THROTTLE_OUTPUT 0
-#define MAX_THROTTLE_OUTPUT 3100
+constexpr int MIN_THROTTLE_OUTPUT = 0;
+constexpr int MAX_THROTTLE_OUTPUT = 3100;
 
-#define MIN_THROTTLE_READ_POS 120
-#define MAX_THROTTLE_READ_POS 752
+constexpr int MIN_THROTTLE_READ_POS = 120;
+constexpr int MAX_THROTTLE_READ_POS = 752;
 
-#define MIN_THROTTLE_READ_NEG 545
-#define MAX_THROTTLE_READ_NEG 752
-#define THROTTLE_ERROR_TOL 1600
-#define THROTTLE_MAINTAIN_TOL 20
-#define THROTTLE_NOISE_REDUCTION_THRESHOLD 60
+constexpr int MIN_THROTTLE_READ_NEG = 545;
+constexpr int MAX_THROTTLE_READ_NEG = 752;
+constexpr int THROTTLE_ERROR_TOL = 1600;
+constexpr int THROTTLE_MAINTAIN_TOL = 20;
+constexpr int THROTTLE_NOISE_REDUCTION_THRESHOLD = 60;
 
 
 Throttle::Throttle() {

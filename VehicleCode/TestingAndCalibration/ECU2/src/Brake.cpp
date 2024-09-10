@@ -2,7 +2,7 @@
 #include "Arduino.h"
 
 
-#define BRAKE_THRESHOLD 50
+constexpr int BRAKE_THRESHOLD = 50;
 
 
 // TODO: Add signal filtering for the brake?

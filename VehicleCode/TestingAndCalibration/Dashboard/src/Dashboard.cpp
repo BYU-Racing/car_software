@@ -2,18 +2,17 @@
 #include "EasyNextionLibrary.h"
 
 // Global variables
-#define BAUDRATE 250000
-
-#define SWITCH_ID 1
-#define BATTERY_TEMP_ID 54
-#define TRACTIVE_ID 194
-#define BRAKE_ID 2
-#define DRIVE_STATE_ID 203
-#define BRAKE_P 2
-#define THROTTLE1_ID 3
-#define THROTTLE2_ID 4
-#define BATTERY_PERC_ID 5
-#define DRIVE_MODE_ID 204
+constexpr int BAUDRATE = 250000;
+constexpr int SWITCH_ID = 1;
+constexpr int BATTERY_TEMP_ID = 54;
+constexpr int TRACTIVE_ID = 194;
+constexpr int BRAKE_ID = 2;
+constexpr int DRIVE_STATE_ID = 203;
+constexpr int BRAKE_P = 2;
+constexpr int THROTTLE1_ID = 3;
+constexpr int THROTTLE2_ID = 4;
+constexpr int BATTERY_PERC_ID = 5;
+constexpr int DRIVE_MODE_ID = 204;
 
 /*!
  * @brief Constructor

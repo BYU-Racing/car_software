@@ -1,10 +1,10 @@
 #include "AnalogSensor.h"
 #include <Arduino.h>
 
-#define ACCELERATOR_POT_1 3
-#define MAXPERCENT 10000
-#define LENGTH 8
-#define BYTESIZE 256
+constexpr int ACCELERATOR_POT_1 = 3;
+constexpr int MAXPERCENT = 10000;
+constexpr int LENGTH = 8;
+constexpr int BYTESIZE = 256;
 
 /**
  * @brief Constructor for AnalogSensor class.
