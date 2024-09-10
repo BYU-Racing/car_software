@@ -3,31 +3,33 @@
 #include "Throttle.h"
 #include "Brake.h"
 
-#define HORN_PIN 12
-#define BRAKE_THRESHOLD 50
+constexpr int HORN_PIN = 12;
+constexpr int BRAKE_THRESHOLD = 50;
 
-#define MIN_THROTTLE_OUTPUT 0
-#define MAX_THROTTLE_OUTPUT 5000
+constexpr int MIN_THROTTLE_OUTPUT = 0;
+constexpr int MAX_THROTTLE_OUTPUT = 5000;
 
-#define MIN_THROTTLE_READ_POS 36
-#define MAX_THROTTLE_READ_POS 500
+constexpr int MIN_THROTTLE_READ_POS = 36;
+constexpr int MAX_THROTTLE_READ_POS = 500;
 
-#define MIN_THROTTLE_READ_NEG 679
-#define MAX_THROTTLE_READ_NEG 962
-#define THROTTLE_ERROR_TOL 1600
-#define THROTTLE_MAINTAIN_TOL 2
-#define THROTTLE_NOISE_REDUCTION_THRESHOLD 60
+constexpr int MIN_THROTTLE_READ_NEG = 679;
+constexpr int MAX_THROTTLE_READ_NEG = 962;
+constexpr int THROTTLE_ERROR_TOL = 1600;
+constexpr int THROTTLE_MAINTAIN_TOL = 2;
+constexpr int THROTTLE_NOISE_REDUCTION_THRESHOLD = 60;
 
-#define BTO_OFF_THRESHOLD 120
-#define BTO_ON_THRESHOLD 300
+constexpr int BTO_OFF_THRESHOLD = 120;
+constexpr int BTO_ON_THRESHOLD = 300;
 
-#define THROTTLE1_ID 3
-#define THROTTLE2_ID 4
-#define BRAKE_ID 2
-#define KEY_ID 1
+constexpr int THROTTLE1_ID = 3;
+constexpr int THROTTLE2_ID = 4;
+constexpr int BRAKE_ID = 2;
+constexpr int KEY_ID = 1;
 
-#define CALIBRATE_THROTTLE_MIN_ID 104
-#define CALIBRATE_THROTTLE_MAX_ID 105
+constexpr int DRIVEMODE_ID = 204;
+
+constexpr int CALIBRATE_THROTTLE_MIN_ID = 104;
+constexpr int CALIBRATE_THROTTLE_MAX_ID = 105;
 
 
 ECU::ECU() {
@@ -163,6 +165,9 @@ void ECU::route(SensorData* data) {
         case CALIBRATE_THROTTLE_MAX_ID:
             calibrateThrottleMax(data);
             break;
+        case DRIVEMODE_ID:
+            updateDriveMode(data);
+            break;
     }
 }
 
@@ -227,6 +232,52 @@ void ECU::updateSwitch(SensorData* msg) {
     }
 }
 
+
+void ECU::updateDriveMode(SensorData* msg) {
+    if(msg->getData()[0] == 0 && driveMode != 0) {
+        if(driveMode == 2) { //RESET MAX RPM
+            rmsg.id = 0x0C1;
+            rmsg.buf[0] = 128
+            rmsg.buf[2] = 1 // 1 to write value
+
+            rmsg.buf[4] = 255; // Write values for max RPM
+            rmsg.buf[5] = 255;
+
+            motorCAN.write(rmsg);
+        }
+        driveMode = 0;
+        throttle.setMaxTorque(3100);
+    }
+    else if(msg->getData()[0] == 1 && driveMode != 1) {
+        if(driveMode == 2) { //RESET MAX RPM
+            rmsg.id = 0x0C1;
+            rmsg.buf[0] = 128
+            rmsg.buf[2] = 1 // 1 to write value
+
+            rmsg.buf[4] = 255; // Write values for max RPM
+            rmsg.buf[5] = 255;
+
+            motorCAN.write(rmsg);
+        }
+        driveMode = 1;
+        throttle.setMaxTorque(1500);
+    }
+    else if(msg->getData()[0] == 2 && driveMode != 2) {
+        //TODO: VERIFY THIS WORKING!!
+        driveMode = 2;
+        // Call the rpm limiter to the motor
+        rmsg.id = 0x0C1;
+        rmsg.buf[0] = 128
+        rmsg.buf[2] = 1 // 1 to write value
+
+        rmsg.buf[4] = 255; // Write values for max RPM
+        rmsg.buf[5] = 255;
+
+        motorCAN.write(rmsg); 
+
+        throttle.setMaxTorque(3100);
+    }
+}
 
 /////////////////////////////////////////
 ////////////ACTION FUNCTIONS/////////////

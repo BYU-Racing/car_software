@@ -2,17 +2,17 @@
 #include "EasyNextionLibrary.h"
 
 // Global variables
-#define BAUDRATE 250000
-
-#define SWITCH_ID 1
-#define BATTERY_TEMP_ID 54
-#define TRACTIVE_ID 194
-#define BRAKE_ID 2
-#define DRIVE_STATE_ID 203
-#define BRAKE_P 2
-#define THROTTLE1_ID 3
-#define THROTTLE2_ID 4
-#define BATTERY_PERC_ID 5
+constexpr int BAUDRATE = 250000;
+constexpr int SWITCH_ID = 1;
+constexpr int BATTERY_TEMP_ID = 54;
+constexpr int TRACTIVE_ID = 194;
+constexpr int BRAKE_ID = 2;
+constexpr int DRIVE_STATE_ID = 203;
+constexpr int BRAKE_P = 2;
+constexpr int THROTTLE1_ID = 3;
+constexpr int THROTTLE2_ID = 4;
+constexpr int BATTERY_PERC_ID = 5;
+constexpr int DRIVE_MODE_ID = 204;
 
 /*!
  * @brief Constructor
@@ -87,6 +87,8 @@ void Dashboard::routeData(SensorData* data) {
         case DRIVE_STATE_ID:
             updateDriveState(data);
             break;
+        case DRIVE_MODE_ID:
+            updateDriveMode(data);
     }
 }
 
@@ -113,12 +115,7 @@ void Dashboard::resetTimeZero(unsigned long startTime) {
 void Dashboard::updateSwitchState(SensorData* data) {
     // Get the current state && update all SWITCH COMPONENTS!!!
     if(data->getData()[0] != switchState) {
-        if(data->getData()[0] == 0) {
-            display->writeNum("PreRun.SwitchVar.val", 0);
-        }
-        else {
-            display->writeNum("PreRun.SwitchVar.val", 1);
-        }
+        display->writeNum("PreRun.SwitchVar.val", data->getData()[0]);
         switchState = data->getData()[0];
     }
 }
@@ -136,12 +133,7 @@ void Dashboard::updateSOCState(SensorData* data) {
 void Dashboard::updateTractiveActiveState(SensorData* data){ 
 
     if(data->getData()[0] != TractiveState) {
-        if(data->getData()[0] == 0) {
-            display->writeNum("PreRun.TractiveActive.val", 0);
-        }
-        else {
-            display->writeNum("PreRun.TractiveActive.val", 1);
-        }
+        display->writeNum("PreRun.TractiveActive.val", data->getData()[0]);
         TractiveState = data->getData()[0];
     }
 
@@ -170,12 +162,7 @@ void Dashboard::updateBrakeActiveState(SensorData* data) {
 void Dashboard::updateStartFaultState(SensorData* data) {
 
     if(StartFaultState != data->getData()[0]) {
-        if(data->getData()[0] == 0) {
-            display->writeNum("PreRun.StartFault.val", 0);
-        }
-        else {
-            display->writeNum("PreRun.StartFault.val", 1);
-        }
+        display->writeNum("PreRun.StartFault.val", data->getData()[0]);
         StartFaultState = data->getData()[0];
     }
 
@@ -211,4 +198,12 @@ void Dashboard::updateThrottle2(SensorData* data) {
         throttle2State = tempThrottle;
     }
     
+}
+
+void Dashboard::updateDriveMode(SensorData* data) {
+
+    if(data->getData()[0] != driveModeState && data->getData()[0] <= 4 && data->getData()[0] >= 0) {
+        display->writeNum("PreRun.DriveMode.val", data->getData()[0]);
+        driveModeState = data->getData()[0];
+    }
 }

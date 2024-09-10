@@ -1,17 +1,17 @@
 #include "Throttle.h"
 #include "Arduino.h"
 
-#define MIN_THROTTLE_OUTPUT 0
-#define MAX_THROTTLE_OUTPUT 3100
+constexpr int MIN_THROTTLE_OUTPUT = 0;
+constexpr int MAX_THROTTLE_OUTPUT = 3100;
 
-#define MIN_THROTTLE_READ_POS 120
-#define MAX_THROTTLE_READ_POS 752
+constexpr int MIN_THROTTLE_READ_POS = 120;
+constexpr int MAX_THROTTLE_READ_POS = 752;
 
-#define MIN_THROTTLE_READ_NEG 545
-#define MAX_THROTTLE_READ_NEG 752
-#define THROTTLE_ERROR_TOL 1600
-#define THROTTLE_MAINTAIN_TOL 20
-#define THROTTLE_NOISE_REDUCTION_THRESHOLD 60
+constexpr int MIN_THROTTLE_READ_NEG = 545;
+constexpr int MAX_THROTTLE_READ_NEG = 752;
+constexpr int THROTTLE_ERROR_TOL = 1600;
+constexpr int THROTTLE_MAINTAIN_TOL = 20;
+constexpr int THROTTLE_NOISE_REDUCTION_THRESHOLD = 60;
 
 
 Throttle::Throttle() {
@@ -49,13 +49,13 @@ void Throttle::setThrottle1(int* input) {
 
     readIn1 = (input[0] * 100) + input[1];
 
-    this->throttle1 = map(readIn1, minT1, maxT1, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
+    this->throttle1 = map(readIn1, minT1, maxT1, MIN_THROTTLE_OUTPUT, maxTorque);
 }
 
 void Throttle::setThrottle2(int* input) {
     readIn2 = (input[0] * 100) + input[1];
 
-    this->throttle2 = map(-readIn2, -maxT2, -minT2, MIN_THROTTLE_OUTPUT, MAX_THROTTLE_OUTPUT);
+    this->throttle2 = map(-readIn2, -maxT2, -minT2, MIN_THROTTLE_OUTPUT, maxTorque);
 }
 
 int Throttle::calculateTorque() {
@@ -101,4 +101,8 @@ void Throttle::setCalibrationValueMin(int min1, int min2) {
 void Throttle::setCalibrationValueMax(int max1, int max2) {
     minT2 = max2;
     maxT1 = max1;
+}
+
+void Throttle::setMaxTorque(int torqueVal) {
+    maxTorque = torqueVal;
 }
