@@ -58,6 +58,7 @@ void Dashboard::updateDisplay() {
         routeData(msg);
         delete msg;
     }
+    display->NextionListen();
 }
 
 void Dashboard::routeData(SensorData* data) {

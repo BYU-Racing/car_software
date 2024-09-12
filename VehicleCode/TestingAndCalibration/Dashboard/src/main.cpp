@@ -42,7 +42,6 @@ void setup() {
 
 void loop() {
   myDash.updateDisplay();
-  myDisplay.NextionListen();
 }
 
 
