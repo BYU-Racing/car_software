@@ -33,6 +33,7 @@ class SwitchSensor : public Sensor {
         int rescale(int data);
         int* buildData(int value);
         int* buildError();
+        bool plugTest() override;
 
 
 };

@@ -136,5 +136,8 @@ bool SwitchSensor::getCritical() {
     return isCritical;
 }
 
+bool SwitchSensor::plugTest() {
+    return (analogRead(inputPins[0]) == 0);
+}
 
 

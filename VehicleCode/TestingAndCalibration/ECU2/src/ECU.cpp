@@ -237,8 +237,8 @@ void ECU::updateDriveMode(SensorData* msg) {
     if(msg->getData()[0] == 0 && driveMode != 0) {
         if(driveMode == 2) { //RESET MAX RPM
             rmsg.id = 0x0C1;
-            rmsg.buf[0] = 128
-            rmsg.buf[2] = 1 // 1 to write value
+            rmsg.buf[0] = 128;
+            rmsg.buf[2] = 1; // 1 to write value
 
             rmsg.buf[4] = 255; // Write values for max RPM
             rmsg.buf[5] = 255;
@@ -251,8 +251,8 @@ void ECU::updateDriveMode(SensorData* msg) {
     else if(msg->getData()[0] == 1 && driveMode != 1) {
         if(driveMode == 2) { //RESET MAX RPM
             rmsg.id = 0x0C1;
-            rmsg.buf[0] = 128
-            rmsg.buf[2] = 1 // 1 to write value
+            rmsg.buf[0] = 128;
+            rmsg.buf[2] = 1; // 1 to write value
 
             rmsg.buf[4] = 255; // Write values for max RPM
             rmsg.buf[5] = 255;
@@ -267,8 +267,8 @@ void ECU::updateDriveMode(SensorData* msg) {
         driveMode = 2;
         // Call the rpm limiter to the motor
         rmsg.id = 0x0C1;
-        rmsg.buf[0] = 128
-        rmsg.buf[2] = 1 // 1 to write value
+        rmsg.buf[0] = 128;
+        rmsg.buf[2] = 1; // 1 to write value
 
         rmsg.buf[4] = 255; // Write values for max RPM
         rmsg.buf[5] = 255;
